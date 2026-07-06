@@ -1,0 +1,1444 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOGIPA — Diretoria Executiva</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0a0f; --surface:#13131a; --sidebar:#0d0d13; --card:#1a1a26; --border:#2a2a3a;
+    --green:#00e5a0; --yellow:#ffd32a; --red:#e8192c; --blue:#3d7bff;
+    --muted:#8888aa; --text:#ffffff; --orange:#fb923c; --cyan:#06b6d4; --purple:#a855f7; --gold:#f2b705;
+  }
+  *{box-sizing:border-box;}
+  html{ overflow-x:hidden; }
+  body{
+    background:var(--bg); color:var(--text); margin:0; padding:0;
+    font-family:'Inter', Arial, sans-serif; display:flex; min-height:100vh;
+    overflow-x:hidden; font-size:14px;
+  }
+  ::-webkit-scrollbar{height:8px; width:8px;}
+  ::-webkit-scrollbar-thumb{background:var(--border); border-radius:4px;}
+  svg text{font-family:'Segoe UI', Arial, sans-serif;}
+  .scrollx{overflow-x:auto;}
+
+  /* ── SIDEBAR ── */
+  .sidebar{
+    width:264px; flex-shrink:0; background:var(--sidebar); border-right:1px solid var(--border);
+    position:sticky; top:0; height:100vh; overflow-y:auto; display:flex; flex-direction:column;
+  }
+  .sidebar-logo{ padding:22px 20px 20px; border-bottom:1px solid var(--border); }
+  .sidebar-logo .name{ font-size:18px; font-weight:800; display:flex; align-items:center; gap:9px; }
+  .sidebar-logo .sub{ font-size:12px; color:var(--muted); margin-top:3px; }
+  .nav{ padding:10px 0; flex:1; }
+  .nav-item{
+    display:flex; align-items:center; gap:14px; padding:14px 22px; color:var(--muted);
+    cursor:pointer; font-size:15.5px; border-left:4px solid transparent; transition:.15s; user-select:none;
+  }
+  .nav-item .ic{ width:22px; text-align:center; font-size:16px; }
+  .nav-item:hover{ background:rgba(255,255,255,.03); color:var(--text); }
+  .nav-item.active{ background:rgba(232,25,44,.09); color:var(--text); border-left-color:var(--red); font-weight:600; }
+  .nav-item .soon{ font-size:12px; background:rgba(255,211,42,.15); color:var(--yellow); padding:1px 5px; border-radius:6px; margin-left:auto; font-weight:700; }
+  .sidebar-foot{ padding:14px 20px; border-top:1px solid var(--border); font-size:12px; color:var(--muted); line-height:1.5; }
+
+  /* ── MAIN ── */
+  .main{ flex:1; min-width:0; overflow-x:hidden; }
+  .topbar{
+    background:linear-gradient(135deg, #0d1b3e 0%, #1a1a2e 100%);
+    border-bottom:2px solid var(--blue); padding:0 48px;
+    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px;
+    position:sticky; top:0; z-index:20; min-height:90px;
+  }
+  .topbar-title{ font-size:24px; font-weight:800; letter-spacing:.3px; }
+  .topbar-sub{ font-size:13px; color:var(--muted); margin-top:3px; }
+  .topbar-right{ display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+  .topbar-date{ text-align:right; font-size:14px; color:var(--muted); line-height:1.6; }
+  .topbar-date b{ color:var(--text); font-weight:600; }
+  .periodo-range{ font-size:24px; font-weight:800; color:var(--text); margin-top:3px; }
+  .periodo-count{ font-size:14px; color:var(--green); font-weight:600; }
+  .status-pill{
+    font-size:13px; font-weight:700; letter-spacing:.4px; padding:6px 14px; border-radius:20px;
+    display:flex; align-items:center; gap:6px; white-space:nowrap;
+  }
+  .status-pill.fechamento{ background:rgba(255,211,42,.12); border:1px solid var(--yellow); color:var(--yellow); }
+  .status-pill.atualizado{ background:rgba(0,229,160,.12); border:1px solid var(--green); color:var(--green); }
+  .status-pill .blink{ width:7px; height:7px; border-radius:50%; background:currentColor; }
+  .status-pill.pulsando{ animation:pulseGreenBox 2s ease-in-out infinite; }
+  .status-pill.pulsando .blink{ animation:pulseGreenDot 2s ease-in-out infinite; }
+  @keyframes pulseGreenBox{
+    0%, 100% { box-shadow:0 0 0 0 rgba(0,229,160,.55); }
+    50% { box-shadow:0 0 14px 4px rgba(0,229,160,.55); }
+  }
+  @keyframes pulseGreenDot{
+    0%, 100% { opacity:1; transform:scale(1); }
+    50% { opacity:.35; transform:scale(1.3); }
+  }
+
+  .filterbar{
+    background:var(--bg); border-bottom:1px solid var(--border); padding:14px 48px;
+    display:flex; align-items:flex-end; gap:16px; flex-wrap:wrap;
+  }
+  @media (max-width:900px){ .filterbar{ padding:12px 20px; } }
+  .filterbar-label{ font-size:13px; color:var(--muted); font-weight:700; letter-spacing:.4px; margin-right:4px; }
+  .filter-field{ display:flex; flex-direction:column; gap:4px; }
+  .filter-field label{ font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.3px; }
+  .filter-field input, .filter-field select{
+    background:#0a0a0f; border:1px solid var(--border); color:var(--text); border-radius:8px;
+    padding:10px 14px; font-size:15px; font-family:inherit;
+  }
+  .btn-apply{
+    background:var(--red); color:#fff; border:none; border-radius:8px; padding:11px 24px;
+    font-size:14px; font-weight:700; letter-spacing:.3px; cursor:pointer;
+  }
+  .btn-apply:hover{ opacity:.85; }
+  .filter-badge{ font-size:12px; color:var(--text); font-weight:700; white-space:nowrap; margin-left:auto; }
+
+  .content{ max-width:1400px; margin:0 auto; padding:32px 48px 70px; overflow-x:hidden; }
+  @media (max-width:900px){ .content{ padding:24px 20px 60px; } }
+  .page-section{ display:none; }
+  .page-section.active{ display:block; animation:fadeIn .3s ease; }
+  @keyframes fadeIn{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+
+  .section-title{font-size:20px; font-weight:800; color:var(--text); margin:30px 0 14px; display:flex; align-items:center; gap:8px;}
+  .section-title:first-child{ margin-top:0; }
+  .section-title .line{flex:1; height:1px; background:var(--border);}
+
+  .kpi-row-icons{ display:grid; grid-template-columns:repeat(5,1fr); gap:16px; margin-bottom:28px; }
+  .kpi-icon-card{ display:flex; flex-direction:column; align-items:flex-start; gap:0; padding:20px; background:var(--card); border:1px solid var(--border); border-radius:12px; min-height:160px; }
+  .kpi-card-top{ display:flex; align-items:center; gap:10px; margin-bottom:16px; }
+  .kpi-icon-circle{ width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
+  .kpi-icon-info .label{ font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:1.2px; font-weight:600; }
+  .kpi-icon-info .value{ font-size:32px; font-weight:900; margin-top:0; line-height:1.15; }
+  .kpi-icon-info .delta{ font-size:12px; margin-top:8px; }
+  .mini-stat-row{ display:flex; gap:10px; margin-top:14px; border-top:1px solid var(--border); padding-top:14px; }
+  .mini-stat{ flex:1; text-align:center; }
+  .mini-stat-label{ font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.6px; margin-bottom:4px; }
+  .mini-stat-value{ font-size:19px; font-weight:800; color:var(--text); }
+
+  .grid-3{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-bottom:28px; }
+  .grid-2{display:grid; grid-template-columns:1.1fr .9fr; gap:20px; margin-bottom:28px;}
+  .grid-2.reverse{grid-template-columns:.9fr 1.1fr;}
+  .kpi-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:28px;}
+
+  .card{ background:var(--card); border:1px solid var(--border); border-radius:12px; padding:26px; position:relative; min-width:0; overflow:hidden; }
+  .grid-3 > *, .grid-2 > *, .kpi-grid > *, .kpi-row-icons > * { min-width:0; }
+  .card.full{grid-column:1/-1;}
+  .card-label{font-size:12px; color:var(--muted); margin-bottom:14px; text-transform:uppercase; letter-spacing:1.2px; font-weight:700;}
+  .card-value{font-size:36px; font-weight:900; margin-bottom:6px; letter-spacing:.2px;}
+  .card-meta{font-size:13px; color:var(--muted);}
+
+  .status-box{
+    background:#14141e; border:1px solid var(--border); border-left-width:4px; border-left-style:solid;
+    border-radius:10px; padding:16px 18px; margin-bottom:16px;
+  }
+  .status-box:last-child{ margin-bottom:0; }
+  .status-box-head{
+    display:flex; align-items:center; gap:8px; font-size:13px; font-weight:800;
+    text-transform:uppercase; letter-spacing:.6px; margin-bottom:12px;
+  }
+  .status-count{
+    font-size:12px; font-weight:800; padding:2px 9px; border-radius:20px; margin-left:auto;
+  }
+  .status-item{ padding:10px 0; border-top:1px solid var(--border); }
+  .status-item:first-of-type{ border-top:none; padding-top:2px; }
+  .status-item-top{ display:flex; justify-content:space-between; align-items:baseline; gap:12px; }
+  .status-item-top .nome{ color:var(--text); font-size:15px; font-weight:600; }
+  .status-item-top .val{ font-size:15px; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .status-item-sub{ font-size:12.5px; color:var(--muted); margin-top:3px; font-variant-numeric:tabular-nums; }
+  .legend-row{display:flex; align-items:center; gap:8px; font-size:15px; color:var(--muted); margin-top:4px;}
+  .legend-btn{
+    display:flex; align-items:center; gap:8px; font-size:15px; color:var(--muted); margin-top:4px;
+    cursor:pointer; padding:8px 10px; border-radius:8px; border:1px solid transparent; transition:.15s;
+  }
+  .legend-btn:hover{ background:rgba(255,255,255,.04); border-color:var(--border); }
+  .legend-btn-active{ background:rgba(61,123,255,.1); border-color:var(--blue); }
+  .dot{width:10px; height:10px; border-radius:50%; display:inline-block;}
+
+  table{width:100%; border-collapse:collapse; font-size:16px;}
+  th{text-align:left; color:var(--muted); font-weight:700; font-size:13.5px; text-transform:uppercase; letter-spacing:.3px; padding:9px 10px; border-bottom:1px solid var(--border);}
+  td{padding:12px 12px; border-bottom:1px solid var(--border); color:var(--text);}
+  tr:last-child td{border-bottom:none;}
+  .num{text-align:right; font-variant-numeric:tabular-nums;}
+  .muted{color:var(--muted);}
+  .tag{font-size:13px; padding:4px 11px; border-radius:6px; font-weight:700;}
+
+  .total-highlight td{
+    background:linear-gradient(90deg, rgba(0,229,160,.14), rgba(0,229,160,.04));
+    border-top:2px solid var(--green); border-bottom:none;
+    color:var(--text); font-weight:800; font-size:16px; padding:14px 10px;
+  }
+  .total-highlight td:first-child{ border-radius:0 0 0 8px; letter-spacing:.5px; }
+  .total-highlight td:last-child{ border-radius:0 0 8px 0; color:var(--green); font-size:18px; }
+
+  .alert-box{
+    border:1px solid var(--border); border-left:4px solid var(--yellow); background:rgba(255,211,42,.06);
+    border-radius:10px; padding:18px 22px; font-size:16px; margin-top:16px; display:flex; gap:12px;
+  }
+  .alert-box.red{border-left-color:var(--red); background:rgba(232,25,44,.06); animation:pulseRed 2.2s ease-in-out infinite;}
+  @keyframes pulseRed{
+    0%, 100% { box-shadow:0 0 0 0 rgba(232,25,44,.35); border-left-color:var(--red); }
+    50% { box-shadow:0 0 14px 2px rgba(232,25,44,.25); border-left-color:#ff4d5e; }
+  }
+  .alert-box.green{border-left-color:var(--green); background:rgba(0,229,160,.06);}
+  .alert-box b{color:var(--text);}
+
+  .donut-wrap{display:flex; align-items:center; gap:22px; flex-wrap:wrap;}
+  .donut{width:190px; height:190px; flex-shrink:0; display:flex; align-items:center; justify-content:center;}
+  .donut-ring{ animation:donutIn .65s cubic-bezier(.34,1.56,.64,1); transform-origin:center; }
+  @keyframes donutIn{ from{ transform:scale(.72) rotate(-90deg);} to{ transform:scale(1) rotate(0deg);} }
+
+  .kpi-card{ cursor:pointer; transition:transform .15s ease, border-color .15s ease, box-shadow .15s ease; border:1px solid var(--border); }
+  .kpi-card:hover{ transform:translateY(-3px); border-color:var(--muted); }
+  .kpi-card.active{ box-shadow:0 0 0 2px var(--accent) inset, 0 8px 24px -8px var(--accent); border-color:var(--accent); }
+  /* mantém o destaque visual (borda/brilho) do card ativo, sem exibir o texto "SELECIONADO" */
+  .stage{ border:1px solid var(--border); border-radius:12px; padding:30px; background:linear-gradient(180deg, rgba(255,255,255,.02), transparent 40%), var(--card); margin-top:16px; }
+  .stage-head{display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:6px;}
+  .stage-title{font-size:23px; font-weight:800; display:flex; align-items:center; gap:10px;}
+  .stage-badge{font-size:13px; padding:4px 10px; border-radius:20px; font-weight:700; letter-spacing:.3px;}
+  .stage-desc{font-size:16px; color:var(--muted); margin-bottom:16px; max-width:820px;}
+
+  .placeholder{ text-align:center; padding:70px 20px; color:var(--muted); }
+  .placeholder .big{ font-size:40px; margin-bottom:14px; }
+  .placeholder .t{ font-size:15px; color:var(--text); font-weight:600; margin-bottom:6px; }
+
+  .footer-note{color:var(--muted); font-size:12px; text-align:center; margin-top:40px; line-height:1.6;}
+
+  @media (max-width:1100px){
+    .sidebar{ display:none; }
+    .kpi-row-icons{ grid-template-columns:repeat(2,1fr); }
+    .grid-3{ grid-template-columns:1fr; }
+    .kpi-grid{grid-template-columns:repeat(2,1fr);}
+    .grid-2, .grid-2.reverse{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════ SIDEBAR ═══════════ -->
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="name"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMQAAADwCAYAAABfTcvQAAA70UlEQVR42u1dd3gU1fp+z8xsTSUBQQFFuYiADQtFLl5RioULNsReQb3Se09CUYKIXFSkiHrt9SrFhorld1FQEaQo2EA6ISF1+87M9/vjzOxOQkLdTbLJeZ8nD2GT7O7snPd83/u1AwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAjUQrCafHEiksQtEKhqeTDGSHwMAgL1yUIQEWOMERG5AbwOoAEAqmlrJVBroAGQAcxmjH1ARDJjTKuuF1dq6qoPHTqkZGZm9gDg9nq9YEzwoV7vzIyBiKAoCux2OwC8WRObdo0RYtu2bdSlS5eS7777ztGtWzeSZZnpui5WRj2FLMtQVRU33nij+uqrryperzdUE+9DqenPQdM02e/3C5dJWAgQEQKBABkuE6uPhABjDIwxSJIEYSHqLxRFgaqqkGW5Zt9HbfgwiCjyJVA/UVvWgMgDCAgIQggICEIICAhCCAgIQgjUSiRC8lVJlA+ypsNxdQ1EBE2rtooIyLJcra9XpwlBRFBVVaziRHRBJClCPnNjq833UqntH6au6zjzzDMxcuRIEBE3u0RAxSReVRZE1/nvH/tWdnLPU/HvNR28dvGIFwpUgzthJj5TU1NRVFSEJUuWYOvWrZFNJ9ZWXZKkiFW47bbbcP/996Nv375QVTWSmRaEOAGfs1mzZhg8eLDYbmOE1atXIzs7G7///nvMyWC1ApqmoWPHjpg6dSp69eqFgwcP1npLnxAuUzgchqqq0DUNkixD3bwF/tw5gNsFqBqY3Y6k3GlgDRrwXZwxvqPb7dC2/AJf7mxAVqreqSUJ8Hhhv/6fcNxxKxAK8cdMy2CzQV23Hv4n5gIuN0AVrBOTAL8fjltvhuOGviDz71UV3glZ0PMOAjbb4a8vSYDXC9eIoVAuvZi/lhS7OIfpqjidTgDAunXrkJWVhY8//jiuOkFVVZxxxhmYNGkSHnjggYilT4Sq5oQR1YqiQAcgKQqo4BC0/74PlpYGhMJgbhfk6VmQFIUTgghQFGi//gbfbXdD+3MHmMNRtVtCBGgaAqu+gi0zE/are/DFyRggy6CSUniGj4G2bj1YkhuH1Z0Zf+//bBWkklI477kzQib9i6+irx/ZiYm7UooMKiqCdPutUBQF0LSqXbbjhKZpUBQFNpsNBw4cwMyZM7FgwQKEw2FIBuliVTtm1QlJSUkYOnQoxowZgwYNGkQ2NJvNFnldQYhYw2YDa9AALDUVCIfBXK7oYjcsBIXD8Dw8FPruPZBObQKEwyCvr3LCuZyA0wl4vfCOHAdbx0u4tQmHAZsNwdffhLb+J0hnNAf8AZDPX/nfezzwz5oLxy03gbnd3BUxORDhECcZS3MDkswfV2J3G8xFLssyQqEQFixYgJkzZyIvLy/m0R5JksAYK6cTsrOz0bp16wgpZVlOqAhhYhLC2JHLfZU3KYCqgkrLOFmCQTCXC7bL/24Qx6g2JwIkBm3bb9B37+VuTSgECgTK2QDyePnP/EGw9DTYrrg8utubf79nL1/oSW7LzyTYr+0Ffd8+vuh1HdB0UFkZ1B9+BOwMCGuALMXgIyHouh5ZfMuXL0d2djZ++uknfqMVBZqmxYQMFaNFXbp0wbRp03DllVcCQKRqNRFD5YlJiGO7a1H3I6yCtTgFKa++UOmvesdPQWD+IrAG6ZVHfGSZWx2/H8plHZHyyvPlfuyblAP/gsVgycnG3/K/Z4qCpNzph71e4IWXEP7ia7C0VEhNT4Ny6SVRTXGCOkFRFMiyjJ9++glZWVlYsWJFxCLouh4zMWvVCWeddRamTJmCe++9N2IRTPc2UVF3CWFaEuv3oRDfqU3hbfrs4XB5l6uq5zEsD3Td+CJAkaEXF4OKCoFQGOR0ln+OCmFXUjUEX3wFzO0ClZbBcWs/SA0zT0g/mC6JoihV6oRYuUcmsTRNQ0pKCkYMH46Rw4cjLSPjMOuUyKjbhKgsmiRJUUIQHX8OgLHoTi4xQGJw3nsXbH+/DMzhAEtK4poiYqWYuXoBSYL63RqoP28FS0sFdB2O226JiU7Izc3FgQMH4q4T7rrrLmRNnoy/nX22wXcdsiTVmUqC+kWImBOML3bl0ot52PQYyBR8422AdJDXC1uHS6C0v4AT8xgWVE3qhH/84x+YlpODy6+4gusEXYe28nPYu14GJCfXnVsqVvUJumLWL03jrlQofLjAB7hrJcvQD+Qh/NkXPDoWCMDR/2bDddOPSgQzu2vqhD59+qBv37746aefIMsyGGNQVTUmSTZZliOv2apVK7zyyiv46quvcPkVV0AHEPpmDXw33ArPrXdD37PPNFvCQtRLMFZesJuiuzLdEvVxAElGaOly6AcPgqWlQWreDPbe1xp/Lx2XTli4cCFCoVBcdUJ6ejpGjhyJ4cOHIyUlBQRA/XM7gk8+heA773FZJEnQtm6DfM7Zx1ceIwhRB6DrYG4XtM1bUHrN9eWEMiQJ5PXBcevNcD48MKpRIitNAjQNwXfe5/mJ0jI4buvHo1pViGmrTgiHw5F8QnXohPvvvx+TJ0/GmWeeCRBBU1Wo7y2Dd9R4HspOSwXsNlDeQagbN8F+Qx9BiERd1JEiPbO8wxTXx+ImSRKozIPwjxsq/Iw/pzp6PajMA9eoYVHBbiz48Hc/QN24iYdmdbKIaVZrdMJVV12FqVOnokuXLlwnqCpkALKiwPfJp6DCIrBTmwDBIBBWeUnLlp8Pt5JCQ9Ry98b83m7ni1SW+b82G//XDMVahPIREQ6X+2I2G1hKClhKMgLPvwzyB6LRLAPBN94GVA3k88HW4WIoF5piWqpSJ/Tt2zduOkFRlMhrnnPOOXjj9dfx+eefo0uXLtA0DbquQ1EUMDOi5g8ADjughiMbBLM7oP+xHeTxHPvGIixEzZGBgsFowVw4DO2PPzkZzLFohm9PxSWRHY78AV6sVxm5QiFITZvCPWms6eADsozga28i9MVXYHY7WHJSeasiy9Dz8xH+9HOw1BRQcTEc/ftFcxrGjm/VCbm5uViwYEHcdIKZWMvIyMCY0aMxZNAgJKWmggDofj9kl6ucOwgAesEhg+SWa7PboB/Ig7Z9B5TzzzvcVRSEqCVWQdfBHA64x46E55GhYCkp0PcfQMlV11bpDrH0NFB+AVxTxkNq1DDqTlmfV1XBGqTB3rd3eYPx/Q/AJ58CDkf5aItBxtCyD6HvzwPLaGCI6Wv4j433Wt06QZIkDBgwAJMmTMDpLVpw96ioCMGZsyE1bsxdPiNvAsaAYBBUUgImy+WtgCyBfD5oP2/lhNAp4X2OuukySRJPet3RH0lPPcl34iNvm6DiEjgHPwz3+NHldsbDyKZa6qeCQePfUOU7oyQDuo7Qe8sApwP6rt2w//NaoEE6tGAIkixDkiSsWLECHTp0wLBhw3DgwAHuqlhE7snqBEVRItGjXr164dtvvsGiRYtweosWUDUVgdfehKdXH/hmz44WLloWvl7mAZWVVa4TCFA3bq4zS6fuukzGDZVbteQukM6TYZW1RDC3i5v/7TtARcU8+lOVP2wNuZrCuUpiMqjrNiC06ktITRrDOXEs7MMHgQGQHXZs3LgRWVlZWL58ebmwZ6zqjszxkKqqol27dsjJzsbN/fpxFwyA9r9vEJg1B+H/+wYsJRlSesPDQ8iMgUpKeaWwVMFC6Nxt0rb8ctTwsSBETUeTZBna73/Ac/cDgKaCpTaA7apu5Xdy44ZrW7dB37MPoY9XouzuAUh562VeJXs0aBoX5GavgykszUWj6wg89yLs1/WCc3o27O3aAkC16oSGDRti3NixGPzII3AmJUXzCXPm8XyCroNlNuCLvbS00o2Aiot5BXDFOi1DWGsVN5IE1hF1jxDmDVFVeIaNhl5YxGuMGjVEykvPVfon3glTEHhmEVijRlA3bgYVF4O53VVbCVNfOBygkhJo237lpNA0wKZE+hsoGIT93juhdO4ICUAoEMDCRYswM451RyaxFEXBgw8+iInjx6Np8+ZcJ5SUILToBQQWLQHlF/AFbLqBCqvSytKhQh5Rc7sArULBpE2BXlAA7Y8/efmKIEQtjTCFw6D9eXynVzV+o4JVVLuGwpH/M5fryG6QxU0KvvE2/LPnQtu9Byw9HbT/AJwD7gNzOkCqCt1hh71zRwDAimXLkD11KjZs2BBxZ2KZT7A29F933XWYmpODiy/hZeUa6VDfXQr/E/+G9stWsNRUsMyMo2sr09AVHDJKUlil+gt+P9QtP8elDVYQIpbRJputfNRHlvhXZBcz8gDWHe1INTlGa6q6bj18M3IR/uIrsORksNQU6Lt2w9a1Cxz33QU1HIZis0EG8NOGDcjOyYmLTqjY0H/BBRcgJycH119/Pb8UAOp33yOQOwfhL74CHE6whg2jtVdHN7cGIQqq3vmJACZBM4W1CLvWfmF98r6IoQ2cTuh/bkfp9beAvD6wU04BlZQCQd5H7Zg8DsxmgwIgLy8v0p8Qb53QuHFjjB8/Ho888gjsdjt0TYO2Zy9Cc59G4I23efLQHMBgEuFI/R9RyvFfyS8obzKs/SFGPkL9ZathPWVBiLoO8geMoQAKyO8HjAQc5eVB6XgpnOPHwNa9GyQA4VAICxYujGs+wSSW3W7Hww8/jAnjx6PJqafyx0MhyHY7fNNzEXj+Jd4H7nKVr8JVFMDv5wu43PCDSvnALYSZlCMCczoAMFAgwP/vcED/axf0/AJIpzRKaB0hyr+P5nYBsHXtApbs5h13NhvoUCFYkhvuWY8i6YP34DDIsGL5cnTs1Clu+QTT3dJ1HX379sV3a9Zi3rx5aHLqqbykwyBf5G8apEejYaa/D4DyDkI6vTnks1vxXEpVi9d4nA4VGgMRePZfatoU8tl/44RgDFAU6IcKof32+9HdTkGIBIbME2u2y/+OpAVPgYpLQD4fHPfdhaRPP4DrkQehOJ34af169O3bF3369sWGDRtiWndkJtbM3umLLroIK5Yvx9KlS3HhRe2hAdA9Hk6+ysLCFrePSksBXYdz8MNIW7kCSueORn5Bqsoc8fVdWFS+P/2URpDPaxdNSEoSEApC27wltq6qcJlqj1Uotyg0DY6bruclDA0bwtnzKgDAgb37kDv78WrRCaeddhomTpiIBwcMgM3p4PmErdvgn5gN5z13wn79PytvTjLJEAjC3v1KuKdM4IsZ4G7TUSJCFAgYZRvRwW1SWiqU886NWgIj8qZu3JLwwrp+E8LMJ5iLwiy4w+FTN3RVhf32/mAAwsEg1wnVkE9wOp14ZNAgjB83Do0aNQIAqIWFCD2zCIEXX4a+cxecD9xzNJYDoRBcI4dyMvj9fI7U0cLL4CN4qMxjyc7rYElJkNu15VE80xrY7dC2bovpsDVBiOqMPhkjKgHw+h1FBvl8ULp24VMwjHh6pD/BSLZVZz7hpptuQk5ODs4991xOhEAA2rIP4J81B9rvf4BlZIClpx91lrJJdvJ4I1n8o+7iZkCphLuJUUIAcLsh/60lWGoKz/HIEs9Y794Dff8BSM2aJmw+Qqp3RDCrOGUZ2m+/w/PIMISWf8DHYurEKz0tvQKmmN24cSPXCddfH3ed0KFDB3z80Ud49913ce6550INh/nk8/0H4Bk0AtruvWCNGkUbkI7d9BzHIjUsRFFxVDyb7zfJzWufTm0CChs6wiaDioqhbfstoXWEVK/IoCjc/dm7D96J2Sjpfh2Cr78F2GzQDxyAvXs32Lp0hhYOgxn9CXl5eRgxYgQ6dOiA5cuXQ5KkyC4e64b+5s2bY+GCBfh29Wpcfc010A3rpBjkAxFYSjIfc6OqcV10kXKsQqNsw0IklpLC3/uZLaJZfiYBahhqggtrpb6QgdlsoKIiBF54GYHFL0A/cIC7HCkpoPx82C6+CM4pE6CrKmSbrVr6E0yd4Ha7MWTIEIwZNQqZhk7QfH5IEuMFdRV7LKrFHTEshFm2wRAZ/cnSUvnncXYr4MOPowk6WYa6aXO5CJUgRG0LmwK8AO1gPkp69YG29VewBulgmZmgQ4cgNW8G14QxsN13FxSjwvWDDz5AVlZWXHRCxYb+/v37IzsrC23a8kpYDYD6/nIEnnoWKf9ZDHbG6TW62+r5RtkGjFIXJkFKT+cfb5vW3DIQ8b5yux3ar79HhkQnYoKuThOCSkp5Mi0tDeTx8PBh41NAhYVgSUlwDv4X7IMfgu200wAAGzdsQPbUqVi2bFnEIsSj7ggAOnfujGlTp6J7jx4RIujrfoT/8ScR/uRz7pYYor9GA3H5BdGom+F2mgk/udXfAFfUgjG7HfqevdB274F81pmCELXKRZJl2HtfjdCyFfzAElnhZjwQhP2f18ExahjsF5wHAMjbtw+5jz+OZ6shn9CiRQtMnjwZ999zD5hx5oW+ew+Cc59G8PW3QKEQWHrakUsqqgVGlrqgIFrLRQRmU3gAAoB0xumQMjJAJSVcnykKqLgY2tZfo4QQLlMNw5y0YbMhafZjcI0dgfCqrxB8fzlQUgLHyKGw9ezO644CASyIY3+CdfBXcnIyhg0bhlEjRqJBZgYnnMeL0Av/QWD+Yuj794Olp/Py81CoxssfmDF9RDfLNkz94rBHNISUmQmp2WlQ8/PBbLZICb26cTPs110tCFHroOuQGjWC49Z+sN/aDzoRZMOEf7B8ObKnTsX69evjrhPuuOMOZE2ZgrPNg0QAqEtXwP/EXGgbN/MRNpmZPHJUW46uNeuYiixlGzpPykUmi0gMcsuzoH6/LiqsFSVawpGAwrpuE0KSQLoOLRyG4nBAZgwb129A9rTq0Qldu3bF1KlT0a1bN4tOWA//rDkIf7aKV80eV39CDKFpR97BZdko2yjl0zZMQrjd0W5CxiCf05pXApsNVnYHtN//APkDPDycYFaiThMiMu/I4UBeXh5yc3Px7LPPxl0ntGzZElOmTME9d90FSFJUJ/z7Ga4TAgEjw0zVTwSdotPGraUXlVgIikzbkAAQSNfBkpOivdWMQW59drQL0ZzVtP8A9L928iiUIEQNmPYKtTMV56IuNPoT9u/fH1edkJqaipEjR2LEiBFITeV+tub1IvT8SwjMXwR9334e8jX7r63XUB0LR9O4QHY4EFq6HKHPvgBLSY6Wc1QSpSOf3/iZMaU8JZn/35hYLrc8k7tQlhJzKi2F+svWKCESKNKU2JlqozybiosBokjG18wmf/DBB+jUqROGDh2K/fv3x7Q/QTIOCTEz1vfccw/Wr1+P7OxspKamQlNVhD7+FGU9esM3KQdUVgbWMDNaPgJEx7ZYTzCKo2VgDdKg796DsjvuQ9m9D4IO5pcf41mREMUVyjZ0DZJBdDNxJzVrCqlRo+g1GMPXIi2lwkJUn1Wg4hIwhx3OIf+CnpYKhTEoNhs2btyI7OzsatEJ3bp1w9SpU9G1a1cAxoBgSYKsKPDkPgF142ZITRrzBWNt35RlnhdxuSA1bgw9Pz9+ItTw/QMLn0d47XfQd+7mQwbMwc8WzWV9D/qhQ7w0w+2OPo8RcjUXO3O7IZ3RHNrOXdzymed6W4cgJxApEtNChFVQYRFs3bsh6cP34Z48HkpSUrm6o2XLlsW17ujss8/Ga6++ii9WrULXrl2hmXVHhhUCwAcQuN3l646MM+2o4BCU889F6ruvw3HXbdFYfty2PhnB95byCd4NM8qLaqPrjXw+Xtlqrvd8S9kGi1qZqAtmuE2t/saHIBv5CuZwQPtzO9cfCTYEObEshLnQMtKRtGQBHPfdFcknLHzuuWrRCQ3S0zFq9GgMGzIEyaZOCAQggRm9xuV35nL5BEkClZRCanoq3NOy+AHvdhvCX6+Ov8tExLPfRLxk20IUhMKgA3lQLmoP+zU9I7VSekEBopOhuZvEjLKNyCIn4oQgy1HHNn52hPbnDigXni8sRNz4YPQnsIsvgssgwwfLl6NTly5x1wkA8MADD2D9+g2YNGkSklNToQEIffAxPNfdCDIORq8yoSZJIK8XjptvQNqXK+EceB/fUSsOVY6rjtDLnaENSQIdKgKcTrhzJiHtq5WwXdYpsvNTpGwjuqAls0/bjFgxBqXjpeUHPUeGIP+ScDoiYSyE6arYjHlHG9evR/a0adWiE3r06IGpU6eic+fO3CIAoJ9/gT93DkLLP+RRlqPVHTEGBEOw9+3Np4uHQrwwrrqTV6Z+KS0DGOC4/Ra4xo3ipdwmacwsdcEhww0yRDSTuIXQdf6Y3Qby+xH+5FOwSsS5unEzHHfcKkR17Dc2HYwx2Gw25OXlYVZuLubHKZ9gHRDcpk0bZGdno3///vx9AKDCQgSfWoDA8/8BlXl4GYPDfmy7IGP8cBEzD3Ckv4kHUWSZ94UXFUO5rCPcE8fC9o+ulpCsFJmcDgB64aHyc5Ykibtdxu8F/7sU/jnzoP38C/8cIk0U3G3Sft4afV1BiNjB4XBA13XMnz8/rjrBTKxlZmZizJgxGDJ4MNzGgGDSdYTfeJuPg/zjT1531CD9+OuOjnYutnHyEJV5YlvPJEmg4mJIzZrB/WgOnPfeZXTc6YfncgwyUmGxhbi8LENq1pRPLsx5FOH/fcNrmxo0KJ9XMYX1jh1cxGc0EISIlWUAgJ07d6Jz5874/vvvI7t4LOuOTAsjyzIGDhyIiRMnorkxIFgHoK35Dv7HHkf469Vgble03CKWdUdmpKe0FPAHYL+hTzSbHQsy+Hxw3HEb3DmTuMtmRokqjrA3R+D7jWkbihzpQWfJSfDlzID63Q8gny867dscLGB+HuYQ5PwCaL//AbnjpYIQsdINJiF27twZV51w9dVXY9q0abj00ksjOgG79yDwxL/5OEhV42PjNf3wcZAnbZ6M8yvyCyCfczbc40fzsTIVomsnBVWF8+47ovrFbj/ieQ5UVsatlHUiiaYh/PX/eD1TWlqUCEQ8J5ScFH2vkgwEAlC3/MJFtyBELDdPFvMJeKZOOO+885CTk4Mbb7wxYhEQCCC05EUEnlrAW03T0/nCUONTiUoePubFPWksnP96kC8snY7tAMjjsEBUWhbVL0cIz/LfLY1O27BYKX6Kqh4p96DiYrC0NDjuvgPhT1ZGB58ZQ5AT7XShhCAEGWUZsdQJp5xyCsaNG4dHBg2C09AokCSon3wK/8zZUNf/dHhZtqU0IVZ+PQDYulwG+419+Tltxm7Od9oYi1FZOvbxM4VFoEDw8IpV3TLj1u+HrfuVcOdMhnJeOxR3+I53KTodkUI/7Zet0HU94poKQtQCWHWCzWbDQw89hAnjx+O0pk3546oKSSd4h49E8NU3uFCsWJZt+Mjk9fLscywJ0ePKaKTHnA5Sc9uPEWEypm0kuaPawIhAUUEB5L+1hGvcKDhu7RchinzWmXxelMsVOfhS37OX10w1aZwQ+Yg6PYam4oDg3r17Y+3atXj66adxWtOm0IiXNMuKAoSCCK/6gpc3JyVFyy0kxoeYlZQARLBdcXnsE2m6Hh31oiggrw+BZxdD338g6sZULx/KT9swhbk/AKganMMGI+2LjzkZdOKaRJJ4KbiqGqUe/FxwbfsOqJu2RK9TWIiaI4J5kMiFF16IqVOnok+fPhGdQAfzIbldfPEbPjZLTuYm37xxjM9EhT8AW9fL4J6WBZbkRvHlPXhPQKzIAER6E4JvvQP/nKeg/bkd9j7X1ZyFyLeUbTAGBIKQW7VE8jNzobS/IGrRZDmSq5DbtI6SuqQUCIfhuKM/5Dat+RA2YSGqH9YCvFObNMG8efPw3dq16NOnDz+YXFUReu5FlPX8J98Fqzo9yJjzKjdvhuSFTyH1w/ehXNyeR14QIwthSYaFV32J0mtvgOfBIdB2/MVdthrpIzCz1JayDZmXndi7d+NkCIXKi3ND/MutWwE2O+jAQchnt0LKa/9ByouLgebNwBhDg4wMYSFqQic4HA7861//wvhx49C4SZOIVdD+bzV8jz0OdfW3YBkZVZdbWCo0U15eArltG+4KSDEstTCGLKsbN8H/xL8R+mglfzijAX+t6u6kK88HvlmYh6Qwxg2FGWGqmFw0vpeaNYPc7DQ4brsFzqGDAJeTt+/abFBVFc8991xkPCjVUmuR8ISoOCD4huuvR87UqTj//PM5QQBg1274Z81B8K3/AiAeOTpCY0zEb1cUPiXbKipPPmTG//H54Zs+E8GXX+P9x8YkC2hazfrazDptQ4K12pU1zCxX2nEYIdLTkLpyBaTGp0DTdcgAZJsNH374IbKysrB+/fpaTYaEJkRFnXDxxRdj2rRpuPbaayMWAYEAQotfQODpBdDzDvLMqsR408ux1NdYs7Cx2rFNQhQUIPjiy4DNxt9XrJN9JxP5Isu0DbOwT5IhmS5PVe/RZgM1PoW7T5KEjRs3IicnB0uXLo24s1ptmSpSlwhhzSc0bdoUEydOxIMDB0Kx2aAb+5m68jP4H5sNdf2G8sfQEjuhHTMeC4+lp/PkV21ZJGZSLuDnmWfFkpRT5CPWJJmlLzKAgwcPIjc3F/Pnz49LAaYgRCU6weVyYfDgwRg7ZgwaGgOCdQD02+/wzpyN0LIPAFmuuTEvxyqqa6H7QGUenj23Tvx2OqPNQZZNouJAh0WLFuGxxx6LSwGmIEQVOuHmm29GTk4O2rVrF9EJUlkZAs8sRGDhEr67NUjj5r42EqGii1Jb2ixNC1FSEp22YRQcMputXHNQ5CAZw/W06gQgtgWY1Xo7EuFNmgeJdOzYEStXrsQ777yDdu3a8UYdANp7y1DS/Tr4H32cD8tqkM6L8I71tJwa245kvhMf6STQav2gjX+KiiOJQsovgNziDCQ/Nx/SqaeCdB2q0Z8iyzI2bdqEG264Ab1798b69etjepCMsBCVWAYASE9Px6xZszBgwAAwxqAT8WjFps3wPDoLoZWfA3YHWCNLWbbED/GgklIwh51Xd9amG8QY9AN5sF93DVjDTARfeYMfUVWj79FIyhUXQy8sgtSoIVzDB8E1egRYWirXCZIMRZISWickrIWQjB7qdu3aYeDAgQARNFUF83jhz5qO0qv7IvTpKmNIsOVUHUUBgiFQfgEcN/wT7pzJhx0LVeObsarBNXYkUl7/D+S/tQRCwZqfhWo2vP21C8ol7ZG6/F24p2eD0lKhhcORqN4zzzyD9u3bY+7cuQiFQuXKYxIdCeEymaFVXdMgKwq03/+A/4m5XDSbdfkW94gKCiA1PgXJi+cj+YVFUC44L3r0U23QDADk5k3hnjSOP3aks6KrNXxnFBv2vArpX30G5eL2UINBSIjmEzp27IghQ4Zg3759MR3oIFym43SdZFmGbpkYEelRMG8GY3w6nqLA+a8H4Ro7kp8mSgTyemPbWxAjlynSqFNbSqONDUNucUYksaY4HNi0aROys7PL5RNi1aglCBEraFq0TJoxIByGrcMlcGdPgtKpA3+8ti24KqxF7fpYNT550KITnn32WQSDwTqjE+omISyLigIByM2bIXXFfzlJVJW7T1VloyOhTggYqCyfMHPmTOzbty/yeF0mQt0hBMCFtMsZ7WarKtQamQlbbPxePTmVuJIJ6dGPrvryCZIk1XrhLdWZGx5Wo+XUlVJf4R1v+flQzm2LlBcXQWp8SkI0rZycUDYmpBcVH3at1oPp45lPMGfsJkIUqt4c3E6HCsFcLrinZyPtsw9h79m9diftYqFPLNbQPXkclEsv4qFrY4ErioKDBw9i5MiR6NChA5YuXRrTAdGMMSiKEgnJtm3bFs5YNVYJl+kY3KYqHWSC47ZbkPRoDqQzTo+K8gSaKHfcH4fPByophuPO2+EeOxJyuza81ssIXauqGjlIJh46wVqA2bx5c0ybNg3du3dHq1atImSpjZnsOkEIxlUhP/KporsAQOl6GVK6d4sSwdg966xeIN7OmfLWq3DcfAN3j4JBKA4HIMtx1wlmJMrtdmPo0KEYPXo0MjMzsXPnzlrvNtWLqRus3GRquXyfQ110lYBI0k81OtbMfEJOTg7ef//9yC4ey8Fv1gLM/v37Izs7G23atIkQxPw9QYjqsBHmoX9HWihWIiTYyTZVXlMVc6I0VYVsnKgUz3xCxUatTp06Ydq0aejRo8dhwj0hPtI6oR0YjGlyR1jg5qAxWYa+bz+8E7Kg79lbS6pM6XhXIS/L9niAUAgsKTonyhSwsqJAJcL8+fMjdUfBYDCmdUfWgQ6nn346Fi9ejG+++QY9evTgpTYVTlQShKgNMA8JkWWQ3w//0wtQckUvBBY/X/NkMEdC2o7DUCuKcSRXAQ8fv/8mbFdczs/jJopEicy6o8GDB8e87sgaiXK73Rg3bhw2bNiAgQMHRh6XZTlhpvXVPZeJMZCuA6SX33Utx82Glq6Ab/ZcaJu2gCW5+aCBmrQIqsbPlQBABYXHXMZB+QWQzjgd7uGD+JFcigJV06AY5RbVqRNuueUW5OTkRHSCqqpQFCVh3KO6LapNDWHqBEUBZBnqDz/Cl/sEwqu+BOx23jMRCtVcJ53pujns0P74E/5ZcxD6aCVYaqplpmsVC1KS4Bo9DK5BD4NlZvCdWNOgyDIOHjyIWbNmYf78+TWiE2RZhqIk/nKqW1Emc0EpCvRdu+GbMw+hN98FhULRsxasJ4LWgIvEUlO56/bEvxF4/iVQUREnwxFXJF/cUosz4M6aCB2AHgpDtvN5R4vmz8djjz0W93zC6aefjsmTJ+OBBx6IWAoz+VZXUHeuRNPA0vgUi8D8xQgsWgL94MFo85ClTLzGyOB2I7TiQ/hnz0X4ux8gZWYYg8kqLN4qpnQTER/8ZbcDdt6fkJ2djR9//NGQF/HLJwwZMgRjx45FRkZGpKVXroNh67pT3CfJCLz8GgKLn4e2aTNYWlr5Ufa14T06HQi+8x4gy/wwd00rTwbzZNCiIrBklNMVpn+u2O3YvHkzsrKy4tKfUB90Qt0mhHkucnExvCPGAjYFrFGj2jl6hoiPgzTdO0tQALLMG5mCQdi6XAbXmBGQTmnE8wmKAkVSqlUndOzYEdOmTUPPnj3rnE6oN6KapaUcPnrGevZZbUDFgcoyP3qKioohn38uXMMGwXHLTXwws1GWXZ11R6effjomTZqEAQMG1FmdUH9EtaaXdz8APqPJ7Tr6LNdq/+SNfEJRERfLUybAcd/dYC5nxCowScJHH32ErKysatMJY8aMQaYRkq6rOqH+EMLqfpR5+PkE994J5cLz4R07mYvrmobZn3DoEFjDTLjGjITzkYGQGjaMDghWFGzevBnZ2dl1Kp+QCHOa6hYhFMU4mLwIyiUXwzV+NOy9uiP8zRpADQPMVXNWwmqxXE447r0LruGD+TFURpRMruZ8QnXqBE3TEiJzXTcIYdl1pVNPhXvyODgH3s/Pf9B1wO+PXbj1eAllNuqUlAAA7NddDdeoYVAuupBPHTTzCUTVlk9o3rw5Jk+eXC06Qdd1EFGEiGQMmROEiKd7VFIKKDKc993Nx880PY3/PJZTN8wMuN1+fET1+0FqGLZOHeAaNQy27vyARTUUgmK3Q7bb6qROqNir/dZbbyEnJwfhcLhWu0+JSwhFAUIhkNcH2+Vd4J40DkrnjqZ9jm0TkFkTJUnQ9+7l/z+GAcVUXAyp5ZlwTxoHR78bAcaghsJQ7DYodnudrDsyk3bmc69ZswZZWVn4/PPPhaiOG4igFxyC3KY1kkYNg+Ou2+NDBMtzks8P/7xnEFj0PJh5DvORLJemwTV+FGxXXA6WnMx3YgCK3VandYL53Dt37sSMGTPw/PPPR1wm02oIQsRBoLqGDYJ7/Ch+VpxZ1BcH089SUxH+ejW8E6bwStn0tGizkekLV3LeGmQZ9t7X8rqjcBiyrXrrjqpbJ5iv7/V68dRTT+GJJ55AYWFhhKCJMtMpoQjBzB7p88+FcsGj0R08HtMziAC7Hd4RYxH+6v9AqhqdLm5aB2acYR0MHta1Vq7uyFZ9OsHlcmHo0KE1qhO2bdtWjqDiwJTqENPxHBZg7v6hEJ8unpzE+7Ktvr0iA2EVVFgE+dKL+HnXBlEq1h1VVz6hX79+yMnJQdu2bWtUJyTqYSlAInfMVbQK8TieijGwlORos5HhrkGSQIVFgE2BO2si0j54DyyjAV8AhluSn5+PUaNG4dJLL8X7778fl3lHFQ+Sefvtt9G2bdtIeDNeOsF8/V27dmHgwIHo0qULPv/880iXXKIelpLYUSbrbh4n/RCJMJlWSZZBZWUAERz9boJr/CjIf2t52Lwj85y1uqoTfD4f5s2bl7A6oe4SwqIfQp98BuW8djwHYRW8MfmUlEgBntLpUrgnjIHtyit4HaFl3lF16gSzP0HoBOEylSMDFRXBO2w0yu68j58SZFqNmLllABUcAstogKQnZyHtk+WwXXkF1FAIDPz8hM2bN+PGG2/Eddddhx9//DGmc1EjZ2MYkzL69euHdevWYdasWcjMzIxokXjoBOsImbVr16Jnz5649dZbsW3btjp5WEpiWwhZRujjlfBNngrt19/BGp8CVlUW+Xhj32bdUUkJmNMJ5yMPwjVyKKTGp0T7mO125OfnR85Zi3c+oUOHDpg+fXq15xN27dqF6dOnH5ZPqIuHpSQeIQy9QF4vfNkzEHjxZcDh4IeyV+YmGRll5nIde/RKUUD+ABAIwNbzKrgnjoHS/kLoALRQCLLdDlVVsfjZZ/Hoo49Wi06YNGlSuREv1aUTnnrqKcyePbvO6YQ6QwjSdTBFgfb7nwgsWsIPZTdOD2I2JVqzZIZlbTa+m2755djIoGnQ8wugXHQh3GNGwH5jX/73pk6w24VOqONI2Ew1S0uzjJ5BJBwaqTOSZWh/7YR/xiwEl3/A8wTmzyqDqgFOJ9zZE+EaNggsKancXNT6kE9Yu3YtsrKy8Nlnn8WF7ImgOerGGXMAH9VCxEkRDsO/6Hn4//00KL+Al1tUHHNprYA1stKp778F6bRToRFxnWCz1RudMGPGDCxZsiTmOqEi2WvrGPzEjzKV96X4Eb2ZGQh/swYlvfrAN2EK4A/wWicrGcx8gs8fFdsEXrB32qn8PGbGoBLh2WefRfv30fHkk0/GdS5q8+bNsXDhQqxZswY9e/aM61zUyOxXQyfk5uaiffv2eO655yJkMF8/VteoaRratWuHuXPnwu12R4ghLES8wBjAGLxDRyH4/nJAVbm+qDh5wywZLy6G8vcuYCkpXKSDoKncdajuuqO6qBPMjUPTNDRo0ACjRo3CqFGjEAwGMW7cOOEyxT3yZHSkBd96ly9yl/PwyRtmR12TJnBPGAPnwPsAhyNadyRJ2Lx5M3JycvDee+8JnXCSOoExhgceeACTJ09GixYtAAB79+4V50NUp5VgaWncKmhU3j0yO+ruvYt31DVryhv6CZG6o+rUCdOmTUOvXr3qlE4wrxEArrzySkyfPh2XXXYZACAUCsFmsyXEKJs6NoZGK+8e+f0gnw+2y/8O18SxsF3W6fB8wuLF9SqfEM9rbN26NbKzs3HbbbdFCGleY6KcEVH3xtAYg8mooADSWWchaXS0o87sYzbzCdnZ2Vi3bl2d1glTp07F1q1b46oT0tPTMXr0aAwfPhxJSUkgoogVshJUEKJa42V8QDAVl4AlJcE1fAhcIwaDZWQc1p9QUzrBJEJd1gnmNbIEPe448QlhnYsaCsN+TU+4Jo6Fcl47aADPJxg6YVZuLp6pQZ0QD6tQW3RCPK9REOKY370MBEOgoiLI550L97hRsPftbcw7MnQCUbXXHQ0YMCDyeH3SCQInZt4ZAKxevTqFiPK+/fZbAqBLkkTgRRiRL1mWCQB17tyZiIi0cJiIiMI/baJDTVpQQVpjKjyrDflmzyXd6+U/C4XIxIcffkiXXHJJ5PkURSHG2GGvcyJfkiSR+Z5dLheNHTuWCgoKIq+tqirFA7qul3vuN998k9q0aXPYZxaLL1mWI59Xeno6zZgxgzweD78Xmkaaph3TezZ/76+//iKHw0EADrsPiqIQAOrXr1+YiMjj8Qww1osiCHE0QvzwIxUkN6KyhwaTun0HX4CWm7Np0ya68cYbK72xJ/vFGCu36G6++WbasmVLtRAhbFw/EdGaNWuoR48ecSO79Rrvv/9+2rFjxwlfoyBEvAhh3Ah1+w4KfbaKP8bvEBERHTx4kEaNGkVOp/OwXTwWRDBvGgDq0KEDffLJJ5GbHg6HSdf1uJDBugB37txJAwcOjFyXLMtxu8Yrr7ySvvnmm5O+RkGIOBHCejN0IlJNixEO0/z586lp06Zxcx3M75s1a0YLFiyILFJVVY/ZdTiRhWQ+t9frpdzcXMrIyIj7NbZu3Zpef/31coQ8mWsUhIgjISq6DtWlE5xOJ40ZM6ZGdMJbb71VIzpB1/WYkF0QIg6E0HWdQhbBvHnz5hrTCVZCxlsn9OzZMyF0giBENRKiY8eOkQ9X6ITaqROOxfXbvn27IEQsCHH55ZcTEdEzzzwjdEIMdcJrr70WM51wJKtnWva8vDyy2+2CECdKCPNDa9GiBXXq1Kla8gm1RSdYd/FE0AlHs3qbNm2ia6+9liRJqvTeCUIcAyGOdGPrik5Yu3ZtndAJVVm94uJimjBhQsTFreraBCGOgxCMsTqnE3bt2kUPPvhgtemE1atXx/0aK5L99ddfp5YtWx6T+ycIcQIWoi7phMzMzLjrhLPPPrtadEJFsq9fv56uvvrq47J6ghDVSIjK8gn5+flCJ8SY7IWFhTR69OiIcD4eq2eSpn///vWaEAdWr15NjDHdZrPFnAj1VSds37692sn+8ssvU4sWLU7Y6pnh2GuvvTZMRJrH47m/XhFi7dq1qUR08Mcff1QBPlE+ln609evSSy+ljz/+WOiEOFzjDz/8QN27dz9hslutd2pqqr5kyRI/EZHf7x9UbwhhfCVpmraHiGjVqlVap06dtFjtoIwxYoxRq1at6OWXX47EwY+nZPlkXAefz1cndYKmaRGS5efn0/DhwyOkPF6yVyT0rbfeqv7111/mS/1CRBcZ60RCXYeFFOcQUaSKbMmSJWqLFi20k11EZqy7Q4cO9NNPP8V116xMJ7Rt27badEJZWVncdULFa3zhhReoefPmJ0x26+9fcMEF2ieffGK+8bJAIJBFRG6rN1HvUFZWdhURfWOYSpo0aVI4OTlZr0wHHM8OZH5/9913059//hlTv7omdcJ9991XLTqh4nOvWbOGunXrdsJkt7pHDRo00GfPnh35AEOh0DuBQOBsy6Yp1TsiEJFERGYTLvP7/fcR0XYioj///JNuv/121bqrHK//bc2KpqWl0bRp02Kyo9YXnWA+d15eHg0ePLjcNR4P2Stuanfeeae6e/fuSBLb6/X+07ImlHprGSwfgmx+CEVFRel+v386EZUREX355Zd6ly5d1JPZeY/mcx/roqoPOqGie7Ro0SI67bTT6ESttfX3L774Yu3zzz8333iJz+ebuGPHDqdlDUgQKE8M8/uSkpJWoVDoVfPGvPjii+qZZ555wvqi4m571VVX0bfffntMu23FRfL2229Xm06YPn16teiEimHo1atXU9euXU/KPTKvIzMzU587d67VPXrD7/e3rOy+C1QuuCOhNr/ffwUR/R8RUSAQoClTpoRTUlJOWF9Y/XHGGA0YMIB27txZqTtUn3SCuRns27ePHn744ch1nax7dO+996r79+83X2qDx+O5RrhHJ68v4PF47iGiP4iIduzYQXfeeedJ6Qvrjc7IyKDc3Fzy+XwR18hKhF27dtFDDz1U53SC1fLpuk7z58+nxo0bn7B7VKFGTPvyyy9Nc1YYCATGEJFduEcx1BcFBQWpfr8/h4hKiIi+/vprvWvXrielL6w3sW3btvTOO+9EFozX66VZs2bVOZ1Q0T366quv6LLLLjth98i6uTRq1Eh/+umnre7RK0VFRWcK9yiO+qK4uLhlKBR6yVI2oLZs2TJm+uK6666jBQsW0DnnnFPndILV9dq9ezcNGDDghMvrK1qRAQMGqAcPHjSffl1ZWVkP4R5Vo74oLS29XNO0r4ydiKZOnRpOS0s7KX1R0RWKZQ9GTeoEq3ukqirNmzePGjVqdMLl9dYNonPnztr//vc/068r8Hq9I9atW2cT7lEN6Qufz3cnEf1u+vv33HPPSesLRVHqjE6wukerVq2iDh06xCTL3KRJE33BggVW9+jFwsLC04V7VAv0RX5+fkogEJhCRMVG2FC/4oorTkpfxFontGrVil599dVq0wkVBxfcc889MXGPGGP08MMPhw8dOhQJwPn9/m5W90iszlqiL/x+/5nhcPgF80699tpraqtWrU66PupkdEJaWlq16gRN0yJkCIVCNGfOnMjgghOZUmK1bl27dtXWrFljmrM8r9c75O2335YrblACtU9fdNE0bZW5U86YMSOcnp5+UvVRiaATrO7RypUr6aKLLoqJe9S0aVN98eLFqsXNW+z1epsK9yjB9EVZWdntRLSNiGjPnj10//33q9akU7w69bp161ZtOqEi0bZv30533HHHCbtHVlLLskxDhgwJFxcXm0//jc/nu1y4R4lJDAYA+/fvTwoEAhOJqNCo2tSvvPLKmOoL0+qcf/759NJLL1WbTrC6R4FAgGbNmkXp6ekn5B5VFP/dunVTv//+e5PF+71e77/Mz1S4R3VAX/h8vjNCodBzxGcl0xtvvKG2bt1aO9lcgxm2bNiwIa1ZsyayWIPBYLW5Rx9++CFdcMEFMXGPmjdvrr/44oumydGDweCzHo+nicU1Fe5RXdIXJSUlnTVN+8xcWDNnzgxnZGToJyO8TQuTlJREI0aMiOsQA+vz/f7779S/f/+TauE0r9dms9GIESPCpvgnoq99Pt9lwj2qP/mL/ka7Iu3bt48GDhwYNl2Mk50Z26xZM1q4cGHEXYqF61Sx/HzGjBmUmpoaE/eoe/fu6vr1682X2uPxeAZWFt4WqLvEkABg7969bp/PN56ICoiIvvvuO+revfsJ64uKC61jx460cuXKkxLXFd2jZcuW0bnnnhsT96hFixb6K6+8YpocNRgMPrV///5TLJZVZJnrqb5oHgqFFpFxKNHbb7+ttWnT5oT1RcXQbv/+/Wnr1q3H7UZZf2/btm100003xcQ9cjgcNGbMmLClwveLkpKSjiKMKkhRUV901DQtMtvy8ccfD2dmZp6wvrC6MklJSTRx4kQqLCystPGoKvfI4/FQTk4OJSUlxcQ9uvrqq9VNmzZFktgej+c+4R4JVEaMyK7o9XpvJqItREQHDhyghx56KGyS4UT0RQU3hZ5//vlKQ7MV3aP//ve/5apuT8Y9atmypfbGG2+YDAwHg8EnS0pKMiu6kQICleqLXbt2uXw+3xgiyiciWrduHfXq1Stm+qJLly70xRdfVNqjsGXLFurbt29MBoA5nU59woQJYTMMrGnap8XFxZcI90jghPRFQUFBs2Aw+CwRqcaurbVr105DDHx58CkU9NtvvxERUWlpKU2ePJlcLldMBoD17t1b/fnnn02e7fD5fHcK90ggJvrC6/VeoqrqR+bqmjNnTrhRo0YnpS9MIiUnJ9OgQYNO6nDFCh142rvvvqtGc4TBx4uLixsI90gg5vqitLT0RiLaZI50fOSRR8KKouix0Bc4wdoj8zXdbrc+ZcqUsCnWNU37yOPxXCjcI4G46ovffvvN4fP5RhJRHhHRhg0b6Nprr1VxEv0Gx9uUVNE96tu3r/rrr7+aBuwPn893q+W9ixZOgfjri/z8/NOCweDTRBQiIlq6dKl23nnnxWxw87FYlTZt2mjLli0z3SO/3+9/rKCgIFW4RwI1pi88Hs9FmqatMLfnJ598Um3cuPFJ1UcdzT1KTk7Wp02bFjYz35qmLS8rKztPuEcCtUZfeL3evkT0ExFRQUEBDRkyJGyz2U5YX1TlHt10002qZYDztrKysn7CPRKolfpiy5Yt9kAgMIyIDhARbdy4kXr37n3C+sJqXc4991xtxYoVZpWg1+/3T8vLy0sW7pFArdcXHo+nSTAY/DcRBYmIli9frl144YXHrC+sFiUtLU2fOXNm2JLdfq+0tLStcI8EEk5fFBUVXaiq6jJzMc+bN09t0qRJlfriaKfreL3e64V7JJDw+sLj8fQmovVEREVFRTR8+PCw3W4vpy+OcrrOlL1797qFeyRQZ/TFunXrbF6vdwgR7SMi2rx5M/Xp00e1WohjOF1HuEcCdUtflJWVneL3+58kogAR0UcffaS1b99e69+/v7pnzx5xuo5A/dQXZWVl56uq+l6FdoiSQCAwQZyuI1Cf9cU1RPSjqqrvFhcXi9N1BIS+qPC4cI8EhL4Q0SMBAYsbJT4FAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBgePB/wNxoYbNHRyAfgAAAABJRU5ErkJggg==" alt="SOGIPA" style="height:64px; vertical-align:middle; margin-right:10px;">SOGIPA</div>
+    <div class="sub">Painel do Diretor</div>
+  </div>
+  <div class="nav" id="navList">
+    <div class="nav-item active" data-page="visaogeral"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" style="vertical-align:-3px;"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span> Visão Geral</div>
+    <div class="nav-item" data-page="fluxocaixa"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" style="vertical-align:-3px;"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span> Fluxo de Caixa</div>
+    <div class="nav-item" data-page="pagamentos"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" style="vertical-align:-3px;"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></span> Pagamentos</div>
+    <div class="nav-item" data-page="negociacao"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" style="vertical-align:-3px;"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span> Negociação</div>
+    <div class="nav-item" data-page="reingresso"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" style="vertical-align:-3px;"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></span> Reingresso</div>
+    <div class="nav-item" data-page="vendas"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" style="vertical-align:-3px;"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v30"/></svg></span> Vendas</div>
+    <div class="nav-item" data-page="retencao"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" style="vertical-align:-3px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span> Retenção</div>
+  </div>
+  <div class="sidebar-foot">
+    Diretoria Executiva SOGIPA
+  </div>
+</div>
+
+<!-- ═══════════ MAIN ═══════════ -->
+<div class="main">
+  <div class="topbar">
+    <div>
+      <div class="topbar-title" style="display:flex; align-items:center; gap:10px;"><img src="data:image/png;base64,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" alt="SOGIPA" style="height:56px;">DASHBOARD — DIRETORIA EXECUTIVA SOGIPA</div>
+      <div class="topbar-sub" id="pageSub">Indicadores Estratégicos</div>
+    </div>
+    <div class="topbar-right">
+      <div class="topbar-date">
+        <div id="dataAtual">quinta-feira, 2 de julho de 2026</div>
+        <div class="periodo-range" id="periodoRangeBig">21/06 → 27/06/2026</div>
+        <div class="periodo-count" id="periodoCountSmall"></div>
+      </div>
+      <div class="status-pill atualizado pulsando" id="statusPill"><span class="blink"></span> DADOS ATUALIZADOS</div>
+    </div>
+  </div>
+
+  <div class="filterbar">
+    <span class="filterbar-label">SEMANA</span>
+    <div class="filter-field" style="min-width:280px;">
+      <label>Selecionar</label>
+      <select id="filtroSemana" onchange="aplicarFiltro()"></select>
+    </div>
+    <button class="btn-apply" onclick="aplicarFiltro()">APLICAR</button>
+  </div>
+
+  <div class="content">
+    <div style="margin-bottom:22px;">
+      <div style="font-size:24px; font-weight:800;" id="pageBreadcrumbTitle">Visão Geral</div>
+      <div style="font-size:13.5px; color:var(--muted); margin-top:3px;" id="pageBreadcrumbSub">Gestão integrada · Junho/2026</div>
+    </div>
+
+    <!-- ══════════════════ VISÃO GERAL ══════════════════ -->
+    <div class="page-section active" id="page-visaogeral">
+
+      <div class="alert-box red">
+        <span>🚨</span>
+        <div><b>PONTO DE ATENÇÃO:</b> do saldo em banco de R$ 2,04 milhões (30/jun), apenas <b>R$ 195,8 mil (9,6%)</b> é caixa operacional livre — o resto é fundo de obras. A projeção indica caixa livre <b>negativo em 06/jul</b>. Detalhes na aba <b>Fluxo de Caixa</b>.</div>
+      </div>
+
+      <div class="section-title">Fluxo Caixa - SOGIPA<div class="line"></div></div>
+      <div class="kpi-row-icons">
+        <div class="kpi-icon-card">
+          <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(0,229,160,.15); color:var(--green); font-weight:800; font-size:20px;">R$</div><div class="label">Caixa Livre</div></div>
+          <div class="kpi-icon-info"><div class="value">R$ 195,8 mil</div><div class="delta muted">9,6% do saldo total</div></div>
+        </div>
+        <div class="kpi-icon-card">
+          <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(232,25,44,.15); color:var(--red);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" style="vertical-align:-3px;"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div><div class="label">Resultado Oper.</div></div>
+          <div class="kpi-icon-info"><div class="value" style="color:var(--red)">-R$ 110,5 mil</div><div class="delta muted">receita − despesa</div></div>
+        </div>
+        <div class="kpi-icon-card">
+          <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(168,85,247,.15); color:var(--purple);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" style="vertical-align:-3px;"><path d="M4 18v-2a8 8 0 0 1 16 0v2"/><path d="M2 18h20"/><line x1="12" y1="6" x2="12" y2="9"/></svg></div><div class="label">Fundo Obras</div></div>
+          <div class="kpi-icon-info"><div class="value">R$ 1,85 milhões</div><div class="delta muted">restrito p/ obras</div></div>
+        </div>
+        <div class="kpi-icon-card">
+          <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(0,229,160,.15); color:var(--green);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" style="vertical-align:-3px;"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div><div class="label">Recuperado (Neg.)</div></div>
+          <div class="kpi-icon-info"><div class="value">R$ 514,3 mil</div><div class="delta" style="color:var(--green)">▲ mar-mai/26</div></div>
+        </div>
+        <div class="kpi-icon-card">
+          <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(242,183,5,.18); color:var(--gold);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" style="vertical-align:-3px;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div class="label">Associados (mov.)</div></div>
+          <div class="kpi-icon-info"><div class="value">48</div><div class="delta muted">26 reingr. + 22 vendas</div></div>
+        </div>
+      </div>
+
+      <div class="section-title">Fluxo de Caixa &amp; Composição<div class="line"></div></div>
+      <div class="grid-3">
+        <div class="card">
+          <div class="card-label">Composição do Saldo em Banco</div>
+          <div id="vgDonutSaldo" class="donut-wrap"></div>
+        </div>
+        <div class="card">
+          <div class="card-label">Pagamentos — Distribuição por Faixa de Valor</div>
+          <div id="vgDonutPagamentos" class="donut-wrap"></div>
+        </div>
+        <div class="card">
+          <div class="card-label">Receita × Despesa (R$ mil)</div>
+          <div id="vgBarDespesas"></div>
+        </div>
+      </div>
+
+      <div class="section-title">Negociação / Vendas / Reingresso &amp; Retenção<div class="line"></div></div>
+      <div class="grid-3">
+        <div class="card">
+          <div class="card-label">Negociações — Valor Recuperado</div>
+          <div id="vgChartNegociacoes" class="scrollx"></div>
+          <div id="vgLegendaNeg" style="margin-top:12px; border-top:1px solid var(--border); padding-top:12px;"></div>
+          <div id="vgSerieDetalhe" style="margin-top:8px;"></div>
+        </div>
+        <div class="card">
+          <div class="card-label">Distribuição — Vendas (Associações Novas)</div>
+          <div id="vgDistribuicaoVendas" class="donut-wrap"></div>
+        </div>
+        <div class="card">
+          <div class="card-label">Retenção — Desligamentos por Categoria</div>
+          <div id="vgRetencaoDonut" class="donut-wrap"></div>
+          <div class="mini-stat-row">
+            <div class="mini-stat"><div class="mini-stat-label">Fechamento</div><div class="mini-stat-value">56</div></div>
+            <div class="mini-stat"><div class="mini-stat-label">Desligados</div><div class="mini-stat-value" style="color:var(--red);">19</div></div>
+            <div class="mini-stat"><div class="mini-stat-label">Retidos</div><div class="mini-stat-value" style="color:var(--green);">6</div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ══════════════════ FLUXO DE CAIXA ══════════════════ -->
+    <div class="page-section" id="page-fluxocaixa">
+
+      <div class="alert-box">
+        <span>🕒</span>
+        <div><b>Fechamento em andamento:</b> o financeiro ainda está finalizando a apuração do período. As informações aqui são até <b>30/06/2026</b> e podem sofrer pequenos ajustes quando o fechamento for concluído.</div>
+      </div>
+
+      <div class="alert-box red">
+        <span>🚨</span>
+        <div><b>PONTO DE ATENÇÃO:</b> do saldo em banco de R$ 2,04 milhões reportado em 30/jun, apenas <b>R$ 195,8 mil (9,6%)</b> é caixa operacional livre. Os outros <b>R$ 1,85 milhões (90,4%)</b> pertencem ao fundo Índices Construtivos — e a projeção indica esse caixa livre <b>negativo em 06/jul</b>, exigindo acionamento de linha de crédito garantida.</div>
+      </div>
+
+      <div class="section-title" style="margin-top:26px;">Clique em um card para explorar<div class="line"></div></div>
+      <div class="kpi-grid">
+        <div class="card kpi-card" id="kpi-operacional" onclick="selectView('operacional')" style="--accent:#3d7bff;">
+          <div class="card-label">① Caixa Operacional Livre (30/jun)</div>
+          <div class="card-value">R$ 195,8 mil</div>
+          <div class="card-meta">Único valor de fato disponível para o dia a dia</div>
+        </div>
+        <div class="card kpi-card" id="kpi-investimento" onclick="selectView('investimento')" style="--accent:#a855f7;">
+          <div class="card-label">② Fundo Índices Construtivos (30/jun)</div>
+          <div class="card-value" style="color:var(--purple)">R$ 1,85 milhões</div>
+          <div class="card-meta">Restrito — obras (Caldeira, Quadras, Telhado...)</div>
+        </div>
+        <div class="card kpi-card" id="kpi-financiamento" onclick="selectView('financiamento')" style="--accent:#06b6d4;">
+          <div class="card-label">③ Limite de Crédito Garantido</div>
+          <div class="card-value" style="color:var(--cyan)">R$ 6,40 milhões</div>
+          <div class="card-meta">Banrisul + Itaú — capacidade de socorro</div>
+        </div>
+        <div class="card kpi-card" id="kpi-resultado" onclick="selectView('resultado')" style="--accent:#e8192c;">
+          <div class="card-label">Resultado Operacional (Jun)</div>
+          <div class="card-value" style="color:var(--red)">-R$ 110,5 mil</div>
+          <div class="card-meta">Receita R$ 3,24 milhões − Despesa R$ 3,35 milhões</div>
+        </div>
+      </div>
+
+      <div class="card full" style="margin-top:16px;">
+        <div class="card-label">Composição do Saldo em Banco — 30/jun/2026</div>
+        <div style="display:flex; height:34px; border-radius:8px; overflow:hidden; border:1px solid var(--border); margin:10px 0 8px;">
+          <div style="width:9.6%; background:var(--blue); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700;">9,6%</div>
+          <div style="width:90.4%; background:var(--purple); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700;">90,4%</div>
+        </div>
+        <div class="legend-row"><span class="dot" style="background:var(--blue)"></span> Caixa Operacional Livre — R$ 195,8 mil</div>
+        <div class="legend-row"><span class="dot" style="background:var(--purple)"></span> Fundo Índices Construtivos (restrito a obras) — R$ 1,85 milhões</div>
+      </div>
+
+      <div class="stage" id="stage">
+        <div class="stage-head">
+          <div class="stage-title"><span id="stageIcon">💧</span> <span id="stageTitle">Caixa Operacional Livre</span></div>
+          <div class="stage-badge" id="stageBadge">BLOCO 1 · OPERACIONAL</div>
+        </div>
+        <div class="stage-desc" id="stageDesc"></div>
+        <div id="stageChart" class="scrollx"></div>
+        <div id="stageAlerts"></div>
+      </div>
+
+      <div class="section-title">Detalhamento · Receitas &amp; Despesas Operacionais (R$ mil)<div class="line"></div></div>
+      <div class="grid-2">
+        <div class="card"><div class="card-label">Despesas — Previsto vs Tendência vs Realizado</div><div id="despesasCats"></div></div>
+        <div class="card"><div class="card-label">Receitas — Previsto vs Tendência vs Realizado</div><div id="receitasCats"></div></div>
+      </div>
+
+      <div class="section-title">Detalhamento de Compromissos - SOGIPA<div class="line"></div></div>
+      <div class="card full">
+        <div class="card-label">Compromissos futuros — Conta Índices Construtivos</div>
+        <div class="scrollx"><table>
+          <thead><tr><th>Data</th><th>Fornecedor</th><th>Projeto</th><th class="num">Valor</th></tr></thead>
+          <tbody id="tabelaObras"></tbody>
+          <tfoot><tr class="total-highlight"><td colspan="3">TOTAL</td><td class="num">R$ 630.066,00</td></tr></tfoot>
+        </table></div>
+      </div>
+
+      <div class="section-title">Detalhamento · Linhas de Crédito Garantidas<div class="line"></div></div>
+      <div class="card full">
+        <table>
+          <thead><tr><th>Linha</th><th>Custo</th><th class="num">Limite</th><th class="num">Utilizado (jun)</th></tr></thead>
+          <tbody>
+            <tr><td>Conta Garantida Banrisul</td><td class="muted">0,39% + CDI a.m.</td><td class="num">—</td><td class="num" style="color:var(--green)">R$ 0,00</td></tr>
+            <tr><td>Conta Garantida Itaú</td><td class="muted">1,50% a.m.</td><td class="num">—</td><td class="num" style="color:var(--green)">R$ 0,00</td></tr>
+            <tr><td style="font-weight:700;">Total combinado</td><td></td><td class="num" style="font-weight:700;">R$ 6.400.000</td><td class="num" style="font-weight:700; color:var(--green)">R$ 0,00</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══════════════════ PAGAMENTOS ══════════════════ -->
+    <div class="page-section" id="page-pagamentos">
+      <div class="section-title">Pagamentos <span class="tag" id="pagPeriodoTag" style="background:rgba(136,136,170,.15); color:var(--muted);">28/06 a 05/07/2026</span><div class="line"></div></div>
+
+      <div class="kpi-row-icons" style="grid-template-columns:repeat(4,1fr);">
+        <div class="kpi-icon-card">
+          <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(61,123,255,.15); color:var(--blue);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div><div class="label">Total de Pagamentos</div></div>
+          <div class="kpi-icon-info"><div class="value" id="pagKpiTotalQtd">153</div><div class="delta muted">lançamentos no período</div></div>
+        </div>
+        <div class="kpi-icon-card">
+          <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(0,229,160,.15); color:var(--green);">R$</div><div class="label">Valor Total Pago</div></div>
+          <div class="kpi-icon-info"><div class="value" id="pagKpiTotalValor">R$ 687.723</div><div class="delta muted" id="pagKpiValorPeriodo">28/06 a 05/07/2026</div></div>
+        </div>
+        <div class="kpi-icon-card">
+          <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(232,25,44,.15); color:var(--red);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></div><div class="label">Pagamentos Acima de R$ 5 mil</div></div>
+          <div class="kpi-icon-info"><div class="value" style="color:var(--red)" id="pagKpiMaiorQtd">25</div><div class="delta muted" id="pagKpiMaiorPct">76,4% do valor total</div></div>
+        </div>
+        <div class="kpi-icon-card">
+          <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(255,211,42,.15); color:var(--yellow);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg></div><div class="label">Pagamentos Até R$ 5 mil</div></div>
+          <div class="kpi-icon-info"><div class="value" style="color:var(--yellow)" id="pagKpiMenorQtd">128</div><div class="delta muted" id="pagKpiMenorPct">23,6% do valor total</div></div>
+        </div>
+      </div>
+      <div class="card-meta" style="margin-top:-14px; margin-bottom:24px;">💡 Use o filtro de período no topo da página para ver qualquer um dos cortes já recebidos da controladoria.</div>
+
+      <div class="grid-2 reverse">
+        <div class="card">
+          <div class="card-label">Distribuição por Faixa de Valor</div>
+          <div id="pagDonutFaixa" class="donut-wrap"></div>
+        </div>
+        <div class="card">
+          <div class="card-label">Pagamentos por Semana - Dados Controladoria</div>
+          <div id="pagChartSemanal" class="scrollx"></div>
+        </div>
+      </div>
+
+      <div class="section-title">Fornecedores Recorrentes<div class="line"></div></div>
+      <div class="alert-box">
+        <span>🔁</span>
+        <div id="pagInsightFornecedores">Carregando...</div>
+      </div>
+      <div class="card full">
+        <div class="card-label">Top 15 Fornecedores por Valor Pago no Período</div>
+        <div id="tabelaFornecedores" class="scrollx"></div>
+      </div>
+
+      <div class="section-title">Pagamentos por Banco / Conta<div class="line"></div></div>
+      <div class="card full">
+        <div class="card-label">Quantidade e Valor por Banco / Conta Utilizada no Período</div>
+        <div id="tabelaBancos" class="scrollx"></div>
+      </div>
+    </div>
+
+    <!-- ══════════════════ NEGOCIAÇÃO ══════════════════ -->
+    <div class="page-section" id="page-negociacao">
+      <div class="section-title">Cobrança — Inadimplência e Recuperação de Valores<div class="line"></div></div>
+
+      <div class="alert-box red">
+        <span>🚨</span>
+        <div><b>A inadimplência é o problema de fundo:</b> ela subiu de 12,5% (mar/26) para 16,4% (mai/26) — 3,1 p.p. acima da meta de 13,3%. Diante disso, a equipe de cobrança intensificou a negociação para recuperar o que der: os números abaixo são o resultado desse esforço, não uma métrica isolada de sucesso.</div>
+      </div>
+
+      <div class="grid-3">
+        <div class="card"><div class="card-label">🔴 Inadimplência Atual (mai/26)</div><div class="card-value" style="color:var(--red)">16,4%</div><div class="card-meta">meta: 13,3% · gap de +3,1 p.p.</div></div>
+        <div class="card"><div class="card-label">💵 Recuperado no Período</div><div class="card-value" style="color:var(--green)">R$ 514.293</div><div class="card-meta">via 884 contatos, mar-mai/26</div></div>
+        <div class="card"><div class="card-label">📞 Contatos Enviados</div><div class="card-value">884</div><div class="card-meta">volume de ações de cobrança</div></div>
+      </div>
+
+      <div class="card full">
+        <div class="card-label">Negociações × Inadimplência — Real × Meta (%) · Valor Recuperado × Contatos</div>
+        <div class="card-meta" style="margin-bottom:10px;">Fonte: Painel Institucional (inadimplência) + Cobrança (negociações). Clique em um item da legenda para destacar a linha/barra correspondente. Ainda não temos o saldo absoluto em R$ da dívida em atraso — só a taxa percentual. Se você tiver esse valor, me manda que eu incluo aqui também.</div>
+        <div id="negChartFull" class="scrollx"></div>
+        <div id="negLegendaNeg" style="margin-top:16px; border-top:1px solid var(--border); padding-top:16px;"></div>
+        <div id="negSerieDetalhe" style="margin-top:10px;"></div>
+        <div class="alert-box">
+          <span>📊</span>
+          <div><b>Estamos atuando nas negociações.</b> No período, R$ 514,3 mil foram recuperados via 884 contatos — passando de R$ 57,2 mil (mar) para R$ 324,8 mil (mai), à medida que o volume de negociações também cresceu. Ainda assim, isso é parte de uma inadimplência maior que segue crescendo: a recuperação está aumentando, mas não na mesma velocidade em que novas dívidas surgem.</div>
+        </div>
+      </div>
+      <div class="card full">
+        <div class="card-label">Detalhamento por Competência</div>
+        <div id="tabelaLegendaNeg" class="scrollx"></div>
+      </div>
+    </div>
+
+    <!-- ══════════════════ REINGRESSO ══════════════════ -->
+    <div class="page-section" id="page-reingresso">
+      <div class="section-title">Reingresso de Associados <span class="tag" style="background:rgba(136,136,170,.15); color:var(--muted);">01 a 26/jun/2026</span><div class="line"></div></div>
+      <div class="grid-3">
+        <div class="card"><div class="card-label">↩️ Total de Reingressos</div><div class="card-value" style="color:var(--green)">26</div><div class="card-meta">no período</div></div>
+        <div class="card"><div class="card-label">💰 Valor Arrecadado</div><div class="card-value">R$ 14.307,35</div><div class="card-meta">total do período</div></div>
+        <div class="card"><div class="card-label">🎯 Ticket Médio</div><div class="card-value">R$ 550,28</div><div class="card-meta">por reingresso</div></div>
+      </div>
+      <div class="grid-2 reverse">
+        <div class="card">
+          <div class="card-label">Por Campanha</div>
+          <div id="reingressoChart"></div>
+        </div>
+        <div class="card">
+          <div class="card-label">Distribuição</div>
+          <div id="reingressoDonut" class="donut-wrap"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════ VENDAS ══════════════════ -->
+    <div class="page-section" id="page-vendas">
+      <div class="section-title">Vendas — Associações Novas <span class="tag" style="background:rgba(136,136,170,.15); color:var(--muted);">01 a 26/jun/2026</span><div class="line"></div></div>
+      <div class="grid-3">
+        <div class="card"><div class="card-label">➕ Associações Novas</div><div class="card-value" style="color:var(--blue)">22</div><div class="card-meta">no período</div></div>
+        <div class="card"><div class="card-label">💰 Valor Arrecadado</div><div class="card-value">R$ 16.896,00</div><div class="card-meta">total do período</div></div>
+        <div class="card"><div class="card-label">🎯 Ticket Médio</div><div class="card-value">R$ 768,00</div><div class="card-meta">por associação nova</div></div>
+      </div>
+      <div class="grid-2 reverse">
+        <div class="card">
+          <div class="card-label">Por Campanha</div>
+          <div id="vendasChart"></div>
+        </div>
+        <div class="card">
+          <div class="card-label">Distribuição</div>
+          <div id="vendasDonut" class="donut-wrap"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════ RETENÇÃO ══════════════════ -->
+    <div class="page-section" id="page-retencao">
+      <div class="section-title">Retenção &amp; Desligamentos <span class="tag" style="background:rgba(136,136,170,.15); color:var(--muted);">01 a 30/jun/2026</span><div class="line"></div></div>
+
+      <div class="kpi-row-icons">
+        <div class="kpi-icon-card">
+          <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(0,229,160,.15); color:var(--green);">📊</div><div class="label">Fechamento Junho</div></div>
+          <div class="kpi-icon-info"><div class="value">56</div><div class="delta muted">base ao final do mês</div></div>
+        </div>
+        <div class="kpi-icon-card">
+          <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(232,25,44,.15); color:var(--red);">❌</div><div class="label">Desligamentos Junho</div></div>
+          <div class="kpi-icon-info"><div class="value" style="color:var(--red)">19</div><div class="delta muted">no período</div></div>
+        </div>
+        <div class="kpi-icon-card">
+          <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(0,229,160,.15); color:var(--green);">✅</div><div class="label">Retenção</div></div>
+          <div class="kpi-icon-info"><div class="value" style="color:var(--green)">6</div><div class="delta muted">associados retidos</div></div>
+        </div>
+        <div class="kpi-icon-card">
+          <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(61,123,255,.15); color:var(--blue);">♻️</div><div class="label">Retorno de Licença</div></div>
+          <div class="kpi-icon-info"><div class="value">1</div><div class="delta muted">no período</div></div>
+        </div>
+        <div class="kpi-icon-card">
+          <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(255,211,42,.15); color:var(--yellow);">🚫</div><div class="label">Programados Julho</div></div>
+          <div class="kpi-icon-info"><div class="value" style="color:var(--yellow)">18</div><div class="delta muted">a desligar</div></div>
+        </div>
+      </div>
+
+      <div class="section-title">Relatório de Desempenho — Detalhamento (01 a 29/06/2026)<div class="line"></div></div>
+      <div class="grid-2 reverse">
+        <div class="card">
+          <div class="card-label">Distribuição por Categoria (Desligamentos)</div>
+          <div id="retencaoDonutCategoria" class="donut-wrap"></div>
+        </div>
+        <div class="card">
+          <div class="card-label">Motivos de Desligamento</div>
+          <table>
+            <thead><tr><th>Motivo</th><th class="num">Qtd.</th><th class="num">%</th></tr></thead>
+            <tbody id="tabelaMotivos"></tbody>
+            <tfoot><tr><td style="font-weight:700;">Total</td><td class="num" style="font-weight:700;">19</td><td class="num" style="font-weight:700;">100%</td></tr></tfoot>
+          </table>
+        </div>
+      </div>
+
+      <div class="grid-3">
+        <div class="card"><div class="card-label">🎫 Ticket Médio de Junho</div><div class="card-value">R$ 536,85</div><div class="card-meta">das solicitações de desligamento</div></div>
+        <div class="card"><div class="card-label">👨‍👩‍👧 Ticket Médio Dependentes</div><div class="card-value">2,3</div><div class="card-meta">média de dependentes/solicitação</div></div>
+        <div class="card"><div class="card-label">🔁 Desligamentos Residual</div><div class="card-value">36</div><div class="card-meta">pendentes de períodos anteriores</div></div>
+      </div>
+
+      <div class="card full">
+        <div class="card-label">Análise</div>
+        <div class="card-meta" style="font-size:13px; line-height:1.7;">
+          A categoria <b style="color:var(--text)">Patrimonial</b> concentrou o maior volume de desligamentos (31,6%), seguida por <b style="color:var(--text)">Contribuinte</b> e <b style="color:var(--text)">Contribuinte Individual</b>, empatadas em 26,3% cada — juntas, essas três categorias somam <b style="color:var(--text)">84,2%</b> do total. <b style="color:var(--text)">Veterano Contribuinte</b> representou 15,8%.<br><br>
+          Sobre os motivos: <b style="color:var(--text)">Não utilização</b> foi disparado o principal (47,4%), seguido de <b style="color:var(--text)">Financeiro</b> (21,1%) e <b style="color:var(--text)">Mudança</b> (15,8%) — juntos, 84,3% dos casos. Isso sugere que a maior parte da evasão não é por insatisfação ou preço, e sim por baixo uso — um sinal de que ações de engajamento/reativação (como as campanhas vistas na aba Reingresso) tendem a ter mais impacto que desconto.
+        </div>
+      </div>
+    </div>
+
+
+    <div class="footer-note">
+      SOGIPA · Diretoria Executiva · Julho de 2026<br>
+      Documento confidencial — uso interno da diretoria.
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// DADOS — FLUXO DE CAIXA JUNHO/2026 (R$ mil)
+// ═══════════════════════════════════════════════════════════
+const DESPESAS_CATS = [
+  {nome:'Pessoal de Apoio',        prev:1517.5, tend:1641.7, real:1641.7, tag:'pessoal'},
+  {nome:'Despesas de Funcionamento',prev:1186.0, tend:1151.6, real:1101.6, tag:'func'},
+  {nome:'Despesas Fixas',          prev:300.9,  tend:231.0,  real:231.0,  tag:'fixa'},
+  {nome:'Esporte',                 prev:151.9,  tend:238.9,  real:238.9,  tag:'esporte'},
+  {nome:'Eventos',                 prev:70.7,   tend:95.6,   real:95.6,   tag:'evento'},
+  {nome:'Imobilizado',             prev:40.0,   tend:5.3,    real:5.3,    tag:'outros'},
+  {nome:'Contingências (Indenizações)', prev:32.4, tend:25.1, real:25.1, tag:'outros'},
+  {nome:'Tarifas e Desp. Bancárias', prev:9.1,  tend:10.1,   real:9.6,   tag:'outros'},
+  {nome:'Taxas IPTU',              prev:1.0,    tend:1.1,    real:1.1,   tag:'outros'},
+];
+const RECEITAS_CATS = [
+  {nome:'Boletos',            prev:1548.0, tend:1473.7, real:1428.7},
+  {nome:'Débito em Conta',    prev:686.0,  tend:684.6,  real:684.6},
+  {nome:'Receitas Diversas',  prev:525.0,  tend:602.6,  real:592.6},
+  {nome:'Cartões Crédito',    prev:395.0,  tend:399.5,  real:395.5},
+  {nome:'Cartões Débito',     prev:154.0,  tend:144.7,  real:137.7},
+  {nome:'Rendimento Aplicação', prev:0,    tend:0.1,    real:0.1},
+  {nome:'Patrocínios',        prev:0,      tend:0,      real:0},
+];
+const PROJECAO = [
+  {d:'25/jun', mov:-20733,  banco:276306,   indices:1880346},
+  {d:'26/jun', mov:-95961,  banco:180346,   indices:1880346},
+  {d:'29/jun', mov:0,       banco:180346,   indices:1880346},
+  {d:'30/jun', mov:15500,   banco:195846,   indices:1845679},
+  {d:'01/jul', mov:48000,   banco:243846,   indices:1845679},
+  {d:'02/jul', mov:35300,   banco:279146,   indices:1845679},
+  {d:'03/jul', mov:41500,   banco:320646,   indices:1845679},
+  {d:'06/jul', mov:-415500, banco:-94854,   indices:2664679},
+  {d:'07/jul', mov:160000,  banco:65146,    indices:2664679},
+  {d:'08/jul', mov:85000,   banco:150146,   indices:2664679},
+  {d:'09/jul', mov:72700,   banco:222846,   indices:2664679},
+  {d:'10/jul', mov:-178500, banco:44346,    indices:2615679},
+  {d:'13/jul', mov:1050800, banco:1095146,  indices:2615679},
+  {d:'14/jul', mov:217000,  banco:1312146,  indices:2608613},
+  {d:'15/jul', mov:30645,   banco:1342791,  indices:2608613},
+  {d:'16/jul', mov:-25000,  banco:1317791,  indices:2608613},
+  {d:'17/jul', mov:-21000,  banco:1296791,  indices:2608613},
+  {d:'20/jul', mov:-945600, banco:351191,   indices:2608613},
+  {d:'21/jul', mov:35000,   banco:386191,   indices:2608613},
+  {d:'22/jul', mov:-10000,  banco:376191,   indices:2608613},
+  {d:'23/jul', mov:-35100,  banco:341091,   indices:2608613},
+  {d:'24/jul', mov:-33000,  banco:308091,   indices:2608613},
+  {d:'27/jul', mov:-74700,  banco:233391,   indices:2608613},
+  {d:'28/jul', mov:5000,    banco:238391,   indices:2608613},
+  {d:'29/jul', mov:5000,    banco:243391,   indices:2608613},
+  {d:'30/jul', mov:14000,   banco:257391,   indices:2608613},
+  {d:'31/jul', mov:5000,    banco:262391,   indices:2573947},
+];
+const OBRAS = [
+  {data:'30/06/2026', fornecedor:'—', projeto:'Plano e Desenvolvimento', valor:34666.67},
+  {data:'10/07/2026', fornecedor:'Center Broilo Com. de Sist. de Aquecimento', projeto:'Caldeira', valor:49000.00},
+  {data:'14/07/2026', fornecedor:'Oglee Soluções Inovadoras Ltda', projeto:'Quadras Poliesportivas', valor:7066.00},
+  {data:'31/07/2026', fornecedor:'—', projeto:'Plano e Desenvolvimento', valor:34666.67},
+  {data:'10/08/2026', fornecedor:'Center Broilo Com. de Sist. de Aquecimento', projeto:'Caldeira', valor:49000.00},
+  {data:'31/08/2026', fornecedor:'—', projeto:'Plano e Desenvolvimento', valor:34666.66},
+  {data:'30/09/2026', fornecedor:'—', projeto:'Telhado Dn. Leopoldina', valor:421000.00},
+];
+const REINGRESSO_CAMPANHAS = [
+  {nome:'Plano Senior', qtd:6, cor:'#00e5a0'},
+  {nome:'Promo 24h',    qtd:4, cor:'#06b6d4'},
+];
+const VENDAS_CAMPANHAS = [
+  {nome:'Check-in Excluídos',  qtd:6, cor:'#3d7bff'},
+  {nome:'Plano Senior',        qtd:5, cor:'#a855f7'},
+  {nome:'Promo Amigo Indica',  qtd:5, cor:'#00e5a0'},
+  {nome:'Plano Teen',          qtd:3, cor:'#f2b705'},
+];
+const NEGOCIACOES = [
+  {mes:'Mar/26', valor:57189.00,  contatos:37},
+  {mes:'Abr/26', valor:132267.00, contatos:335},
+  {mes:'Mai/26', valor:324837.00, contatos:512},
+];
+const INADIMPLENCIA = [
+  {mes:'Mar/26', real:12.5, meta:12.5},
+  {mes:'Abr/26', real:15.3, meta:12.5},
+  {mes:'Mai/26', real:16.4, meta:13.3},
+];
+const RETENCAO_CATEGORIAS = [
+  {nome:'Patrimonial',            qtd:6, cor:'#00e5a0'},
+  {nome:'Contribuinte',           qtd:5, cor:'#3d7bff'},
+  {nome:'Contribuinte Individual',qtd:5, cor:'#a855f7'},
+  {nome:'Veterano Contribuinte',  qtd:3, cor:'#f2b705'},
+];
+const RETENCAO_MOTIVOS = [
+  {motivo:'Não utilização', qtd:9, pct:47.37, cor:'#3d7bff'},
+  {motivo:'Financeiro',     qtd:4, pct:21.05, cor:'#00e5a0'},
+  {motivo:'Mudança',        qtd:3, pct:15.79, cor:'#f2b705'},
+  {motivo:'Saúde',          qtd:1, pct:5.26,  cor:'#a855f7'},
+  {motivo:'Insatisfação',   qtd:1, pct:5.26,  cor:'#06b6d4'},
+  {motivo:'Localização',    qtd:1, pct:5.26,  cor:'#e8192c'},
+];
+
+// ═══════════════════════════════════════════════════════════
+// DADOS — PAGAMENTOS JUNHO/2026 (fonte: Demonstrativo de Pagamentos + planilha Controladoria)
+// ═══════════════════════════════════════════════════════════
+const PAGAMENTOS_SEMANAL = [
+  {semana:'01-05/jun', qtd:150, total:1096023.83},
+  {semana:'08-12/jun', qtd:190, total:639405.05},
+  {semana:'15-26/jun', qtd:373, total:2020524.83},
+  {semana:'29-30/jun', qtd:61,  total:151580.61},
+  {semana:'28/06-05/07', qtd:153, total:687722.71},
+];
+const FORNECEDORES_TOP = [
+  {nome:'GBA Brasil Administração de Pessoas Ltda',     qtd:1,  valor:157129.89, pct:22.85},
+  {nome:'Buffet Bettino',                                qtd:1,  valor:44700.00,  pct:6.50},
+  {nome:'Cia de Gás do Estado do RS (Sulgás)',           qtd:1,  valor:42639.85,  pct:6.20},
+  {nome:'Santori Comércio de Móveis Eireli',             qtd:2,  valor:42549.60,  pct:6.19},
+  {nome:'MercadoPago.com Representações Ltda.',         qtd:15, valor:32802.26,  pct:4.77},
+  {nome:'3S Soluções em Serviços e Segurança Ltda',     qtd:1,  valor:28076.48,  pct:4.08},
+  {nome:'Folha de Pagamento',                           qtd:7,  valor:27992.39,  pct:4.07},
+  {nome:'Avates Eventos Ltda',                          qtd:1,  valor:24725.00,  pct:3.60},
+  {nome:'Earte Promoções e Prod. Artísticas Cult. e Ensino',qtd:2, valor:23029.53, pct:3.35},
+  {nome:'Eduardo Almeida Ltda',                         qtd:1,  valor:18770.00,  pct:2.73},
+  {nome:'Banco do Brasil',                              qtd:2,  valor:15915.55,  pct:2.31},
+  {nome:'Centro de Integração Empresa Escola',          qtd:1,  valor:15718.60,  pct:2.29},
+  {nome:'41.326.303 Valdoir Rodrigues Dias',            qtd:2,  valor:11200.00,  pct:1.63},
+  {nome:'Higiemaster Sul Indústria e Comércio de Saneantes',qtd:1, valor:10730.06, pct:1.56},
+  {nome:'HUB Instituição de Pagamento S.A.',            qtd:7,  valor:10420.87,  pct:1.52},
+];
+const TAG_LABEL = {pessoal:'Pessoal', func:'Funcionamento', fixa:'Desp. Fixa', esporte:'Esporte', evento:'Evento', outros:'Outros'};
+
+function fmtMil(v){
+  const abs = Math.abs(v);
+  if(abs >= 1000){
+    const emMilhoes = v/1000;
+    const label = Math.abs(emMilhoes) < 1.05 ? 'milhão' : 'milhões';
+    return 'R$ ' + emMilhoes.toLocaleString('pt-BR',{minimumFractionDigits:2, maximumFractionDigits:2}) + ' ' + label;
+  }
+  return 'R$ ' + v.toLocaleString('pt-BR',{minimumFractionDigits:1, maximumFractionDigits:1}) + ' mil';
+}
+function fmtBRL(v){ return 'R$ ' + v.toLocaleString('pt-BR',{minimumFractionDigits:2, maximumFractionDigits:2}); }
+function fmtBRL0(v){ return 'R$ ' + v.toLocaleString('pt-BR',{minimumFractionDigits:0, maximumFractionDigits:0}); }
+
+// ── Categoria bars (Prev/Tendência/Real) ──
+function getStatus(pct, isReceita){
+  // Despesas: economia (pct<=0) é bom; pequeno estouro é atenção; estouro grande é ruim.
+  // Receitas: atingir/superar (pct>=0) é bom; pequeno déficit é atenção; déficit grande é ruim.
+  const p = isReceita ? -pct : pct; // normaliza: p<=0 sempre "bom" nessa escala
+  if(p <= 0) return {cor:'#00e5a0', label: isReceita ? 'Superou' : 'Dentro', key:'bom'};
+  if(p <= 5) return {cor:'#ffd32a', label:'Atenção', key:'atencao'};
+  return {cor:'#e8192c', label: isReceita ? 'Abaixo' : 'Acima', key:'ruim'};
+}
+
+function renderCats(containerId, cats, isReceita){
+  const el = document.getElementById(containerId);
+  const enriched = cats.map(c=>{
+    const delta = c.real - c.prev;
+    const pct = c.prev ? (delta/c.prev*100) : 0;
+    return Object.assign({}, c, {pct: pct, st: getStatus(pct, isReceita)});
+  });
+
+  const grupos = [
+    {key:'ruim',    icon:'🔴', titulo: isReceita ? 'Abaixo da Meta' : 'Acima do Orçado', cor:'#e8192c'},
+    {key:'atencao', icon:'🟡', titulo: 'Atenção',                                         cor:'#ffd32a'},
+    {key:'bom',     icon: isReceita ? '🔵' : '🟢', titulo: isReceita ? 'Superou a Meta' : 'Dentro do Orçado', cor: isReceita ? '#3d7bff' : '#00e5a0'},
+  ];
+
+  const html = grupos.map(g=>{
+    const itens = enriched.filter(c=>c.st.key===g.key);
+    if(itens.length===0){
+      return ''; // não mostra quadro vazio
+    }
+    const rows = itens.map(c=>`
+      <div class="status-item">
+        <div class="status-item-top">
+          <span class="nome">${c.nome}</span>
+          <span class="val" style="color:${g.cor};">${fmtMil(c.real)} <b>(${c.pct>=0?'+':''}${c.pct.toFixed(1)}%)</b></span>
+        </div>
+        <div class="status-item-sub">Prev: ${fmtMil(c.prev)} · Tend: ${fmtMil(c.tend)}</div>
+      </div>`).join('');
+    return `<div class="status-box" style="border-left-color:${g.cor};">
+      <div class="status-box-head" style="color:${g.cor};">${g.icon} ${g.titulo} <span class="status-count" style="background:${g.cor}22; color:${g.cor};">${itens.length}</span></div>
+      ${rows}
+    </div>`;
+  }).join('');
+
+  el.innerHTML = html;
+}
+renderCats('despesasCats', DESPESAS_CATS, false);
+renderCats('receitasCats', RECEITAS_CATS, true);
+
+document.getElementById('tabelaObras').innerHTML = OBRAS.map(o=>`
+  <tr><td>${o.data}</td><td class="muted">${o.fornecedor}</td><td>${o.projeto}</td><td class="num">${fmtBRL(o.valor)}</td></tr>
+`).join('');
+
+// ── Gráfico de barras: Pagamentos por Semana ──
+function drawPagamentosSemanal(elId){
+  const el = document.getElementById(elId);
+  const W = 560, H = 260, padL=70, padR=20, padT=24, padB=50;
+  const max = Math.max.apply(null, PAGAMENTOS_SEMANAL.map(s=>s.total)) * 1.18;
+  const bw = (W-padL-padR)/PAGAMENTOS_SEMANAL.length;
+  const y = v => padT + (1-v/max)*(H-padT-padB);
+  let gridLines = '';
+  for(let s=0; s<=3; s++){
+    const v = max*s/3, yy = y(v);
+    gridLines += `<line x1="${padL}" y1="${yy}" x2="${W-padR}" y2="${yy}" stroke="#2a2a3a" stroke-width="1"/>`;
+    gridLines += `<text x="${padL-8}" y="${yy+4}" text-anchor="end" fill="#8888aa" font-size="12">${(v/1e6).toFixed(1)}M</text>`;
+  }
+  let bars = '', labels = '';
+  PAGAMENTOS_SEMANAL.forEach((s,i)=>{
+    const cx = padL + i*bw + bw/2, barW = bw*0.55;
+    const barH = (H-padB) - y(s.total);
+    bars += `<rect x="${(cx-barW/2).toFixed(1)}" y="${y(s.total).toFixed(1)}" width="${barW.toFixed(1)}" height="${barH.toFixed(1)}" fill="#3d7bff" rx="3"><title>${s.semana}: ${fmtBRL0(s.total)} (${s.qtd} lançamentos)</title></rect>`;
+    bars += `<text x="${cx}" y="${y(s.total)-8}" text-anchor="middle" fill="#3d7bff" font-size="12" font-weight="800">${fmtBRL0(s.total)}</text>`;
+    labels += `<text x="${cx}" y="${H-padB+18}" text-anchor="middle" fill="#8888aa" font-size="12">${s.semana}</text>`;
+    labels += `<text x="${cx}" y="${H-padB+34}" text-anchor="middle" fill="#5c6370" font-size="12">${s.qtd} lanç.</text>`;
+  });
+  el.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="width:100%; max-width:100%; height:auto; display:block;">
+    <line x1="${padL}" y1="${H-padB}" x2="${W-padR}" y2="${H-padB}" stroke="#2a2a3a"/>
+    ${gridLines}${bars}${labels}
+  </svg>`;
+}
+
+// ── Tabela de fornecedores recorrentes ──
+function renderTabelaFornecedores(elId){
+  const el = document.getElementById(elId);
+  const totalGeral = 3983025.43;
+  el.innerHTML = `<table>
+    <thead><tr><th>#</th><th>Fornecedor</th><th class="num">Qtd. Pagamentos</th><th class="num">Valor Total</th><th class="num">% do Total</th><th>Recorrência</th></tr></thead>
+    <tbody>
+      ${FORNECEDORES_TOP.map((f,i)=>{
+        const recor = f.qtd >= 10 ? {label:'Muito alta', cor:'#e8192c'} : f.qtd >= 5 ? {label:'Alta', cor:'#ffd32a'} : f.qtd >= 2 ? {label:'Ocasional', cor:'#00e5a0'} : {label:'Única', cor:'#8888aa'};
+        return `<tr>
+          <td class="muted">${i+1}</td>
+          <td>${f.nome}</td>
+          <td class="num">${f.qtd}x</td>
+          <td class="num">${fmtBRL(f.valor)}</td>
+          <td class="num">${f.pct.toFixed(2).replace('.',',')}%</td>
+          <td><span class="tag" style="background:${recor.cor}22; color:${recor.cor};">${recor.label}</span></td>
+        </tr>`;
+      }).join('')}
+    </tbody>
+  </table>`;
+}
+
+// ── Donut genérico (conic-gradient) ──
+function drawDonut(elId, segments, centerLabel, centerSub){
+  const el = document.getElementById(elId);
+  const total = segments.reduce((s,x)=>s+x.valor,0);
+  let acc = 0, stops = [];
+  segments.forEach(s=>{
+    const pct = s.valor/total*100;
+    stops.push(`${s.cor} ${acc.toFixed(2)}% ${(acc+pct).toFixed(2)}%`);
+    acc += pct;
+  });
+  let legend = segments.map(s=>`<div class="legend-row"><span class="dot" style="background:${s.cor}"></span>${s.nome} — ${s.valor.toLocaleString('pt-BR')}${s.suffix||''} (${(s.valor/total*100).toFixed(1)}%)</div>`).join('');
+  el.innerHTML = `<div class="donut">
+      <div class="donut-ring" style="width:158px; height:158px; border-radius:50%; background:conic-gradient(${stops.join(',')}); display:flex; align-items:center; justify-content:center;">
+        <div style="width:106px; height:106px; border-radius:50%; background:var(--card); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:6px; box-sizing:border-box;">
+          <div style="font-size:22px; font-weight:900; line-height:1.1;">${centerLabel}</div>
+          <div style="font-size:11px; color:var(--muted); line-height:1.25; max-width:90px; overflow-wrap:break-word;">${centerSub||''}</div>
+        </div>
+      </div>
+    </div>
+    <div>${legend}</div>`;
+}
+
+// ── Barras simples horizontais ──
+function renderSimpleBars(elId, items){
+  const el = document.getElementById(elId);
+  const max = Math.max(...items.map(i=>i.valor)) * 1.1;
+  el.innerHTML = items.map(i=>`
+    <div class="cat-row">
+      <div class="cat-row-head"><span class="nome">${i.nome}</span><span class="val">${i.display||i.valor}</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:${(i.valor/max*100).toFixed(1)}%; background:${i.cor||'#3d7bff'};"></div></div>
+    </div>`).join('');
+}
+
+// ── Gráfico de linha genérico (SVG) ──
+function drawLineChart(elId, serieKey, opts){
+  opts = opts || {};
+  const el = document.getElementById(elId);
+  const W = Math.max(700, PROJECAO.length*30), H = 300;
+  const padL=76, padR=16, padT=20, padB=36;
+  const vals = PROJECAO.map(p=>p[serieKey]);
+  let min = Math.min(...vals), max = Math.max(...vals);
+  const spread = max-min || 1;
+  min -= spread*0.12; max += spread*0.12;
+  if(opts.includeZero){ min = Math.min(min,0); }
+  const x = i => padL + i*( (W-padL-padR)/(PROJECAO.length-1) );
+  const y = v => padT + (1 - (v-min)/(max-min)) * (H-padT-padB);
+  let path = PROJECAO.map((p,i)=> `${i===0?'M':'L'} ${x(i).toFixed(1)} ${y(p[serieKey]).toFixed(1)}`).join(' ');
+  let gridLines = '';
+  for(let s=0; s<=3; s++){
+    const v = min + (max-min)*s/3, yy = y(v);
+    gridLines += `<line x1="${padL}" y1="${yy}" x2="${W-padR}" y2="${yy}" stroke="#2a2a3a" stroke-width="1"/>`;
+    gridLines += `<text x="${padL-8}" y="${yy+4}" text-anchor="end" fill="#8888aa" font-size="12.5">${(v/1e6).toFixed(2)}M</text>`;
+  }
+  let zeroLine = '';
+  if(opts.includeZero){
+    const yz = y(0);
+    zeroLine = `<line x1="${padL}" y1="${yz}" x2="${W-padR}" y2="${yz}" stroke="#e8192c" stroke-width="1.3" stroke-dasharray="4,3"/>`;
+  }
+  let dots = '', labels = '';
+  PROJECAO.forEach((p,i)=>{
+    const val = p[serieKey], cx = x(i), cy = y(val), isNeg = val<0;
+    const color = isNeg ? '#e8192c' : (opts.dotColor || '#3d7bff');
+    const r = isNeg ? 6 : (Math.abs(p.mov) > 300000 ? 5 : 2.8);
+    dots += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${color}" stroke="#0a0a0f" stroke-width="1"><title>${p.d}: ${fmtBRL0(val)}</title></circle>`;
+    if(i % 4 === 0 || i===PROJECAO.length-1){ labels += `<text x="${cx}" y="${H-10}" text-anchor="middle" fill="#8888aa" font-size="12">${p.d}</text>`; }
+  });
+  el.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="width:100%; max-width:100%; height:auto; display:block;">
+    ${gridLines}${zeroLine}
+    <path d="${path}" fill="none" stroke="${opts.lineColor || '#3d7bff'}" stroke-width="2.2"/>
+    ${dots}${labels}
+  </svg>`;
+}
+
+// ── Gráfico de BARRAS diário (colunas) — substitui a linha quando solicitado ──
+function drawBarChartDaily(elId, serieKey, opts){
+  opts = opts || {};
+  const el = document.getElementById(elId);
+  const n = PROJECAO.length;
+  const W = Math.max(700, n*34), H = 400;
+  const padL=76, padR=16, padT=38, padB=36;
+  const vals = PROJECAO.map(p=>p[serieKey]);
+  let min = Math.min(...vals), max = Math.max(...vals);
+  const spread = max-min || 1;
+  min -= spread*0.10; max += spread*0.10;
+  if(opts.includeZero){ min = Math.min(min,0); max = Math.max(max,0); }
+  const bw = (W-padL-padR)/n;
+  const y = v => padT + (1 - (v-min)/(max-min)) * (H-padT-padB);
+  const y0 = y(0);
+  let gridLines = '';
+  for(let s=0; s<=3; s++){
+    const v = min + (max-min)*s/3, yy = y(v);
+    gridLines += `<line x1="${padL}" y1="${yy}" x2="${W-padR}" y2="${yy}" stroke="#2a2a3a" stroke-width="1"/>`;
+    gridLines += `<text x="${padL-8}" y="${yy+4}" text-anchor="end" fill="#8888aa" font-size="12.5">${(v/1e6).toFixed(2)}M</text>`;
+  }
+  let bars = '', labels = '';
+  let idxMin = 0, idxMax = 0;
+  vals.forEach((v,i)=>{ if(v<vals[idxMin]) idxMin=i; if(v>vals[idxMax]) idxMax=i; });
+  PROJECAO.forEach((p,i)=>{
+    const val = p[serieKey];
+    const cx = padL + i*bw + bw/2;
+    const barW = bw*0.62;
+    const yTop = Math.min(y(val), y0);
+    const barH = Math.max(Math.abs(y(val)-y0), 1.5);
+    const isNeg = val < 0;
+    const color = isNeg ? '#e8192c' : (opts.barColor || '#3d7bff');
+    bars += `<rect x="${(cx-barW/2).toFixed(1)}" y="${yTop.toFixed(1)}" width="${barW.toFixed(1)}" height="${barH.toFixed(1)}" fill="${color}" rx="2"><title>${p.d}: ${fmtBRL0(val)}</title></rect>`;
+    if(i % 4 === 0 || i===n-1){ labels += `<text x="${cx}" y="${H-10}" text-anchor="middle" fill="#8888aa" font-size="12">${p.d}</text>`; }
+    if(opts.callouts && (i===idxMin || i===idxMax)){
+      const isWorst = i===idxMin;
+      const calloutCor = isWorst ? '#e8192c' : '#00e5a0';
+      const calloutY = isWorst ? y(val) + 18 : y(val) - 10;
+      const emoji = isWorst ? '▼' : '▲';
+      labels += `<text x="${cx}" y="${calloutY}" text-anchor="middle" fill="${calloutCor}" font-size="13" font-weight="800">${emoji} ${p.d}: ${fmtBRL0(val)}</text>`;
+    }
+  });
+  let zeroLine = opts.includeZero ? `<line x1="${padL}" y1="${y0}" x2="${W-padR}" y2="${y0}" stroke="#e8192c" stroke-width="1.3" stroke-dasharray="4,3"/>` : '';
+  el.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="width:100%; max-width:100%; height:auto; display:block;">
+    ${gridLines}${bars}${zeroLine}${labels}
+  </svg>`;
+}
+
+// ── Gráfico Receita x Despesa (barras agrupadas: Prev / Tendência / Real) ──
+function drawReceitaDespesaChart(elId, compact){
+  const el = document.getElementById(elId);
+  const dados = [
+    {grupo:'Previsto',   receita:3308.0, despesa:3309.5},
+    {grupo:'Tendência',  receita:3305.3, despesa:3400.2},
+    {grupo:'Realizado',  receita:3239.3, despesa:3349.7},
+  ];
+  const W = compact ? 400 : 660, H = compact ? 250 : 300, padL=compact?58:66, padR=16, padT=20, padB=52;
+  const max = Math.max.apply(null, dados.map(d=>Math.max(d.receita,d.despesa))) * 1.15;
+  const gw = (W-padL-padR)/dados.length;
+  const y = v => padT + (1-v/max)*(H-padT-padB);
+  let bars='', labels='';
+  dados.forEach((d,i)=>{
+    const gx = padL + i*gw;
+    const barW = gw*0.32, gap = gw*0.06;
+    const xR = gx + gw*0.14, xD = xR + barW + gap;
+    const hR = (H-padB)-y(d.receita), hD = (H-padB)-y(d.despesa);
+    bars += `<rect x="${xR.toFixed(1)}" y="${y(d.receita).toFixed(1)}" width="${barW.toFixed(1)}" height="${hR.toFixed(1)}" fill="#00e5a0" rx="2"><title>Receita ${d.grupo}: ${fmtMil(d.receita)}</title></rect>`;
+    bars += `<rect x="${xD.toFixed(1)}" y="${y(d.despesa).toFixed(1)}" width="${barW.toFixed(1)}" height="${hD.toFixed(1)}" fill="#e8192c" rx="2"><title>Despesa ${d.grupo}: ${fmtMil(d.despesa)}</title></rect>`;
+    const fs = compact ? 11 : 13;
+    bars += `<text x="${(xR+barW/2).toFixed(1)}" y="${y(d.receita)-6}" text-anchor="middle" fill="#00e5a0" font-size="${fs+1}" font-weight="800">${d.receita.toFixed(0)}</text>`;
+    bars += `<text x="${(xD+barW/2).toFixed(1)}" y="${y(d.despesa)-6}" text-anchor="middle" fill="#e8192c" font-size="${fs+1}" font-weight="800">${d.despesa.toFixed(0)}</text>`;
+    labels += `<text x="${(gx+gw/2).toFixed(1)}" y="${H-30}" text-anchor="middle" fill="#8888aa" font-size="13">${d.grupo}</text>`;
+    const resultado = d.receita - d.despesa;
+    const resCor = resultado >= 0 ? '#00e5a0' : '#e8192c';
+    labels += `<text x="${(gx+gw/2).toFixed(1)}" y="${H-10}" text-anchor="middle" fill="${resCor}" font-size="12" font-weight="800">Result: ${resultado>=0?'+':''}${resultado.toFixed(0)}</text>`;
+  });
+  el.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="width:100%; max-width:100%; height:auto; display:block;">
+    <line x1="${padL}" y1="${H-padB}" x2="${W-padR}" y2="${H-padB}" stroke="#2a2a3a"/>
+    ${bars}${labels}
+    <text x="${padL}" y="14" fill="#00e5a0" font-size="13" font-weight="700">■ Receita</text>
+    <text x="${padL+70}" y="14" fill="#e8192c" font-size="13" font-weight="700">■ Despesa</text>
+  </svg>`;
+}
+
+// ── Gráfico único e interativo: Negociações (barras + contatos) + Inadimplência (real/meta) ──
+// Clique na legenda para destacar a série correspondente e ver os valores.
+function drawNegInadInteractive(chartElId, legendElId, detailElId){
+  const el = document.getElementById(chartElId);
+  const W = 860, H = 320, padL=64, padR=60, padT=34, padB=36;
+  const maxV = Math.max.apply(null, NEGOCIACOES.map(n=>n.valor))*1.18;
+  const maxC = Math.max.apply(null, NEGOCIACOES.map(n=>n.contatos))*1.25;
+  const maxP = Math.max.apply(null, INADIMPLENCIA.map(d=>Math.max(d.real,d.meta)))*1.3;
+  const n = NEGOCIACOES.length;
+  const bw = (W-padL-padR)/n;
+  const cxAt = i => padL + i*bw + bw/2;
+  const yV = v => padT + (1-v/maxV)*(H-padT-padB);
+  const yC = v => padT + (1-v/maxC)*(H-padT-padB);
+  const yP = v => padT + (1-v/maxP)*(H-padT-padB);
+
+  let bars='', labels='', lineContatos='', dotsContatos='', lineReal='', dotsReal='', lineMeta='', dotsMeta='';
+  NEGOCIACOES.forEach((nItem,i)=>{
+    const cx = cxAt(i), barW = bw*0.4;
+    const barH = (H-padT-padB) - (yV(nItem.valor)-padT);
+    bars += `<rect x="${(cx-barW/2).toFixed(1)}" y="${yV(nItem.valor).toFixed(1)}" width="${barW.toFixed(1)}" height="${barH.toFixed(1)}" fill="#3d7bff" rx="3"><title>${nItem.mes} · Valor Recuperado: ${fmtBRL0(nItem.valor)}</title></rect>`;
+    bars += `<text x="${cx}" y="${yV(nItem.valor)-8}" text-anchor="middle" fill="#3d7bff" font-size="13" font-weight="800">${fmtBRL0(nItem.valor)}</text>`;
+    labels += `<text x="${cx}" y="${H-12}" text-anchor="middle" fill="#8888aa" font-size="13">${nItem.mes}</text>`;
+
+    const pyC = yC(nItem.contatos);
+    const d = INADIMPLENCIA[i];
+    const acima = d.real > d.meta;
+    const pyR = yP(d.real), pyM = yP(d.meta);
+
+    // Evita sobreposição: se o rótulo de Contatos e o de Inadimplência Real ficarem
+    // muito próximos verticalmente, afasta um para cima e o outro para baixo do ponto.
+    const proximos = Math.abs(pyC - pyR) < 22;
+    const offContatos = proximos ? -16 : -9;
+    const offReal = proximos ? 20 : -11;
+    const anchorReal = proximos ? 'hanging' : 'auto';
+
+    dotsContatos += `<circle cx="${cx.toFixed(1)}" cy="${pyC.toFixed(1)}" r="4.5" fill="#00e5a0" stroke="#0a0a0f" stroke-width="1.2"><title>${nItem.mes} · Contatos: ${nItem.contatos}</title></circle>`;
+    dotsContatos += `<text x="${cx}" y="${(pyC+offContatos).toFixed(1)}" text-anchor="middle" fill="#00e5a0" font-size="12" font-weight="800">${nItem.contatos}</text>`;
+    lineContatos += (i===0?'M':'L') + ` ${cx.toFixed(1)} ${pyC.toFixed(1)}`;
+
+    dotsReal += `<circle cx="${cx.toFixed(1)}" cy="${pyR.toFixed(1)}" r="5" fill="${acima?'#ff8a3d':'#ffd32a'}" stroke="#0a0a0f" stroke-width="1.2"><title>${d.mes} · Inadimplência Real: ${d.real.toFixed(1)}%</title></circle>`;
+    dotsReal += `<text x="${cx}" y="${(pyR+offReal).toFixed(1)}" text-anchor="middle" dominant-baseline="${anchorReal}" fill="${acima?'#ff8a3d':'#ffd32a'}" font-size="12.5" font-weight="800">${d.real.toFixed(1)}%</text>`;
+    lineReal += (i===0?'M':'L') + ` ${cx.toFixed(1)} ${pyR.toFixed(1)}`;
+    dotsMeta += `<circle cx="${cx.toFixed(1)}" cy="${pyM.toFixed(1)}" r="3.5" fill="#8888aa" stroke="#0a0a0f" stroke-width="1"><title>${d.mes} · Meta: ${d.meta.toFixed(1)}%</title></circle>`;
+    lineMeta += (i===0?'M':'L') + ` ${cx.toFixed(1)} ${pyM.toFixed(1)}`;
+  });
+
+  el.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="width:100%; max-width:100%; height:auto; display:block;">
+    <line x1="${padL}" y1="${H-padB}" x2="${W-padR}" y2="${H-padB}" stroke="#2a2a3a"/>
+    <g id="${chartElId}-serie-valor" style="transition:opacity .25s ease;">${bars}</g>
+    <g id="${chartElId}-serie-contatos" style="transition:opacity .25s ease;"><path d="${lineContatos}" fill="none" stroke="#00e5a0" stroke-width="2" stroke-dasharray="4,3"/>${dotsContatos}</g>
+    <g id="${chartElId}-serie-inadMeta" style="transition:opacity .25s ease;"><path d="${lineMeta}" fill="none" stroke="#8888aa" stroke-width="1.6" stroke-dasharray="3,3"/>${dotsMeta}</g>
+    <g id="${chartElId}-serie-inadReal" style="transition:opacity .25s ease;"><path d="${lineReal}" fill="none" stroke="#ff8a3d" stroke-width="2.4"/>${dotsReal}</g>
+    ${labels}
+  </svg>`;
+
+  renderLegendaGraficoNeg(legendElId, chartElId, detailElId);
+  showSerieDetalhe(null, chartElId, detailElId);
+}
+
+const SERIES_INFO = {
+  valor:    {label:'Valor Recuperado', cor:'#3d7bff', unidade:'R$'},
+  contatos: {label:'Contatos Enviados', cor:'#00e5a0', unidade:'un'},
+  inadReal: {label:'Inadimplência Real', cor:'#ff8a3d', unidade:'%'},
+  inadMeta: {label:'Meta de Inadimplência', cor:'#8888aa', unidade:'%'},
+};
+window._serieAtivaPorChart = window._serieAtivaPorChart || {};
+
+function highlightSerie(nome, chartElId, legendElId, detailElId){
+  const atual = window._serieAtivaPorChart[chartElId] || null;
+  const novo = (atual === nome) ? null : nome;
+  window._serieAtivaPorChart[chartElId] = novo;
+  Object.keys(SERIES_INFO).forEach(k=>{
+    const g = document.getElementById(chartElId+'-serie-'+k);
+    if(!g) return;
+    g.style.opacity = (novo===null || novo===k) ? '1' : '0.18';
+  });
+  const btns = document.querySelectorAll(`#${legendElId} .legend-btn`);
+  for(let i=0;i<btns.length;i++){
+    btns[i].classList.toggle('legend-btn-active', novo && btns[i].dataset.serie===novo);
+  }
+  showSerieDetalhe(novo, chartElId, detailElId);
+}
+
+function showSerieDetalhe(nome, chartElId, detailElId){
+  const el = document.getElementById(detailElId);
+  if(!el) return;
+  if(!nome){
+    el.innerHTML = `<div class="card-meta">Clique em um item da legenda acima para destacar a série e ver os valores mês a mês.</div>`;
+    return;
+  }
+  const info = SERIES_INFO[nome];
+  let linhas = '';
+  NEGOCIACOES.forEach((nItem,i)=>{
+    let val;
+    if(nome==='valor') val = fmtBRL0(nItem.valor);
+    else if(nome==='contatos') val = nItem.contatos;
+    else if(nome==='inadReal') val = INADIMPLENCIA[i].real.toFixed(1)+'%';
+    else if(nome==='inadMeta') val = INADIMPLENCIA[i].meta.toFixed(1)+'%';
+    linhas += `<div style="display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid var(--border);"><span class="muted">${nItem.mes}</span><span style="font-weight:800; color:${info.cor};">${val}</span></div>`;
+  });
+  el.innerHTML = `<div class="card" style="background:#0e0e17; border-color:${info.cor}55;">
+    <div class="card-label" style="color:${info.cor};">${info.label} — por competência</div>
+    ${linhas}
+  </div>`;
+}
+
+// ── Legenda clicável (bolinha + rótulo — valor total) ──
+function renderLegendaGraficoNeg(elId, chartElId, detailElId){
+  const el = document.getElementById(elId);
+  const totalValor = NEGOCIACOES.reduce((s,n)=>s+n.valor,0);
+  const totalContatos = NEGOCIACOES.reduce((s,n)=>s+n.contatos,0);
+  const ultima = INADIMPLENCIA[INADIMPLENCIA.length-1];
+  el.innerHTML = `
+    <div class="legend-btn" data-serie="valor" onclick="highlightSerie('valor','${chartElId}','${elId}','${detailElId}')"><span class="dot" style="background:#3d7bff"></span>Valor Recuperado — <b style="color:var(--text)">${fmtBRL0(totalValor)}</b> <span class="muted">(mar-mai/26)</span></div>
+    <div class="legend-btn" data-serie="contatos" onclick="highlightSerie('contatos','${chartElId}','${elId}','${detailElId}')"><span class="dot" style="background:#00e5a0"></span>Contatos Enviados — <b style="color:var(--text)">${totalContatos}</b> <span class="muted">(mar-mai/26)</span></div>
+    <div class="legend-btn" data-serie="inadReal" onclick="highlightSerie('inadReal','${chartElId}','${elId}','${detailElId}')"><span class="dot" style="background:#ff8a3d"></span>Inadimplência Real (${ultima.mes}) — <b style="color:#ff8a3d">${ultima.real.toFixed(1)}%</b></div>
+    <div class="legend-btn" data-serie="inadMeta" onclick="highlightSerie('inadMeta','${chartElId}','${elId}','${detailElId}')"><span class="dot" style="background:#8888aa"></span>Meta de Inadimplência (${ultima.mes}) — <b style="color:var(--text)">${ultima.meta.toFixed(1)}%</b></div>
+  `;
+}
+
+// ── Tabela-legenda com todos os valores negociados por competência ──
+function renderLegendaNegociacoes(elId){
+  const el = document.getElementById(elId);
+  el.innerHTML = `<table>
+    <thead><tr><th>Competência</th><th class="num">Valor Recuperado</th><th class="num">Contatos</th><th class="num">R$/contato</th><th class="num">Inadimpl. Real</th><th class="num">Meta</th></tr></thead>
+    <tbody>
+      ${NEGOCIACOES.map((n,i)=>{
+        const d = INADIMPLENCIA[i];
+        const acima = d.real > d.meta;
+        return `<tr><td>${n.mes}</td><td class="num">${fmtBRL(n.valor)}</td><td class="num">${n.contatos}</td><td class="num">${fmtBRL(n.valor/n.contatos)}</td><td class="num" style="color:${acima?'#ff8a3d':'#00e5a0'}; font-weight:700;">${d.real.toFixed(1)}%</td><td class="num muted">${d.meta.toFixed(1)}%</td></tr>`;
+      }).join('')}
+    </tbody>
+    <tfoot><tr><td style="font-weight:700;">Total</td><td class="num" style="font-weight:700;">R$ 514.293,00</td><td class="num" style="font-weight:700;">884</td><td class="num" style="font-weight:700;">R$ 581,79</td><td class="num" style="font-weight:700;">16,4%</td><td class="num muted">13,3%</td></tr></tfoot>
+  </table>`;
+}
+
+// ── Barras de campanha (reingresso + vendas combinado) ──
+function renderCampanhasCombo(elId){
+  const el = document.getElementById(elId);
+  const items = REINGRESSO_CAMPANHAS.map(c=>Object.assign({}, c, {tipo:'Reingresso'}))
+    .concat(VENDAS_CAMPANHAS.map(c=>Object.assign({}, c, {tipo:'Venda'})));
+  const max = Math.max.apply(null, items.map(i=>i.qtd))*1.15;
+  el.innerHTML = items.map(i=>`
+    <div class="cat-row">
+      <div class="cat-row-head"><span class="nome">${i.nome}</span><span class="val">${i.qtd}</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:${(i.qtd/max*100).toFixed(1)}%; background:${i.cor};"></div></div>
+    </div>`).join('');
+}
+
+// ═══════════════════════════════════════════════════════════
+// RENDERIZAÇÃO — VISÃO GERAL
+// ═══════════════════════════════════════════════════════════
+drawDonut('vgDonutSaldo', [
+  {nome:'Caixa Livre', valor:195.8, cor:'#3d7bff', suffix:' mil'},
+  {nome:'Fundo Obras', valor:1845.7, cor:'#a855f7', suffix:' mil'},
+], '2,04', 'R$ milhões');
+// (o donut de pagamentos na Visão Geral é atualizado dentro de renderPagamentosPeriodo, junto com o filtro)
+drawReceitaDespesaChart('vgBarDespesas', true);
+drawNegInadInteractive('vgChartNegociacoes', 'vgLegendaNeg', 'vgSerieDetalhe');
+drawDonut('vgDistribuicaoVendas', VENDAS_CAMPANHAS.map(c=>({nome:c.nome, valor:c.qtd, cor:c.cor})), '19', 'com campanha');
+drawDonut('vgRetencaoDonut', RETENCAO_CATEGORIAS.map(c=>({nome:c.nome, valor:c.qtd, cor:c.cor})), '19', 'desligamentos');
+
+// ═══════════════════════════════════════════════════════════
+// RENDERIZAÇÃO — NEGOCIAÇÃO (aba dedicada)
+// ═══════════════════════════════════════════════════════════
+drawNegInadInteractive('negChartFull', 'negLegendaNeg', 'negSerieDetalhe');
+renderLegendaNegociacoes('tabelaLegendaNeg');
+
+// ═══════════════════════════════════════════════════════════
+// RENDERIZAÇÃO — REINGRESSO (aba dedicada)
+// ═══════════════════════════════════════════════════════════
+renderSimpleBars('reingressoChart', REINGRESSO_CAMPANHAS.map(c=>({nome:c.nome, valor:c.qtd, cor:c.cor})));
+drawDonut('reingressoDonut', REINGRESSO_CAMPANHAS.map(c=>({nome:c.nome, valor:c.qtd, cor:c.cor})), '10', 'com campanha');
+
+// ═══════════════════════════════════════════════════════════
+// RENDERIZAÇÃO — VENDAS (aba dedicada)
+// ═══════════════════════════════════════════════════════════
+renderSimpleBars('vendasChart', VENDAS_CAMPANHAS.map(c=>({nome:c.nome, valor:c.qtd, cor:c.cor})));
+drawDonut('vendasDonut', VENDAS_CAMPANHAS.map(c=>({nome:c.nome, valor:c.qtd, cor:c.cor})), '19', 'com campanha');
+
+// ═══════════════════════════════════════════════════════════
+// RENDERIZAÇÃO — RETENÇÃO (aba dedicada)
+// ═══════════════════════════════════════════════════════════
+drawDonut('retencaoDonutCategoria', RETENCAO_CATEGORIAS.map(c=>({nome:c.nome, valor:c.qtd, cor:c.cor})), '19', 'desligamentos');
+
+// ═══════════════════════════════════════════════════════════
+// RENDERIZAÇÃO — PAGAMENTOS (aba dedicada)
+// ═══════════════════════════════════════════════════════════
+drawDonut('pagDonutFaixa', [
+  {nome:'Acima de R$ 5 mil', valor:525289.83, cor:'#e8192c', suffix:''},
+  {nome:'Até R$ 5 mil', valor:162432.88, cor:'#ffd32a', suffix:''},
+], '153', 'pagamentos');
+drawPagamentosSemanal('pagChartSemanal');
+renderTabelaFornecedores('tabelaFornecedores');
+document.getElementById('tabelaMotivos').innerHTML = RETENCAO_MOTIVOS.map(m=>`
+  <tr><td><span class="dot" style="background:${m.cor}; margin-right:6px;"></span>${m.motivo}</td><td class="num">${m.qtd}</td><td class="num">${m.pct.toFixed(2).replace('.',',')}%</td></tr>
+`).join('');
+
+// ═══════════════════════════════════════════════════════════
+// PALCO INTERATIVO — Fluxo de Caixa
+// ═══════════════════════════════════════════════════════════
+const VIEWS = {
+  operacional: {
+    icon:'💧', title:'Caixa Operacional Livre', badge:'BLOCO 1 · OPERACIONAL', accent:'#3d7bff',
+    desc:'Somente o caixa de uso livre do clube — sem misturar com fundo de obras ou limite de crédito.',
+    render(container){ drawBarChartDaily('stageChart', 'banco', {includeZero:true, barColor:'#3d7bff', callouts:true}); },
+    alerts:`<div class="alert-box red"><span>🔻</span><div><b>Ponto de atenção — 06/jul:</b> caixa operacional projetado em <b>-R$ 94.854</b>. Único dia do período em que o caixa livre fica negativo.</div></div>
+      <div class="alert-box"><span>🔺</span><div><b>Maior recomposição:</b> 13/jul, entrada de R$ 1.050.800.</div></div>`
+  },
+  investimento: {
+    icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" style="vertical-align:-3px;"><path d="M4 18v-2a8 8 0 0 1 16 0v2"/><path d="M2 18h20"/><line x1="12" y1="6" x2="12" y2="9"/></svg>', title:'Fundo Índices Construtivos', badge:'BLOCO 2 · INVESTIMENTO', accent:'#a855f7',
+    desc:'Recurso arrecadado dos sócios especificamente para obras. Não deve ser tratado como caixa livre.',
+    render(container){
+      container.innerHTML = `<div id="stageIndicesChart" class="scrollx"></div>
+        <div style="margin-top:22px; font-size:13px; font-weight:700; color:var(--text); text-transform:uppercase; letter-spacing:.4px;">Ranking de Obras (Fundo Índices Construtivos)</div>
+        <div id="stageObrasRanking" style="margin-top:10px;"></div>`;
+      drawLineChart('stageIndicesChart', 'indices', {includeZero:false, lineColor:'#a855f7', dotColor:'#a855f7'});
+      const top = OBRAS.slice().sort((a,b)=>b.valor-a.valor).map(o=>({nome:o.projeto+' ('+o.data+')', valor:o.valor, display:fmtBRL0(o.valor), cor:'#a855f7'}));
+      renderSimpleBars('stageObrasRanking', top);
+    },
+    alerts:`<div class="alert-box"><span>ℹ️</span><div>Saldo do fundo cobre com folga os R$ 630 mil já comprometidos com obras. <b>Telhado Dn. Leopoldina</b> concentra a maior saída (R$ 421 mil, set/2026).</div></div>`
+  },
+  financiamento: {
+    icon:'🛟', title:'Limite de Crédito Garantido', badge:'BLOCO 3 · FINANCIAMENTO', accent:'#06b6d4',
+    desc:'Linhas contratadas junto a Banrisul e Itaú. É um backstop, não caixa.',
+    render(container){
+      const usoMaxNecessario = 94854, limiteTotal = 6400000, pctUso = (usoMaxNecessario/limiteTotal*100);
+      container.innerHTML = `<div style="display:flex; height:34px; border-radius:8px; overflow:hidden; border:1px solid var(--border); margin:6px 0 8px; background:#0a0a0f;">
+          <div style="width:${pctUso.toFixed(2)}%; background:var(--cyan); min-width:3px;"></div></div>
+        <div class="legend-row">Uso projetado no pior dia (06/jul): <b style="color:var(--text)">${fmtBRL0(usoMaxNecessario)}</b> — apenas <b style="color:var(--cyan)">${pctUso.toFixed(1)}%</b> do limite total</div>`;
+    },
+    alerts:`<div class="alert-box"><span>💡</span><div>Mesmo no pior dia projetado, o clube usaria menos de 2% do limite disponível.</div></div>`
+  },
+  resultado: {
+    icon:'📊', title:'Resultado Operacional — Junho', badge:'RECEITA × DESPESA', accent:'#e8192c',
+    desc:'Receita menos despesa operacional do mês. É negativo neste período.',
+    render(container){
+      container.innerHTML = `<div id="stageReceitaDespesa"></div>`;
+      drawReceitaDespesaChart('stageReceitaDespesa', false);
+    },
+    alerts:`<div class="alert-box red"><span>⚠️</span><div>Despesa superou receita em <b>R$ 110,5 mil</b> neste período.</div></div>`
+  }
+};
+
+function selectView(key){
+  const v = VIEWS[key];
+  const cards = document.querySelectorAll('.kpi-card');
+  for(let i=0; i<cards.length; i++){ cards[i].classList.remove('active'); }
+  document.getElementById('kpi-'+key).classList.add('active');
+  document.getElementById('stageIcon').innerHTML = v.icon;
+  document.getElementById('stageTitle').textContent = v.title;
+  const badge = document.getElementById('stageBadge');
+  badge.textContent = v.badge; badge.style.background = v.accent+'22'; badge.style.color = v.accent;
+  document.getElementById('stageDesc').textContent = v.desc;
+  const chartContainer = document.getElementById('stageChart');
+  chartContainer.innerHTML = '';
+  v.render(chartContainer);
+  document.getElementById('stageAlerts').innerHTML = v.alerts;
+}
+selectView('operacional');
+
+// ═══════════════════════════════════════════════════════════
+// NAVEGAÇÃO — SIDEBAR
+// ═══════════════════════════════════════════════════════════
+const PAGE_TITLES = {
+  visaogeral:  {t:'Visão Geral', s:'Gestão integrada · Junho/2026'},
+  fluxocaixa:  {t:'Fluxo de Caixa', s:'Operacional · Investimento · Financiamento'},
+  pagamentos:  {t:'Pagamentos', s:'Controle de pagamentos e fornecedores · Junho/2026'},
+  negociacao:  {t:'Negociação', s:'Recuperação de inadimplência · Mar-Mai/2026'},
+  reingresso:  {t:'Reingresso', s:'Associados reingressantes · 01 a 26/jun/2026'},
+  vendas:      {t:'Vendas', s:'Associações novas · 01 a 26/jun/2026'},
+  retencao:    {t:'Retenção', s:'Desligamentos, retenção e permanência · Junho/2026'},
+};
+
+const navItems = document.querySelectorAll('.nav-item');
+for(let i=0;i<navItems.length;i++){
+  navItems[i].addEventListener('click', function(){
+    const page = this.getAttribute('data-page');
+    for(let j=0;j<navItems.length;j++){ navItems[j].classList.remove('active'); }
+    this.classList.add('active');
+    const sections = document.querySelectorAll('.page-section');
+    for(let j=0;j<sections.length;j++){ sections[j].classList.remove('active'); }
+    document.getElementById('page-'+page).classList.add('active');
+    document.getElementById('pageBreadcrumbTitle').textContent = PAGE_TITLES[page].t;
+    document.getElementById('pageBreadcrumbSub').textContent = PAGE_TITLES[page].s;
+  });
+}
+
+// ── Filtro de período — baseado nos períodos REAIS enviados pela controladoria ──
+// (não são semanas de calendário limpas; variam de 2 a 12 dias, conforme o corte que eles usam)
+const PAGAMENTOS_POR_PERIODO = {
+  '01-05jun': {label:'01 a 05/06/2026', qtd:150, total:1096023.83, maiorQtd:23, maiorTotal:958214.46, menorQtd:127, menorTotal:137809.37,
+    top:[{nome:'Folha Pagamento',qtd:21,valor:630851.28,pct:57.56},{nome:'Gba Brasil Administracao De Pessoas Ltda',qtd:1,valor:165707.91,pct:15.12},{nome:'Earte Promocoes E Prod Artisticas Cult E Ensi',qtd:1,valor:26113.46,pct:2.38},{nome:'Elite Tour Transportes Ltda',qtd:1,valor:26000.0,pct:2.37},{nome:'3S Solucoes Em Servicos E Seguranca Ltda',qtd:1,valor:25110.96,pct:2.29},{nome:'Centro De Integração Empresa Escola',qtd:1,valor:17407.31,pct:1.59},{nome:'Galbo Engenharia Ltda - Epp',qtd:1,valor:14431.09,pct:1.32},{nome:'Ressarcimento De Terceiros',qtd:7,valor:11396.74,pct:1.04},{nome:'D & C Construcoes Ltda',qtd:1,valor:9797.0,pct:0.89},{nome:'Ponto Do Turismo Ag De Viagens Ltda',qtd:2,valor:9712.05,pct:0.89},{nome:'Contabilizi Consultoria Ltda',qtd:1,valor:9592.0,pct:0.88},{nome:'Eduardo Almeida Ltda',qtd:1,valor:8446.5,pct:0.77},{nome:'Fabricio Serviços De Divulgação De Eventos Ei',qtd:1,valor:7685.0,pct:0.7},{nome:'Copapel Comercio E Repres De Papel Ltda',qtd:3,valor:7577.65,pct:0.69},{nome:'Wagner Andrade Zaccani 003.834.600-18',qtd:1,valor:7500.0,pct:0.68}],
+    bancos:[{nome:'Banrisul',qtd:136,total:949391.57},{nome:'Caixa Sogipa',qtd:7,total:3953.79},{nome:'Patrocínio A',qtd:2,total:9712.05},{nome:'Índices Cons',qtd:2,total:22877.59},{nome:'Alto Rendime',qtd:1,total:7500.0},{nome:'Cbc Edit 11 R',qtd:1,total:43480.0},{nome:'Projeto Olim',qtd:1,total:59108.83}]},
+  '08-12jun': {label:'08 a 12/06/2026', qtd:190, total:639405.05, maiorQtd:24, maiorTotal:452440.77, menorQtd:166, menorTotal:186964.28,
+    top:[{nome:'Unimed Porto Alegre Soc. Coop. De Trabalho M',qtd:6,valor:90317.68,pct:14.13},{nome:'Departamento Municipal De Agua E Esgotos',qtd:5,valor:86225.46,pct:13.49},{nome:'Vitale Restaurantes Empresariais Ltda',qtd:2,valor:53277.8,pct:8.33},{nome:'Center Broilo Com De Sistemas De Aquecim Ltd',qtd:1,valor:49000.0,pct:7.66},{nome:'5 Continentes Viagens E Assessoria Ltda',qtd:2,valor:34376.56,pct:5.38},{nome:'Capitale Energia Comercializadora Ltda.',qtd:1,valor:32232.59,pct:5.04},{nome:'3S Solucoes Em Servicos E Seguranca Ltda',qtd:1,valor:19470.0,pct:3.05},{nome:'Comite Brasileiro De Clubes',qtd:1,valor:17842.5,pct:2.79},{nome:'Falcon Manutencao Em Altura Ltda',qtd:1,valor:14822.03,pct:2.32},{nome:'Galbo Engenharia Ltda - Epp',qtd:1,valor:14431.09,pct:2.26},{nome:'Uniao De Transportes Tupantur Ltda',qtd:6,valor:12861.1,pct:2.01},{nome:'Z Foods Comercio De Alimentos Ltda',qtd:2,valor:9992.45,pct:1.56},{nome:'Vital Assessoria E Consultoria Em Medicina Do',qtd:1,valor:7151.55,pct:1.12},{nome:'Ressarcimento De Terceiros',qtd:5,valor:7113.5,pct:1.11},{nome:'Higiemaster Sul Industria E Comercio De Sanea',qtd:1,valor:7082.54,pct:1.11}],
+    bancos:[{nome:'Banrisul',qtd:176,total:529597.33},{nome:'Caixa Sogipa',qtd:10,total:10610.07},{nome:'Patrocínio A',qtd:2,total:35766.56},{nome:'Índices Cons',qtd:2,total:63431.09}]},
+  '15-26jun': {label:'15 a 26/06/2026', qtd:373, total:2020524.83, maiorQtd:66, maiorTotal:1601740.09, menorQtd:307, menorTotal:418784.74,
+    top:[{nome:'Secretaria Da Receita Federal',qtd:3,valor:553977.55,pct:27.42},{nome:'Folha Pagamento',qtd:20,valor:157003.63,pct:7.77},{nome:'Caixa Economica Federal',qtd:3,valor:125758.14,pct:6.22},{nome:'Top Service Serviços E Sistemas Ltda',qtd:6,valor:115351.27,pct:5.71},{nome:'Companhia Estadual De Distribuição De Energi',qtd:2,valor:65555.92,pct:3.24},{nome:'Vitale Restaurantes Empresariais Ltda',qtd:3,valor:51472.9,pct:2.55},{nome:'Vt Solucoes Administracao E Servicos Ltda',qtd:2,valor:48434.02,pct:2.4},{nome:'3S Solucoes Em Servicos E Seguranca Ltda',qtd:2,valor:41453.8,pct:2.05},{nome:'Percorrer Atividades Fisicas Ltda-Me',qtd:2,valor:28334.31,pct:1.4},{nome:'Avates Eventos Ltda',qtd:1,valor:24725.0,pct:1.22},{nome:'Eduardo Maciel',qtd:6,valor:24175.0,pct:1.2},{nome:'Daniel Borges Cargnin',qtd:2,valor:19000.0,pct:0.94},{nome:'Rodrigo Da Costa Ferreiro',qtd:1,valor:18893.08,pct:0.94},{nome:'Aimoré D Goulart',qtd:1,valor:18711.42,pct:0.93},{nome:'Drogaria Benjamin',qtd:1,valor:16872.86,pct:0.84}],
+    bancos:[{nome:'Banrisul',qtd:293,total:1747884.11},{nome:'Projeto Olim',qtd:55,total:193443.74},{nome:'Caixa Sogipa',qtd:14,total:16815.64},{nome:'Alto Rendime',qtd:4,total:17043.2},{nome:'Patrocínio A',qtd:4,total:20500.0},{nome:'Índices Cons',qtd:3,total:24838.14}]},
+  '29-30jun': {label:'29 a 30/06/2026', qtd:61, total:151580.61, maiorQtd:7, maiorTotal:81678.47, menorQtd:54, menorTotal:69902.14,
+    top:[{nome:'Avates Eventos Ltda',qtd:1,valor:24725.0,pct:16.31},{nome:'Earte Promocoes E Prod Artisticas Cult E Ensi',qtd:2,valor:23029.53,pct:15.19},{nome:'Folha Pagamento',qtd:4,valor:12444.65,pct:8.21},{nome:'Higiemaster Sul Industria E Comercio De Sanea',qtd:1,valor:10730.06,pct:7.08},{nome:'Daniela Pasin De Figueiredo 74481568020',qtd:2,valor:8332.0,pct:5.5},{nome:'Joao Batista Nonnemacher - Escoteiro',qtd:1,valor:7226.28,pct:4.77},{nome:'Editora Espaço Aereo Ltda',qtd:1,valor:6852.0,pct:4.52},{nome:'Santori Comercio De Moveis Eireli',qtd:1,valor:5509.6,pct:3.63},{nome:'Nicole Franzoi',qtd:1,valor:4950.0,pct:3.27},{nome:'Az Motobombas Ltda',qtd:1,valor:3680.83,pct:2.43},{nome:'Cadore Academia De Atividades Fisicas Ltda.',qtd:1,valor:3400.0,pct:2.24},{nome:'Ak&Mv Servicos De Psicologia Ltda',qtd:1,valor:3360.0,pct:2.22},{nome:'Copapel Comercio E Repres De Papel Ltda',qtd:2,valor:3356.84,pct:2.21},{nome:'67.015.160 Rubens Flavio De Assis Porto',qtd:1,valor:3180.0,pct:2.1},{nome:'Hildor Ênio Faber',qtd:1,valor:2445.0,pct:1.61}],
+    bancos:[{nome:'Banrisul',qtd:52,total:131294.55},{nome:'Caixa Sogipa',qtd:4,total:2260.29},{nome:'Proj Sogipa',qtd:3,total:11710.0},{nome:'Banco Do Br',qtd:1,total:2101.72},{nome:'Projeto Olim',qtd:1,total:4214.05}]},
+  '28jun-05jul': {label:'28/06 a 05/07/2026', qtd:153, total:687722.71, maiorQtd:25, maiorTotal:525289.83, menorQtd:128, menorTotal:162432.88,
+    top:[{nome:'Gba Brasil Administracao De Pessoas Ltda',qtd:1,valor:157129.89,pct:22.85},{nome:'Buffet Bettino',qtd:1,valor:44700.0,pct:6.5},{nome:'Cia De Gas Do Estado Do Rs Sulgas',qtd:1,valor:42639.85,pct:6.2},{nome:'Santori Comercio De Moveis Eireli',qtd:2,valor:42549.6,pct:6.19},{nome:'Mercadopago.Com Representacoes Ltda.',qtd:15,valor:32802.26,pct:4.77},{nome:'3S Solucoes Em Servicos E Seguranca Ltda',qtd:1,valor:28076.48,pct:4.08},{nome:'Folha Pagamento',qtd:7,valor:27992.39,pct:4.07},{nome:'Avates Eventos Ltda',qtd:1,valor:24725.0,pct:3.6},{nome:'Earte Promocoes E Prod Artisticas Cult E Ensi',qtd:2,valor:23029.53,pct:3.35},{nome:'Eduardo Almeida Ltda',qtd:1,valor:18770.0,pct:2.73},{nome:'Banco Do Brasil',qtd:2,valor:15915.55,pct:2.31},{nome:'Centro De Integração Empresa Escola',qtd:1,valor:15718.6,pct:2.29},{nome:'41.326.303 Valdoir Rodrigues Dias',qtd:2,valor:11200.0,pct:1.63},{nome:'Higiemaster Sul Industria E Comercio De Sanea',qtd:1,valor:10730.06,pct:1.56},{nome:'Hub Instituicao De Pagamento S.A.',qtd:7,valor:10420.87,pct:1.52}],
+    bancos:[{nome:'Banrisul',qtd:140,total:638936.73},{nome:'Caixa Sogipa',qtd:4,total:2260.29},{nome:'Proj Sogipa',qtd:4,total:14990.0},{nome:'Índices Cons',qtd:3,total:25219.92},{nome:'Banco Do Br',qtd:1,total:2101.72},{nome:'Projeto Olim',qtd:1,total:4214.05}]},
+};
+const PERIODOS = [
+  {key:'01-05jun',     temDados:{pagamentos:true}},
+  {key:'08-12jun',     temDados:{pagamentos:true}},
+  {key:'15-26jun',     temDados:{pagamentos:true}},
+  {key:'29-30jun',     temDados:{pagamentos:true}},
+  {key:'28jun-05jul',  temDados:{pagamentos:true}, atual:true},
+];
+
+function popularFiltroSemanas(){
+  const sel = document.getElementById('filtroSemana');
+  sel.innerHTML = PERIODOS.map(p=>{
+    const d = PAGAMENTOS_POR_PERIODO[p.key];
+    const tag = p.atual ? ' — período atual' : '';
+    return `<option value="${p.key}">${d.label}${tag}</option>`;
+  }).join('');
+  sel.value = PERIODOS[PERIODOS.length-1].key; // seleciona o período mais recente por padrão
+  aplicarFiltro();
+}
+
+function aplicarFiltro(){
+  const sel = document.getElementById('filtroSemana');
+  const key = sel.value;
+  const d = PAGAMENTOS_POR_PERIODO[key];
+  if(!d) return;
+
+  document.getElementById('periodoRangeBig').textContent = d.label.replace(' a ', ' → ');
+  document.getElementById('periodoCountSmall').textContent = '1 período com dados';
+
+  // Re-renderiza a aba Pagamentos com o período selecionado (isso SIM filtra de verdade)
+  renderPagamentosPeriodo(key);
+}
+
+function renderPagamentosPeriodo(key){
+  const d = PAGAMENTOS_POR_PERIODO[key];
+  if(!d) return;
+  const pctMaior = (d.maiorTotal/d.total*100).toFixed(1).replace('.',',');
+  const pctMenor = (d.menorTotal/d.total*100).toFixed(1).replace('.',',');
+
+  document.getElementById('pagPeriodoTag').textContent = d.label;
+  document.getElementById('pagKpiTotalQtd').textContent = d.qtd;
+  document.getElementById('pagKpiTotalValor').textContent = fmtBRL0(d.total);
+  document.getElementById('pagKpiValorPeriodo').textContent = d.label;
+  document.getElementById('pagKpiMaiorQtd').textContent = d.maiorQtd;
+  document.getElementById('pagKpiMaiorPct').textContent = pctMaior + '% do valor total';
+  document.getElementById('pagKpiMenorQtd').textContent = d.menorQtd;
+  document.getElementById('pagKpiMenorPct').textContent = pctMenor + '% do valor total';
+
+  drawDonut('pagDonutFaixa', [
+    {nome:'Acima de R$ 5 mil', valor:d.maiorTotal, cor:'#e8192c', suffix:''},
+    {nome:'Até R$ 5 mil', valor:d.menorTotal, cor:'#ffd32a', suffix:''},
+  ], String(d.qtd), 'pagamentos');
+
+  const donutVG = document.getElementById('vgDonutPagamentos');
+  if(donutVG){
+    drawDonut('vgDonutPagamentos', [
+      {nome:'Acima de R$ 5 mil', valor:d.maiorTotal, cor:'#e8192c', suffix:''},
+      {nome:'Até R$ 5 mil', valor:d.menorTotal, cor:'#ffd32a', suffix:''},
+    ], String(d.qtd), 'pagamentos');
+  }
+
+  renderTabelaFornecedoresPeriodo(d.top);
+  renderTabelaBancosPeriodo(d.bancos, d.total);
+  renderInsightFornecedores(d.top, d.label);
+}
+
+function renderInsightFornecedores(top, periodoLabel){
+  const el = document.getElementById('pagInsightFornecedores');
+  if(!el) return;
+  const maiorValor = top.slice().sort((a,b)=>b.valor-a.valor)[0];
+  const maisRecorrente = top.slice().sort((a,b)=>b.qtd-a.qtd)[0];
+  el.innerHTML = `<b>${maiorValor.nome} concentra ${maiorValor.pct.toFixed(1).replace('.',',')}% do valor pago no período</b> (${fmtBRL(maiorValor.valor)} em ${maiorValor.qtd}x). O destaque de recorrência fica com <b>${maisRecorrente.nome}</b> (${maisRecorrente.qtd}x no período, ${fmtBRL(maisRecorrente.valor)}) — vale entender a natureza desses lançamentos se o valor individual for baixo.`;
+}
+
+function renderTabelaFornecedoresPeriodo(top){
+  const el = document.getElementById('tabelaFornecedores');
+  el.innerHTML = `<table>
+    <thead><tr><th>#</th><th>Fornecedor</th><th class="num">Qtd. Pagamentos</th><th class="num">Valor Total</th><th class="num">% do Total</th><th>Recorrência</th></tr></thead>
+    <tbody>
+      ${top.map((f,i)=>{
+        const recor = f.qtd >= 10 ? {label:'Muito alta', cor:'#e8192c'} : f.qtd >= 5 ? {label:'Alta', cor:'#ffd32a'} : f.qtd >= 2 ? {label:'Ocasional', cor:'#00e5a0'} : {label:'Única', cor:'#8888aa'};
+        return `<tr>
+          <td class="muted">${i+1}</td>
+          <td>${f.nome}</td>
+          <td class="num">${f.qtd}x</td>
+          <td class="num">${fmtBRL(f.valor)}</td>
+          <td class="num">${f.pct.toFixed(2).replace('.',',')}%</td>
+          <td><span class="tag" style="background:${recor.cor}22; color:${recor.cor};">${recor.label}</span></td>
+        </tr>`;
+      }).join('')}
+    </tbody>
+  </table>`;
+}
+
+function renderTabelaBancosPeriodo(bancos, totalGeral){
+  const el = document.getElementById('tabelaBancos');
+  if(!el) return;
+  const totalQtd = bancos.reduce((s,b)=>s+b.qtd,0);
+  el.innerHTML = `<table>
+    <thead><tr><th>Banco / Conta</th><th class="num">Qtd. Pagamentos</th><th class="num">% da Qtd.</th><th class="num">Valor Total</th><th class="num">% do Valor</th></tr></thead>
+    <tbody>
+      ${bancos.map(b=>{
+        const pctQtd = (b.qtd/totalQtd*100).toFixed(1).replace('.',',');
+        const pctValor = (b.total/totalGeral*100).toFixed(1).replace('.',',');
+        return `<tr>
+          <td>${b.nome}</td>
+          <td class="num">${b.qtd}</td>
+          <td class="num muted">${pctQtd}%</td>
+          <td class="num">${fmtBRL(b.total)}</td>
+          <td class="num muted">${pctValor}%</td>
+        </tr>`;
+      }).join('')}
+    </tbody>
+    <tfoot><tr><td style="font-weight:700;">Total</td><td class="num" style="font-weight:700;">${totalQtd}</td><td class="num">100%</td><td class="num" style="font-weight:700;">${fmtBRL(totalGeral)}</td><td class="num">100%</td></tr></tfoot>
+  </table>`;
+}
+popularFiltroSemanas();
+</script>
+</body>
+</html>
