@@ -108,6 +108,8 @@
 
   .kpi-row-icons{ display:grid; grid-template-columns:repeat(5,1fr); gap:16px; margin-bottom:28px; }
   .kpi-row-icons.cols-4{ grid-template-columns:repeat(4,1fr); }
+  .kpi-row-icons.cols-6{ grid-template-columns:repeat(6,1fr); }
+  .kpi-row-icons.cols-5{ grid-template-columns:repeat(5,1fr); }
   .kpi-icon-card{ display:flex; flex-direction:column; align-items:flex-start; gap:0; padding:20px; background:var(--card); border:1px solid var(--border); border-radius:12px; min-height:160px; }
   .kpi-card-top{ display:flex; align-items:center; gap:10px; margin-bottom:16px; }
   .kpi-icon-circle{ width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
@@ -192,6 +194,19 @@
   .alert-box.green{border-left-color:var(--green); background:rgba(0,229,160,.06);}
   .alert-box b{color:var(--text);}
 
+  @keyframes pulseYellow{
+    0%, 100% { box-shadow:0 0 0 0 rgba(255,211,42,.45); }
+    50% { box-shadow:0 0 10px 3px rgba(255,211,42,.35); }
+  }
+  .tag-updating{
+    background:rgba(255,211,42,.15); color:var(--yellow); border:1px solid rgba(255,211,42,.4);
+    animation:pulseYellow 1.8s ease-in-out infinite;
+  }
+  .nav-update-dot{
+    display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--yellow);
+    margin-left:6px; animation:pulseYellow 1.8s ease-in-out infinite; flex-shrink:0;
+  }
+
   .donut-wrap{display:flex; align-items:center; gap:22px; flex-wrap:wrap;}
   .donut{width:190px; height:190px; flex-shrink:0; display:flex; align-items:center; justify-content:center;}
   .donut-ring{ animation:donutIn .65s cubic-bezier(.34,1.56,.64,1); transform-origin:center; }
@@ -220,7 +235,7 @@
     .sidebar-logo .sub{ display:none; }
     .nav-item{ padding:13px 14px; font-size:14px; gap:10px; }
     .sidebar-foot{ display:none; }
-    .kpi-row-icons, .kpi-row-icons.cols-4{ grid-template-columns:repeat(2,1fr); }
+    .kpi-row-icons, .kpi-row-icons.cols-4, .kpi-row-icons.cols-6, .kpi-row-icons.cols-5{ grid-template-columns:repeat(3,1fr); }
     .grid-3{ grid-template-columns:1fr; }
     .kpi-grid{grid-template-columns:repeat(2,1fr);}
     .grid-2, .grid-2.reverse{grid-template-columns:1fr;}
@@ -266,7 +281,7 @@
     .content{ padding:20px 16px 50px; }
     .section-title{ font-size:17px; margin:24px 0 12px; }
 
-    .kpi-row-icons, .kpi-row-icons.cols-4, .kpi-grid{ grid-template-columns:repeat(2,1fr); gap:10px; }
+    .kpi-row-icons, .kpi-row-icons.cols-4, .kpi-row-icons.cols-6, .kpi-row-icons.cols-5, .kpi-grid{ grid-template-columns:repeat(2,1fr); gap:10px; }
     .kpi-icon-card{ padding:14px; min-height:auto; }
     .kpi-icon-info .value{ font-size:22px; }
     .kpi-icon-info .label{ font-size:10.5px; }
@@ -280,7 +295,7 @@
   }
 
   @media (max-width:420px){
-    .kpi-row-icons, .kpi-row-icons.cols-4, .kpi-grid{ grid-template-columns:1fr; }
+    .kpi-row-icons, .kpi-row-icons.cols-4, .kpi-row-icons.cols-6, .kpi-row-icons.cols-5, .kpi-grid{ grid-template-columns:1fr; }
   }
 </style>
 </head>
@@ -298,9 +313,10 @@
     <div class="nav-item" data-page="pagamentos"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" style="vertical-align:-3px;"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></span> <span class="nav-text">Pagamentos</span></div>
     <div class="nav-item" data-page="negociacao"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" style="vertical-align:-3px;"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span> <span class="nav-text">Negociação</span></div>
     <div class="nav-item" data-page="reingresso"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" style="vertical-align:-3px;"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></span> <span class="nav-text">Reingresso</span></div>
-    <div class="nav-item" data-page="vendas"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" style="vertical-align:-3px;"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v30"/></svg></span> <span class="nav-text">Vendas</span></div>
-    <div class="nav-item" data-page="retencao"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" style="vertical-align:-3px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span> <span class="nav-text">Retenção</span></div>
+    <div class="nav-item" data-page="vendas"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" style="vertical-align:-3px;"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v30"/></svg></span> <span class="nav-text">Vendas</span><span class="nav-update-dot" title="Dados em atualização"></span></div>
+    <div class="nav-item" data-page="retencao"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" style="vertical-align:-3px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span> <span class="nav-text">Retenção</span><span class="nav-update-dot" title="Dados em atualização"></span></div>
     <div class="nav-item" data-page="rh"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" style="vertical-align:-3px;"><path d="M12 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10z"/><path d="M4 22c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg></span> <span class="nav-text">RH</span></div>
+    <div class="nav-item" data-page="locacoes"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" style="vertical-align:-3px;"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/><path d="M9 9v.01M9 12v.01M9 15v.01M9 18v.01"/></svg></span> <span class="nav-text">Locações</span><span class="nav-update-dot" title="Dados em atualização"></span></div>
   </div>
   <div class="sidebar-foot">
     Diretoria Executiva SOGIPA
@@ -428,6 +444,14 @@
             <div style="font-size:18px; font-weight:900;" id="vgHESetorMaior"></div>
             <div style="font-size:14px; color:var(--red); font-weight:700; margin-top:2px;" id="vgHEValorMaior"></div>
           </div>
+          <div style="margin-top:16px; padding-top:16px; border-top:1px solid var(--border);">
+            <div class="card-label" style="margin-bottom:10px;">🏛️ Locações — <span id="vgLocPeriodo" style="color:var(--text); text-transform:none; letter-spacing:0;"></span></div>
+            <div class="mini-stat-row">
+              <div class="mini-stat"><div class="mini-stat-label">Meta do Mês</div><div class="mini-stat-value" style="color:var(--gold);" id="vgLocMeta"></div></div>
+              <div class="mini-stat"><div class="mini-stat-label">Realizado</div><div class="mini-stat-value" id="vgLocRealizado"></div></div>
+              <div class="mini-stat"><div class="mini-stat-label">% da Meta</div><div class="mini-stat-value" id="vgLocPct"></div></div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -438,7 +462,7 @@
 
       <div class="alert-box">
         <span>🕒</span>
-        <div><b>Fechamento em andamento:</b> o dia <b>03/07/2026</b> ainda está em fechamento pela Controladoria e não foi importado. Os dados de Fluxo de Caixa deste período podem sofrer ajustes quando essa importação for concluída.</div>
+        <div id="alertaFechamentoFC"></div>
       </div>
 
       <div class="alert-box red">
@@ -502,28 +526,7 @@
         <div class="card-label">Comparativo por Período (R$ mil)</div>
         <table>
           <thead><tr><th>Período</th><th class="num">Saldo Total</th><th class="num">Caixa Livre</th><th class="num">Fundo Obras</th><th class="num">Receita Realizada</th><th class="num">Despesa Realizada</th><th class="num">Resultado Oper.</th><th>Status</th></tr></thead>
-          <tbody>
-            <tr>
-              <td>Junho/2026</td>
-              <td class="num">2.041,5</td>
-              <td class="num">195,8</td>
-              <td class="num">1.845,7</td>
-              <td class="num">3.239,3</td>
-              <td class="num">3.349,7</td>
-              <td class="num" style="color:var(--red);">-110,5</td>
-              <td><span class="tag" style="background:#00e5a022; color:#00e5a0;">Fechado</span></td>
-            </tr>
-            <tr>
-              <td>Julho/2026</td>
-              <td class="num">1.870,5</td>
-              <td class="num" style="color:var(--red);">-10,1</td>
-              <td class="num">1.880,6</td>
-              <td class="num">135,6</td>
-              <td class="num">332,0</td>
-              <td class="num" style="color:var(--red);">-196,4</td>
-              <td><span class="tag" style="background:#ffd32a22; color:#ffd32a;">Em andamento (até 02/07)</span></td>
-            </tr>
-          </tbody>
+          <tbody id="tabelaHistoricoFechamentos"></tbody>
         </table>
         <div class="card-meta" style="margin-top:10px;">💡 Esta tabela guarda o resumo de cada fechamento mensal — vai crescendo a cada novo período importado, sem apagar o histórico anterior. Os gráficos acima (categorias, projeção diária, compromissos) sempre mostram o período mais recente.</div>
       </div>
@@ -534,14 +537,14 @@
         <div class="scrollx"><table>
           <thead><tr><th>Data</th><th>Fornecedor</th><th>Projeto</th><th class="num">Valor</th></tr></thead>
           <tbody id="tabelaObras"></tbody>
-          <tfoot><tr class="total-highlight"><td colspan="3">TOTAL</td><td class="num">R$ 708.066,00</td></tr></tfoot>
+          <tfoot><tr class="total-highlight"><td colspan="3">TOTAL</td><td class="num">R$ 931.266,00</td></tr></tfoot>
         </table></div>
       </div>
 
       <div class="section-title">Detalhamento · Linhas de Crédito Garantidas<div class="line"></div></div>
       <div class="card full">
         <table>
-          <thead><tr><th>Linha</th><th>Custo</th><th class="num">Limite</th><th class="num">Utilizado (jun)</th></tr></thead>
+          <thead><tr><th>Linha</th><th>Custo</th><th class="num">Limite</th><th class="num">Utilizado (atual)</th></tr></thead>
           <tbody>
             <tr><td>Conta Garantida Banrisul</td><td class="muted">0,39% + CDI a.m.</td><td class="num">—</td><td class="num" style="color:var(--green)">R$ 0,00</td></tr>
             <tr><td>Conta Garantida Itaú</td><td class="muted">1,50% a.m.</td><td class="num">—</td><td class="num" style="color:var(--green)">R$ 0,00</td></tr>
@@ -607,6 +610,8 @@
     <div class="page-section" id="page-negociacao">
       <div class="section-title">Cobrança — Inadimplência e Recuperação de Valores<div class="line"></div></div>
 
+      <div id="negAvisoPeriodo"></div>
+
       <div class="alert-box red">
         <span>🚨</span>
         <div id="negAlertaTopo"></div>
@@ -633,39 +638,41 @@
 
     <!-- ══════════════════ REINGRESSO ══════════════════ -->
     <div class="page-section" id="page-reingresso">
-      <div class="section-title">Reingresso de Associados <span class="tag" style="background:rgba(136,136,170,.15); color:var(--muted);">01 a 26/jun/2026</span><div class="line"></div></div>
-      <div class="grid-3">
-        <div class="card"><div class="card-label">↩️ Total de Reingressos</div><div class="card-value" style="color:var(--green)">26</div><div class="card-meta">no período</div></div>
-        <div class="card"><div class="card-label">💰 Valor Arrecadado</div><div class="card-value">R$ 14.307,35</div><div class="card-meta">total do período</div></div>
-        <div class="card"><div class="card-label">🎯 Ticket Médio</div><div class="card-value">R$ 550,28</div><div class="card-meta">por reingresso</div></div>
-      </div>
-      <div class="grid-2 reverse">
-        <div class="card">
-          <div class="card-label">Por Campanha</div>
-          <div id="reingressoChart"></div>
-        </div>
-        <div class="card">
-          <div class="card-label">Distribuição</div>
-          <div id="reingressoDonut" class="donut-wrap"></div>
-        </div>
+      <div class="section-title">Reingresso de Associados <span class="tag" id="reingressoPeriodoTag" style="background:rgba(136,136,170,.15); color:var(--muted);">01 a 26/jun/2026</span><div class="line"></div></div>
+      <div id="reingressoConteudo"></div>
+
+      <div class="section-title" style="margin-top:26px;">Histórico de Reingressos<div class="line"></div></div>
+      <div class="card full">
+        <div class="card-label">Comparativo por Período</div>
+        <table>
+          <thead><tr><th>Período</th><th class="num">Total</th><th class="num">Valor Arrecadado</th><th class="num">Ticket Médio</th></tr></thead>
+          <tbody id="tabelaHistoricoReingresso"></tbody>
+        </table>
+        <div class="card-meta" style="margin-top:10px;">💡 Guarda o resumo de cada período importado, sem apagar o histórico anterior.</div>
       </div>
     </div>
 
     <!-- ══════════════════ VENDAS ══════════════════ -->
     <div class="page-section" id="page-vendas">
-      <div class="section-title">Vendas — Associações Novas <span class="tag" id="vendasPeriodoTag" style="background:rgba(136,136,170,.15); color:var(--muted);">01 a 26/jun/2026</span><div class="line"></div></div>
+      <div class="section-title">Vendas — Associações Novas <span class="tag" id="vendasPeriodoTag" style="background:rgba(136,136,170,.15); color:var(--muted);">01 a 26/jun/2026</span> <span class="tag tag-updating">🟡 Dados em atualização</span><div class="line"></div></div>
       <div id="vendasConteudo"></div>
     </div>
 
     <!-- ══════════════════ RETENÇÃO ══════════════════ -->
     <div class="page-section" id="page-retencao">
-      <div class="section-title">Retenção &amp; Desligamentos <span class="tag" id="retencaoPeriodoTag" style="background:rgba(136,136,170,.15); color:var(--muted);">01 a 06/07/2026</span><div class="line"></div></div>
+      <div class="section-title">Retenção &amp; Desligamentos <span class="tag" id="retencaoPeriodoTag" style="background:rgba(136,136,170,.15); color:var(--muted);">01 a 06/07/2026</span> <span class="tag tag-updating">🟡 Dados em atualização</span><div class="line"></div></div>
       <div id="retencaoConteudo"></div>
     </div>
 
     <div class="page-section" id="page-rh">
       <div class="section-title">Recursos Humanos <span class="tag" style="background:rgba(136,136,170,.15); color:var(--muted);">Horas Extras · Junho/2026</span><div class="line"></div></div>
       <div id="rhConteudo"></div>
+    </div>
+
+    <!-- ══════════════════ LOCAÇÕES ══════════════════ -->
+    <div class="page-section" id="page-locacoes">
+      <div class="section-title">Locações de Espaços <span class="tag" id="locacoesPeriodoTag" style="background:rgba(136,136,170,.15); color:var(--muted);">Junho/2026</span> <span class="tag tag-updating">🟡 Dados em atualização</span><div class="line"></div></div>
+      <div id="locacoesConteudo"></div>
     </div>
 
     <div class="footer-note">
@@ -701,30 +708,45 @@ let RECEITAS_CATS = [
   {nome:'Patrocínios',        prev:0,      tend:0,      real:0},
 ];
 const PROJECAO = [
-  {d:'01/jul', mov:-18436,  banco:167895,   indices:1880773},
-  {d:'02/jul', mov:-177999, banco:-10104,   indices:1880569},
-  {d:'03/jul', mov:25500,   banco:15396,    indices:1880569},
-  {d:'06/jul', mov:-365500, banco:-350104,  indices:2713361},
-  {d:'07/jul', mov:160000,  banco:-190104,  indices:2713361},
-  {d:'08/jul', mov:85000,   banco:-105104,  indices:2713361},
-  {d:'09/jul', mov:38033,   banco:-67071,   indices:2635361},
-  {d:'10/jul', mov:-178500, banco:-245571,  indices:2586361},
-  {d:'13/jul', mov:1039888, banco:794317,   indices:2586361},
-  {d:'14/jul', mov:215000,  banco:1009317,  indices:2579295},
-  {d:'15/jul', mov:30645,   banco:1039962,  indices:2579295},
-  {d:'16/jul', mov:-25000,  banco:1014962,  indices:2579295},
-  {d:'17/jul', mov:-21000,  banco:993962,   indices:2579295},
-  {d:'20/jul', mov:-1032600,banco:-38638,   indices:2579295},
-  {d:'21/jul', mov:35000,   banco:-3638,    indices:2579295},
-  {d:'22/jul', mov:-10000,  banco:-13638,   indices:2579295},
-  {d:'23/jul', mov:-44100,  banco:-57738,   indices:2579295},
-  {d:'24/jul', mov:-44000,  banco:-101738,  indices:2579295},
-  {d:'27/jul', mov:-74700,  banco:-176438,  indices:2579295},
-  {d:'28/jul', mov:5000,    banco:-171438,  indices:2579295},
-  {d:'29/jul', mov:5000,    banco:-166438,  indices:2579295},
-  {d:'30/jul', mov:14000,   banco:-152438,  indices:2579295},
-  {d:'31/jul', mov:-29667,  banco:-182105,  indices:2579295},
+  {d:'03/jul', mov:-82567,   banco:-92671,  indices:2688484},
+  {d:'06/jul', mov:-399293,  banco:-491964, indices:2688484},
+  {d:'07/jul', mov:209113,   banco:-282851, indices:2679849},
+  {d:'08/jul', mov:75333,    banco:-207518, indices:2665349},
+  {d:'09/jul', mov:66133,    banco:-141385, indices:2587349},
+  {d:'10/jul', mov:-124200,  banco:-265585, indices:2538349},
+  {d:'13/jul', mov:1086088,  banco:820503,  indices:2538349},
+  {d:'14/jul', mov:210000,   banco:1030503, indices:2531283},
+  {d:'15/jul', mov:32645,    banco:1063148, indices:2531283},
+  {d:'16/jul', mov:-25000,   banco:1038148, indices:2531283},
+  {d:'17/jul', mov:-56000,   banco:982148,  indices:2531283},
+  {d:'20/jul', mov:-971100,  banco:11048,   indices:2531283},
+  {d:'21/jul', mov:10000,    banco:21048,   indices:2531283},
+  {d:'22/jul', mov:-5000,    banco:16048,   indices:2531283},
+  {d:'23/jul', mov:-39100,   banco:-23052,  indices:2531283},
+  {d:'24/jul', mov:-99000,   banco:-122052, indices:2531283},
+  {d:'27/jul', mov:15300,    banco:-106752, indices:2531283},
+  {d:'28/jul', mov:10000,    banco:-96752,  indices:2531283},
+  {d:'29/jul', mov:10000,    banco:-86752,  indices:2531283},
+  {d:'30/jul', mov:9500,     banco:-77252,  indices:2531283},
+  {d:'31/jul', mov:-53000,   banco:-130252, indices:2531283},
+  {d:'03/ago', mov:31400,    banco:-98852,  indices:2531283},
+  {d:'04/ago', mov:70000,    banco:-28852,  indices:2531283},
+  {d:'05/ago', mov:50000,    banco:21148,   indices:2531283},
+  {d:'06/ago', mov:-424500,  banco:-403352, indices:3361283},
+  {d:'07/ago', mov:-39200,   banco:-442552, indices:3361283},
+  {d:'10/ago', mov:-51500,   banco:-494052, indices:3312283},
+  {d:'11/ago', mov:1395000,  banco:900948,  indices:3312283},
+  {d:'12/ago', mov:162000,   banco:1062948, indices:3312283},
+  {d:'13/ago', mov:-186200,  banco:876748,  indices:3312283},
+  {d:'14/ago', mov:10645,    banco:887394,  indices:3305217},
+  {d:'17/ago', mov:-71000,   banco:816394,  indices:3305217},
+  {d:'18/ago', mov:10000,    banco:826394,  indices:3305217},
+  {d:'19/ago', mov:10000,    banco:836394,  indices:3305217},
+  {d:'20/ago', mov:-997600,  banco:-161206, indices:3123217},
+  {d:'21/ago', mov:-68000,   banco:-229206, indices:3123217},
 ];
+const LIMITE_CREDITO_TOTAL = 6400000;
+
 let OBRAS = [
   {data:'09/07/2026', fornecedor:'CL Soluções em Engenharia Ltda', projeto:'Telhado Rest. Tênis', valor:78000.00},
   {data:'10/07/2026', fornecedor:'Center Broilo Com. de Sist. de Aquecimento', projeto:'Caldeira', valor:49000.00},
@@ -736,6 +758,12 @@ let OBRAS = [
 const REINGRESSO_CAMPANHAS = [
   {nome:'Plano Senior', qtd:6, cor:'#00e5a0'},
   {nome:'Promo 24h',    qtd:4, cor:'#06b6d4'},
+];
+const REINGRESSO_HISTORICO = [
+  {mesKey:'jun2026', periodoTag:'01 a 26/jun/2026', total:26, valor:14307.35, ticketMedio:550.28,
+    campanhas: REINGRESSO_CAMPANHAS, alerta: null},
+  {mesKey:'jul2026', periodoTag:'01 a 10/07/2026', total:5, valor:3738.20, ticketMedio:3738.20/5,
+    campanhas: null, alerta: 'Período parcial de julho — ainda sem quebra por campanha específica. Assim que tivermos mais detalhamento, a distribuição por campanha volta a aparecer.'},
 ];
 const VENDAS_CAMPANHAS = [
   {nome:'Check-in Excluídos',  qtd:6, cor:'#3d7bff'},
@@ -774,90 +802,109 @@ const RETENCAO_MOTIVOS = [
 // ═══════════════════════════════════════════════════════════
 // DADOS — RH / HORAS EXTRAS (fonte: planilha Controladoria/RH, Junho/2026)
 // ═══════════════════════════════════════════════════════════
-const HE_RESUMO = {
-  totalValor: 42038.99,
-  totalHoras: 1087.76,
-  colaboradoresComHE: 110,
-  totalColaboradores: 241,
-  ccComHE: 38,
+const LOCACOES_HISTORICO_MENSAL = [
+  {mes:'Jan/26', meta:null,   realizado:26412.10},
+  {mes:'Fev/26', meta:null,   realizado:32245.30},
+  {mes:'Mar/26', meta:null,   realizado:82670.33},
+  {mes:'Abr/26', meta:null,   realizado:102757.45},
+  {mes:'Mai/26', meta:100000, realizado:100203.50},
+  {mes:'Jun/26', meta:100000, realizado:100706.25},
+  {mes:'Jul/26', meta:100000, realizado:13906.00},
+];
+const HE_HISTORICO_MENSAL = [
+  {mes:'Jan/26', horas:822.90,  valor:28354.98, colaboradores:110, totalColab:215, qtdCC:43},
+  {mes:'Fev/26', horas:701.62,  valor:23094.10, colaboradores:94,  totalColab:211, qtdCC:32},
+  {mes:'Mar/26', horas:448.73,  valor:15546.18, colaboradores:95,  totalColab:219, qtdCC:34},
+  {mes:'Abr/26', horas:1116.17, valor:40724.35, colaboradores:126, totalColab:233, qtdCC:43},
+  {mes:'Mai/26', horas:1488.88, valor:56288.44, colaboradores:123, totalColab:245, qtdCC:36},
+  {mes:'Jun/26', horas:1087.76, valor:42038.99, colaboradores:110, totalColab:241, qtdCC:38},
+];
+const HE_POR_MES = {
+  jun2026: {
+    resumo: {
+      totalValor: 42038.99,
+      totalHoras: 1087.76,
+      colaboradoresComHE: 110,
+      totalColaboradores: 241,
+      ccComHE: 38,
+      dataReferencia: 'Junho/2026',
+    },
+    ccRanking: [
+      {nome:'Basquete Rendimento', valor:6845.29, qtd:2, horas:156.05},
+      {nome:'Manutenção', valor:6758.04, qtd:14, horas:187.10},
+      {nome:'Volei Rendimento', valor:2990.07, qtd:4, horas:61.87},
+      {nome:'Atletismo Alto Rendimento', valor:2398.59, qtd:1, horas:24.85},
+      {nome:'Gin Artística Rendimento', valor:2159.65, qtd:1, horas:31.50},
+      {nome:'Limpeza e Conservação', valor:2095.89, qtd:14, horas:94.12},
+      {nome:'Judo Formação', valor:1978.09, qtd:3, horas:58.00},
+      {nome:'Recepção', valor:1841.78, qtd:12, horas:77.79},
+      {nome:'Tênis Rendimento', valor:1703.49, qtd:1, horas:37.50},
+      {nome:'Atletismo Rendimento', valor:1665.76, qtd:2, horas:28.36},
+      {nome:'Musculação Serviços', valor:1548.21, qtd:4, horas:26.33},
+      {nome:'G.R.D. Rendimento', valor:1206.23, qtd:1, horas:25.25},
+      {nome:'Sede Social Conserv', valor:1199.23, qtd:6, horas:57.72},
+      {nome:'Piscinas Manutenção', valor:1174.34, qtd:3, horas:36.57},
+      {nome:'Judo Rendimento', valor:1134.76, qtd:2, horas:21.55},
+      {nome:'Tênis Manutenção', valor:988.36, qtd:4, horas:39.80},
+      {nome:'Marketing', valor:608.69, qtd:2, horas:13.17},
+      {nome:'Recursos Humanos', valor:557.23, qtd:1, horas:15.78},
+      {nome:'Segurança Patrimonial', valor:448.20, qtd:2, horas:14.78},
+      {nome:'Sec. Esportiva', valor:410.51, qtd:2, horas:5.18},
+      {nome:'Projeto Criança Escol.', valor:287.31, qtd:7, horas:8.25},
+      {nome:'Secretaria Adm.', valor:285.74, qtd:2, horas:7.28},
+      {nome:'Tênis Serviços', valor:262.49, qtd:1, horas:13.85},
+      {nome:'Central de Eventos', valor:257.30, qtd:4, horas:11.76},
+      {nome:'Controladoria', valor:245.96, qtd:1, horas:7.52},
+      {nome:'G.R.D. Formação', valor:241.68, qtd:1, horas:7.83},
+      {nome:'Coral', valor:214.56, qtd:1, horas:0.92},
+      {nome:'Recreação Serviços', valor:154.68, qtd:1, horas:8.52},
+      {nome:'Projetos Esportivos', valor:139.90, qtd:1, horas:2.67},
+      {nome:'Athletic Trainning Serviços', valor:95.09, qtd:2, horas:2.64},
+      {nome:'Tênis de Mesa Formação', valor:46.42, qtd:1, horas:1.30},
+      {nome:'Yoga Serviços', valor:29.61, qtd:1, horas:0.53},
+      {nome:'C.R.A', valor:29.03, qtd:1, horas:0.83},
+      {nome:'Gerência Manut. e Obras', valor:22.39, qtd:1, horas:0.23},
+      {nome:'Levantamento de Pesos Formação', valor:6.23, qtd:1, horas:0.12},
+      {nome:'Tênis Formação', valor:3.91, qtd:1, horas:0.07},
+      {nome:'Informática', valor:3.06, qtd:1, horas:0.15},
+      {nome:'G.R.D Alto Rendimento', valor:1.22, qtd:1, horas:0.02},
+    ],
+    donutSegments: [
+      {nome:'Basquete Rendimento', valor:6845.29, cor:'#e8192c'},
+      {nome:'Manutenção', valor:6758.04, cor:'#3d7bff'},
+      {nome:'Volei Rendimento', valor:2990.07, cor:'#a855f7'},
+      {nome:'Atletismo Alto Rendimento', valor:2398.59, cor:'#f2b705'},
+      {nome:'Gin Artística Rendimento', valor:2159.65, cor:'#06b6d4'},
+      {nome:'Outros (33 setores)', valor:20887.35, cor:'#b0b0d0'},
+    ],
+  },
+  jul2026: null, // ainda não recebemos a planilha de HE de julho
 };
-const HE_CC_RANKING = [
-  {nome:'Basquete Rendimento', valor:6845.29, qtd:2, horas:156.05},
-  {nome:'Manutenção', valor:6758.04, qtd:14, horas:187.10},
-  {nome:'Volei Rendimento', valor:2990.07, qtd:4, horas:61.87},
-  {nome:'Atletismo Alto Rendimento', valor:2398.59, qtd:1, horas:24.85},
-  {nome:'Gin Artística Rendimento', valor:2159.65, qtd:1, horas:31.50},
-  {nome:'Limpeza e Conservação', valor:2095.89, qtd:14, horas:94.12},
-  {nome:'Judo Formação', valor:1978.09, qtd:3, horas:58.00},
-  {nome:'Recepção', valor:1841.78, qtd:12, horas:77.79},
-  {nome:'Tênis Rendimento', valor:1703.49, qtd:1, horas:37.50},
-  {nome:'Atletismo Rendimento', valor:1665.76, qtd:2, horas:28.36},
-  {nome:'Musculação Serviços', valor:1548.21, qtd:4, horas:26.33},
-  {nome:'G.R.D. Rendimento', valor:1206.23, qtd:1, horas:25.25},
-  {nome:'Sede Social Conserv', valor:1199.23, qtd:6, horas:57.72},
-  {nome:'Piscinas Manutenção', valor:1174.34, qtd:3, horas:36.57},
-  {nome:'Judo Rendimento', valor:1134.76, qtd:2, horas:21.55},
-  {nome:'Tênis Manutenção', valor:988.36, qtd:4, horas:39.80},
-  {nome:'Marketing', valor:608.69, qtd:2, horas:13.17},
-  {nome:'Recursos Humanos', valor:557.23, qtd:1, horas:15.78},
-  {nome:'Segurança Patrimonial', valor:448.20, qtd:2, horas:14.78},
-  {nome:'Sec. Esportiva', valor:410.51, qtd:2, horas:5.18},
-  {nome:'Projeto Criança Escol.', valor:287.31, qtd:7, horas:8.25},
-  {nome:'Secretaria Adm.', valor:285.74, qtd:2, horas:7.28},
-  {nome:'Tênis Serviços', valor:262.49, qtd:1, horas:13.85},
-  {nome:'Central de Eventos', valor:257.30, qtd:4, horas:11.76},
-  {nome:'Controladoria', valor:245.96, qtd:1, horas:7.52},
-  {nome:'G.R.D. Formação', valor:241.68, qtd:1, horas:7.83},
-  {nome:'Coral', valor:214.56, qtd:1, horas:0.92},
-  {nome:'Recreação Serviços', valor:154.68, qtd:1, horas:8.52},
-  {nome:'Projetos Esportivos', valor:139.90, qtd:1, horas:2.67},
-  {nome:'Athletic Trainning Serviços', valor:95.09, qtd:2, horas:2.64},
-  {nome:'Tênis de Mesa Formação', valor:46.42, qtd:1, horas:1.30},
-  {nome:'Yoga Serviços', valor:29.61, qtd:1, horas:0.53},
-  {nome:'C.R.A', valor:29.03, qtd:1, horas:0.83},
-  {nome:'Gerência Manut. e Obras', valor:22.39, qtd:1, horas:0.23},
-  {nome:'Levantamento de Pesos Formação', valor:6.23, qtd:1, horas:0.12},
-  {nome:'Tênis Formação', valor:3.91, qtd:1, horas:0.07},
-  {nome:'Informática', valor:3.06, qtd:1, horas:0.15},
-  {nome:'G.R.D Alto Rendimento', valor:1.22, qtd:1, horas:0.02},
-];
-const HE_DONUT_SEGMENTS = [
-  {nome:'Basquete Rendimento', valor:6845.29, cor:'#e8192c'},
-  {nome:'Manutenção', valor:6758.04, cor:'#3d7bff'},
-  {nome:'Volei Rendimento', valor:2990.07, cor:'#a855f7'},
-  {nome:'Atletismo Alto Rendimento', valor:2398.59, cor:'#f2b705'},
-  {nome:'Gin Artística Rendimento', valor:2159.65, cor:'#06b6d4'},
-  {nome:'Outros (33 setores)', valor:20887.35, cor:'#b0b0d0'},
-];
+let HE_RESUMO = HE_POR_MES.jun2026.resumo;
+let HE_CC_RANKING = HE_POR_MES.jun2026.ccRanking;
+let HE_DONUT_SEGMENTS = HE_POR_MES.jun2026.donutSegments;
+let HE_MES_SEM_DADOS = null; // guarda o mesKey pedido quando não há dado de HE ainda
 
+function setHEPeriodo(mesKey){
+  if(HE_POR_MES[mesKey]){
+    HE_RESUMO = HE_POR_MES[mesKey].resumo;
+    HE_CC_RANKING = HE_POR_MES[mesKey].ccRanking;
+    HE_DONUT_SEGMENTS = HE_POR_MES[mesKey].donutSegments;
+    HE_MES_SEM_DADOS = null;
+  } else {
+    // sem dado ainda para este mês: mantém o último disponível, mas avisa
+    const keys = Object.keys(HE_POR_MES).filter(k=>HE_POR_MES[k]);
+    const fallback = keys[keys.length-1];
+    HE_RESUMO = HE_POR_MES[fallback].resumo;
+    HE_CC_RANKING = HE_POR_MES[fallback].ccRanking;
+    HE_DONUT_SEGMENTS = HE_POR_MES[fallback].donutSegments;
+    HE_MES_SEM_DADOS = mesKey;
+  }
+}
 
 // ═══════════════════════════════════════════════════════════
 // DADOS — PAGAMENTOS JUNHO/2026 (fonte: Demonstrativo de Pagamentos + planilha Controladoria)
 // ═══════════════════════════════════════════════════════════
-const PAGAMENTOS_SEMANAL = [
-  {semana:'01-05/jun', qtd:150, total:1096023.83},
-  {semana:'08-12/jun', qtd:190, total:639405.05},
-  {semana:'15-26/jun', qtd:373, total:2020524.83},
-  {semana:'29-30/jun', qtd:61,  total:151580.61},
-  {semana:'28/06-05/07', qtd:153, total:687722.71},
-];
-const FORNECEDORES_TOP = [
-  {nome:'GBA Brasil Administração de Pessoas Ltda',     qtd:1,  valor:157129.89, pct:22.85},
-  {nome:'Buffet Bettino',                                qtd:1,  valor:44700.00,  pct:6.50},
-  {nome:'Cia de Gás do Estado do RS (Sulgás)',           qtd:1,  valor:42639.85,  pct:6.20},
-  {nome:'Santori Comércio de Móveis Eireli',             qtd:2,  valor:42549.60,  pct:6.19},
-  {nome:'MercadoPago.com Representações Ltda.',         qtd:15, valor:32802.26,  pct:4.77},
-  {nome:'3S Soluções em Serviços e Segurança Ltda',     qtd:1,  valor:28076.48,  pct:4.08},
-  {nome:'Folha de Pagamento',                           qtd:7,  valor:27992.39,  pct:4.07},
-  {nome:'Avates Eventos Ltda',                          qtd:1,  valor:24725.00,  pct:3.60},
-  {nome:'Earte Promoções e Prod. Artísticas Cult. e Ensino',qtd:2, valor:23029.53, pct:3.35},
-  {nome:'Eduardo Almeida Ltda',                         qtd:1,  valor:18770.00,  pct:2.73},
-  {nome:'Banco do Brasil',                              qtd:2,  valor:15915.55,  pct:2.31},
-  {nome:'Centro de Integração Empresa Escola',          qtd:1,  valor:15718.60,  pct:2.29},
-  {nome:'41.326.303 Valdoir Rodrigues Dias',            qtd:2,  valor:11200.00,  pct:1.63},
-  {nome:'Higiemaster Sul Indústria e Comércio de Saneantes',qtd:1, valor:10730.06, pct:1.56},
-  {nome:'HUB Instituição de Pagamento S.A.',            qtd:7,  valor:10420.87,  pct:1.52},
-];
 const TAG_LABEL = {pessoal:'Pessoal', func:'Funcionamento', fixa:'Desp. Fixa', esporte:'Esporte', evento:'Evento', outros:'Outros'};
 
 function fmtMil(v){
@@ -871,6 +918,18 @@ function fmtMil(v){
 }
 function fmtBRL(v){ return 'R$ ' + v.toLocaleString('pt-BR',{minimumFractionDigits:2, maximumFractionDigits:2}); }
 function fmtBRL0(v){ return 'R$ ' + v.toLocaleString('pt-BR',{minimumFractionDigits:0, maximumFractionDigits:0}); }
+function fmtMilReais(v){
+  const abs = Math.abs(v);
+  if(abs >= 1000000){
+    const emMilhoes = v/1000000;
+    const label = Math.abs(emMilhoes) < 1.05 ? 'milhão' : 'milhões';
+    return 'R$ ' + emMilhoes.toLocaleString('pt-BR',{minimumFractionDigits:2, maximumFractionDigits:2}) + ' ' + label;
+  }
+  if(abs >= 1000){
+    return 'R$ ' + (v/1000).toLocaleString('pt-BR',{minimumFractionDigits:1, maximumFractionDigits:1}) + ' mil';
+  }
+  return fmtBRL0(v);
+}
 
 // ── Categoria bars (Prev/Tendência/Real) ──
 function getStatus(pct, isReceita){
@@ -927,9 +986,13 @@ document.getElementById('tabelaObras').innerHTML = OBRAS.map(o=>`
 // ── Gráfico de barras: Pagamentos por Semana ──
 function drawPagamentosSemanal(elId){
   const el = document.getElementById(elId);
+  const dados = PERIODOS.filter(p=>p.temDados && p.temDados.pagamentos).map(p=>{
+    const d = PAGAMENTOS_POR_PERIODO[p.key];
+    return {semana:d.label.replace(/\/202\d/g,'').replace(' a ','-'), qtd:d.qtd, total:d.total};
+  });
   const W = 560, H = 260, padL=70, padR=20, padT=24, padB=50;
-  const max = Math.max.apply(null, PAGAMENTOS_SEMANAL.map(s=>s.total)) * 1.18;
-  const bw = (W-padL-padR)/PAGAMENTOS_SEMANAL.length;
+  const max = Math.max.apply(null, dados.map(s=>s.total)) * 1.18;
+  const bw = (W-padL-padR)/dados.length;
   const y = v => padT + (1-v/max)*(H-padT-padB);
   let gridLines = '';
   for(let s=0; s<=3; s++){
@@ -938,7 +1001,7 @@ function drawPagamentosSemanal(elId){
     gridLines += `<text x="${padL-8}" y="${yy+4}" text-anchor="end" fill="#b0b0d0" font-size="12">${(v/1e6).toFixed(1)}M</text>`;
   }
   let bars = '', labels = '';
-  PAGAMENTOS_SEMANAL.forEach((s,i)=>{
+  dados.forEach((s,i)=>{
     const cx = padL + i*bw + bw/2, barW = bw*0.55;
     const barH = (H-padB) - y(s.total);
     bars += `<rect x="${(cx-barW/2).toFixed(1)}" y="${y(s.total).toFixed(1)}" width="${barW.toFixed(1)}" height="${barH.toFixed(1)}" fill="#3d7bff" rx="3"><title>${s.semana}: ${fmtBRL0(s.total)} (${s.qtd} lançamentos)</title></rect>`;
@@ -950,28 +1013,6 @@ function drawPagamentosSemanal(elId){
     <line x1="${padL}" y1="${H-padB}" x2="${W-padR}" y2="${H-padB}" stroke="#40415a"/>
     ${gridLines}${bars}${labels}
   </svg>`;
-}
-
-// ── Tabela de fornecedores recorrentes ──
-function renderTabelaFornecedores(elId){
-  const el = document.getElementById(elId);
-  const totalGeral = 3983025.43;
-  el.innerHTML = `<table>
-    <thead><tr><th>#</th><th>Fornecedor</th><th class="num">Qtd. Pagamentos</th><th class="num">Valor Total</th><th class="num">% do Total</th><th>Recorrência</th></tr></thead>
-    <tbody>
-      ${FORNECEDORES_TOP.map((f,i)=>{
-        const recor = f.qtd >= 10 ? {label:'Muito alta', cor:'#e8192c'} : f.qtd >= 5 ? {label:'Alta', cor:'#ffd32a'} : f.qtd >= 2 ? {label:'Ocasional', cor:'#00e5a0'} : {label:'Única', cor:'#b0b0d0'};
-        return `<tr>
-          <td class="muted">${i+1}</td>
-          <td>${f.nome}</td>
-          <td class="num">${f.qtd}x</td>
-          <td class="num">${fmtBRL(f.valor)}</td>
-          <td class="num">${f.pct.toFixed(2).replace('.',',')}%</td>
-          <td><span class="tag" style="background:${recor.cor}22; color:${recor.cor};">${recor.label}</span></td>
-        </tr>`;
-      }).join('')}
-    </tbody>
-  </table>`;
 }
 
 // ── Donut genérico (conic-gradient) ──
@@ -1096,12 +1137,13 @@ function drawBarChartDaily(elId, serieKey, opts){
 }
 
 // ── Gráfico Receita x Despesa (barras agrupadas: Prev / Tendência / Real) ──
-function drawReceitaDespesaChart(elId, compact){
+function drawReceitaDespesaChart(elId, compact, totais){
   const el = document.getElementById(elId);
+  const t = totais || DADOS_MES[CURRENT_MES_KEY].totaisReceitaDespesa;
   const dados = [
-    {grupo:'Previsto',   receita:3308.0, despesa:3309.5},
-    {grupo:'Tendência',  receita:3305.3, despesa:3400.2},
-    {grupo:'Realizado',  receita:3239.3, despesa:3349.7},
+    {grupo:'Previsto',   receita:t.previsto.receita,  despesa:t.previsto.despesa},
+    {grupo:'Tendência',  receita:t.tendencia.receita,  despesa:t.tendencia.despesa},
+    {grupo:'Realizado',  receita:t.realizado.receita,  despesa:t.realizado.despesa},
   ];
   const W = compact ? 400 : 660, H = compact ? 250 : 300, padL=compact?58:66, padR=16, padT=20, padB=52;
   const max = Math.max.apply(null, dados.map(d=>Math.max(d.receita,d.despesa))) * 1.15;
@@ -1230,7 +1272,7 @@ function showSerieDetalhe(nome, chartElId, detailElId){
 }
 
 // ── Resumo dinâmico da Negociação (sempre calculado a partir de INADIMPLENCIA/NEGOCIACOES) ──
-function renderNegociacaoResumo(){
+function renderNegociacaoResumo(mesKey){
   const comInad = INADIMPLENCIA.filter(d=>d.real!=null);
   const primeira = comInad[0];
   const ultima = comInad[comInad.length-1];
@@ -1241,6 +1283,18 @@ function renderNegociacaoResumo(){
   const ultimoValor = NEGOCIACOES[NEGOCIACOES.length-1];
   const mesInicio = NEGOCIACOES[0].mes.split('/')[0].toLowerCase();
   const mesFim = NEGOCIACOES[NEGOCIACOES.length-1].mes.split('/')[0].toLowerCase();
+
+  // o mês selecionado no filtro tem dado próprio de inadimplência/negociação?
+  const prefixoMes = mesKey==='jul2026' ? 'jul' : (mesKey==='jun2026' ? 'jun' : null);
+  const temDadoDoMes = prefixoMes ? comInad.some(d=>d.mes.toLowerCase().startsWith(prefixoMes)) : true;
+
+  const avisoSemDado = !temDadoDoMes ? `
+    <div class="alert-box">
+      <span>🆕</span>
+      <div>Ainda não recebemos os dados de inadimplência/negociação de <b>${DADOS_MES[mesKey] ? DADOS_MES[mesKey].label : mesKey}</b>. Mostrando <b>${ultima.mes}</b> (mais recente disponível) como referência abaixo.</div>
+    </div>` : '';
+  const avisoEl = document.getElementById('negAvisoPeriodo');
+  if(avisoEl) avisoEl.innerHTML = avisoSemDado;
 
   document.getElementById('negAlertaTopo').innerHTML = `<b>A inadimplência é o problema de fundo:</b> ela subiu de ${primeira.real.toFixed(1).replace('.',',')}% (${primeira.mes.toLowerCase()}) para ${ultima.real.toFixed(1).replace('.',',')}% (${ultima.mes.toLowerCase()})${gap!=null ? ` — ${gap>=0?'+':''}${gap.toFixed(1).replace('.',',')} p.p. ${gap>=0?'acima':'abaixo'} da meta de ${ultima.meta.toFixed(1).replace('.',',')}%` : ''}. Diante disso, a equipe de cobrança intensificou a negociação para recuperar o que der: os números abaixo são o resultado desse esforço, não uma métrica isolada de sucesso.`;
 
@@ -1309,29 +1363,59 @@ drawDonut('vgDonutSaldo', [
   {nome:'Fundo Obras', valor:1845.7, cor:'#a855f7', suffix:' mil'},
 ], '2,04', 'R$ milhões');
 // (o donut de pagamentos na Visão Geral é atualizado dentro de renderPagamentosPeriodo, junto com o filtro)
-drawReceitaDespesaChart('vgBarDespesas', true);
 drawNegInadInteractive('vgChartNegociacoes', 'vgLegendaNeg', 'vgSerieDetalhe');
 drawDonut('vgDistribuicaoVendas', VENDAS_CAMPANHAS.map(c=>({nome:c.nome, valor:c.qtd, cor:c.cor})), '19', 'com campanha');
 drawDonut('vgRetencaoDonut', RETENCAO_CATEGORIAS.map(c=>({nome:c.nome, valor:c.qtd, cor:c.cor})), '23', 'desligamentos');
-drawDonut('vgDonutHE', HE_DONUT_SEGMENTS, fmtBRL0(HE_RESUMO.totalValor), 'total em HE');
-document.getElementById('vgHESetorMaior').textContent = HE_CC_RANKING[0].nome;
-document.getElementById('vgHEValorMaior').textContent = fmtBRL(HE_CC_RANKING[0].valor);
-document.getElementById('vgHETotalValor').textContent = fmtBRL0(HE_RESUMO.totalValor);
-document.getElementById('vgHETotalHoras').textContent = HE_RESUMO.totalHoras.toFixed(2).replace('.',',')+'h';
-document.getElementById('vgHEColaboradores').textContent = HE_RESUMO.colaboradoresComHE;
+
+function renderVisaoGeralHE(){
+  drawDonut('vgDonutHE', HE_DONUT_SEGMENTS, fmtBRL0(HE_RESUMO.totalValor), 'total em HE');
+  document.getElementById('vgHESetorMaior').textContent = HE_CC_RANKING[0].nome;
+  document.getElementById('vgHEValorMaior').textContent = fmtBRL(HE_CC_RANKING[0].valor);
+  document.getElementById('vgHETotalValor').textContent = fmtBRL0(HE_RESUMO.totalValor);
+  document.getElementById('vgHETotalHoras').textContent = HE_RESUMO.totalHoras.toFixed(2).replace('.',',')+'h';
+  document.getElementById('vgHEColaboradores').textContent = HE_RESUMO.colaboradoresComHE;
+}
 
 // ═══════════════════════════════════════════════════════════
 // RENDERIZAÇÃO — NEGOCIAÇÃO (aba dedicada)
 // ═══════════════════════════════════════════════════════════
-renderNegociacaoResumo();
 drawNegInadInteractive('negChartFull', 'negLegendaNeg', 'negSerieDetalhe');
 renderLegendaNegociacoes('tabelaLegendaNeg');
 
 // ═══════════════════════════════════════════════════════════
-// RENDERIZAÇÃO — REINGRESSO (aba dedicada)
+// RENDERIZAÇÃO — REINGRESSO (aba dedicada, com histórico)
 // ═══════════════════════════════════════════════════════════
-renderSimpleBars('reingressoChart', REINGRESSO_CAMPANHAS.map(c=>({nome:c.nome, valor:c.qtd, cor:c.cor})));
-drawDonut('reingressoDonut', REINGRESSO_CAMPANHAS.map(c=>({nome:c.nome, valor:c.qtd, cor:c.cor})), '10', 'com campanha');
+function renderReingresso(mesKey){
+  const historico = REINGRESSO_HISTORICO;
+  const doMes = historico.filter(h=>h.mesKey===mesKey);
+  const r = doMes.length ? doMes[doMes.length-1] : historico[historico.length-1];
+  document.getElementById('reingressoPeriodoTag').textContent = r.periodoTag;
+  const el = document.getElementById('reingressoConteudo');
+  let html = '';
+  if(r.alerta) html += `<div class="alert-box"><span>🆕</span><div>${r.alerta}</div></div>`;
+  html += `
+    <div class="grid-3">
+      <div class="card"><div class="card-label">↩️ Total de Reingressos</div><div class="card-value" style="color:var(--green)">${r.total}</div><div class="card-meta">no período</div></div>
+      <div class="card"><div class="card-label">💰 Valor Arrecadado</div><div class="card-value">${fmtBRL(r.valor)}</div><div class="card-meta">total do período</div></div>
+      <div class="card"><div class="card-label">🎯 Ticket Médio</div><div class="card-value">${fmtBRL(r.ticketMedio)}</div><div class="card-meta">por reingresso</div></div>
+    </div>`;
+  if(r.campanhas){
+    html += `
+    <div class="grid-2 reverse">
+      <div class="card"><div class="card-label">Por Campanha</div><div id="reingressoChart"></div></div>
+      <div class="card"><div class="card-label">Distribuição</div><div id="reingressoDonut" class="donut-wrap"></div></div>
+    </div>`;
+  }
+  el.innerHTML = html;
+  if(r.campanhas){
+    renderSimpleBars('reingressoChart', r.campanhas.map(c=>({nome:c.nome, valor:c.qtd, cor:c.cor})));
+    const totalCamp = r.campanhas.reduce((s,c)=>s+c.qtd,0);
+    drawDonut('reingressoDonut', r.campanhas.map(c=>({nome:c.nome, valor:c.qtd, cor:c.cor})), String(totalCamp), 'com campanha');
+  }
+
+  document.getElementById('tabelaHistoricoReingresso').innerHTML = historico.map(h=>`
+    <tr><td>${h.periodoTag}</td><td class="num">${h.total}</td><td class="num">${fmtBRL(h.valor)}</td><td class="num">${fmtBRL(h.ticketMedio)}</td></tr>`).join('');
+}
 
 // ═══════════════════════════════════════════════════════════
 // RENDERIZAÇÃO — VENDAS e RETENÇÃO agora são feitas via aplicarMes()
@@ -1344,19 +1428,25 @@ drawDonut('pagDonutFaixa', [
   {nome:'Acima de R$ 5 mil', valor:525289.83, cor:'#e8192c', suffix:''},
   {nome:'Até R$ 5 mil', valor:162432.88, cor:'#ffd32a', suffix:''},
 ], '153', 'pagamentos');
-drawPagamentosSemanal('pagChartSemanal');
-renderTabelaFornecedores('tabelaFornecedores');
 
 // ═══════════════════════════════════════════════════════════
 // PALCO INTERATIVO — Fluxo de Caixa
 // ═══════════════════════════════════════════════════════════
+let CURRENT_MES_KEY = 'jul2026';
+const DISPONIVEL_MINIMO = 8596519.99; // menor "Disponível ou Necessidade" observado no período (06/jul) — fonte: Resumo de Necessidades da Controladoria
+
 const VIEWS = {
   operacional: {
     icon:'💧', title:'Caixa Operacional Livre', badge:'BLOCO 1 · OPERACIONAL', accent:'#3d7bff',
-    desc:'Somente o caixa de uso livre do clube — sem misturar com fundo de obras ou limite de crédito.',
+    desc:'Somente o caixa de uso livre do clube — sem misturar com fundo de obras ou limite de crédito. Projeção diária da Controladoria, 03/jul a 21/ago/2026.',
     render(container){ drawBarChartDaily('stageChart', 'banco', {includeZero:true, barColor:'#3d7bff', callouts:true}); },
-    alerts:`<div class="alert-box red"><span>🔻</span><div><b>Ponto de atenção — 06/jul:</b> caixa operacional projetado em <b>-R$ 94.854</b>. Único dia do período em que o caixa livre fica negativo.</div></div>
-      <div class="alert-box"><span>🔺</span><div><b>Maior recomposição:</b> 13/jul, entrada de R$ 1.050.800.</div></div>`
+    get alerts(){
+      const pior = PROJECAO.reduce((a,b)=> b.banco<a.banco ? b : a);
+      const melhor = PROJECAO.reduce((a,b)=> b.banco>a.banco ? b : a);
+      const diasNegativos = PROJECAO.filter(p=>p.banco<0).length;
+      return `<div class="alert-box red"><span>🔻</span><div><b>Pior dia — ${pior.d}:</b> caixa operacional projetado em <b>-${fmtBRL0(Math.abs(pior.banco))}</b>. ${diasNegativos} de ${PROJECAO.length} dias projetados ficam com o caixa livre negativo.</div></div>
+        <div class="alert-box"><span>🔺</span><div><b>Maior recomposição — ${melhor.d}:</b> caixa chega a ${fmtBRL0(melhor.banco)}, puxado pelo vencimento de mensalidades.</div></div>`;
+    }
   },
   investimento: {
     icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" style="vertical-align:-3px;"><path d="M4 18v-2a8 8 0 0 1 16 0v2"/><path d="M2 18h20"/><line x1="12" y1="6" x2="12" y2="9"/></svg>', title:'Fundo Índices Construtivos', badge:'BLOCO 2 · INVESTIMENTO', accent:'#a855f7',
@@ -1369,27 +1459,42 @@ const VIEWS = {
       const top = OBRAS.slice().sort((a,b)=>b.valor-a.valor).map(o=>({nome:o.projeto+' ('+o.data+')', valor:o.valor, display:fmtBRL0(o.valor), cor:'#a855f7'}));
       renderSimpleBars('stageObrasRanking', top);
     },
-    alerts:`<div class="alert-box"><span>ℹ️</span><div>Saldo do fundo cobre com folga os R$ 630 mil já comprometidos com obras. <b>Telhado Dn. Leopoldina</b> concentra a maior saída (R$ 421 mil, set/2026).</div></div>`
+    get alerts(){
+      const m = DADOS_MES[CURRENT_MES_KEY];
+      const maior = OBRAS.slice().sort((a,b)=>b.valor-a.valor)[0];
+      return `<div class="alert-box"><span>ℹ️</span><div>Saldo do fundo (${fmtMil(m.fundoObras)}) cobre com folga os ${fmtBRL0(m.obrasTotal)} já comprometidos com obras. <b>${maior.projeto}</b> concentra a maior saída (${fmtBRL0(maior.valor)}, ${maior.data}).</div></div>`;
+    }
   },
   financiamento: {
     icon:'🛟', title:'Limite de Crédito Garantido', badge:'BLOCO 3 · FINANCIAMENTO', accent:'#06b6d4',
     desc:'Linhas contratadas junto a Banrisul e Itaú. É um backstop, não caixa.',
     render(container){
-      const usoMaxNecessario = 94854, limiteTotal = 6400000, pctUso = (usoMaxNecessario/limiteTotal*100);
+      const usoMaxNecessario = Math.abs(Math.min(...PROJECAO.map(p=>p.banco)));
+      const pctUso = (usoMaxNecessario/LIMITE_CREDITO_TOTAL*100);
+      const piorDia = PROJECAO.reduce((a,b)=> b.banco<a.banco ? b : a).d;
       container.innerHTML = `<div style="display:flex; height:34px; border-radius:8px; overflow:hidden; border:1px solid var(--border); margin:6px 0 8px; background:#13151d;">
           <div style="width:${pctUso.toFixed(2)}%; background:var(--cyan); min-width:3px;"></div></div>
-        <div class="legend-row">Uso projetado no pior dia (06/jul): <b style="color:var(--text)">${fmtBRL0(usoMaxNecessario)}</b> — apenas <b style="color:var(--cyan)">${pctUso.toFixed(1)}%</b> do limite total</div>`;
+        <div class="legend-row">Uso projetado no pior dia (${piorDia}): <b style="color:var(--text)">${fmtBRL0(usoMaxNecessario)}</b> — apenas <b style="color:var(--cyan)">${pctUso.toFixed(1)}%</b> do limite total</div>`;
     },
-    alerts:`<div class="alert-box"><span>💡</span><div>Mesmo no pior dia projetado, o clube usaria menos de 2% do limite disponível.</div></div>`
+    alerts:`<div class="alert-box"><span>💡</span><div>Mesmo no pior dia projetado (03/jul a 21/ago), o disponível entre fundo + limite de crédito nunca cai abaixo de <b>${fmtBRL0(DISPONIVEL_MINIMO)}</b> — bem acima da necessidade operacional do período.</div></div>`
   },
   resultado: {
-    icon:'📊', title:'Resultado Operacional — Junho', badge:'RECEITA × DESPESA', accent:'#e8192c',
-    desc:'Receita menos despesa operacional do mês. É negativo neste período.',
+    icon:'📊',
+    get title(){ return `Resultado Operacional — ${DADOS_MES[CURRENT_MES_KEY].label}`; },
+    badge:'RECEITA × DESPESA', accent:'#e8192c',
+    get desc(){
+      const m = DADOS_MES[CURRENT_MES_KEY];
+      return `Receita menos despesa operacional do período (até ${m.dataReferencia}). ${m.resultadoOper<0 ? 'É negativo neste período.' : 'Positivo neste período.'}`;
+    },
     render(container){
       container.innerHTML = `<div id="stageReceitaDespesa"></div>`;
-      drawReceitaDespesaChart('stageReceitaDespesa', false);
+      drawReceitaDespesaChart('stageReceitaDespesa', false, DADOS_MES[CURRENT_MES_KEY].totaisReceitaDespesa);
     },
-    alerts:`<div class="alert-box red"><span>⚠️</span><div>Despesa superou receita em <b>R$ 110,5 mil</b> neste período.</div></div>`
+    get alerts(){
+      const m = DADOS_MES[CURRENT_MES_KEY];
+      const pior = m.resultadoOper<0;
+      return `<div class="alert-box ${pior?'red':''}"><span>${pior?'⚠️':'✅'}</span><div>${pior?'Despesa superou receita em':'Receita superou despesa em'} <b>${fmtMil(Math.abs(m.resultadoOper))}</b> no acumulado até ${m.dataReferencia}.</div></div>`;
+    }
   }
 };
 
@@ -1418,10 +1523,11 @@ const PAGE_TITLES = {
   fluxocaixa:  {t:'Fluxo de Caixa', s:'Operacional · Investimento · Financiamento'},
   pagamentos:  {t:'Pagamentos', s:'Controle de pagamentos e fornecedores · Junho/2026'},
   negociacao:  {t:'Negociação', s:'Recuperação de inadimplência · Mar-Mai/2026'},
-  reingresso:  {t:'Reingresso', s:'Associados reingressantes · 01 a 26/jun/2026'},
+  reingresso:  {t:'Reingresso', s:'Associados reingressantes · 01 a 10/07/2026'},
   vendas:      {t:'Vendas', s:'Associações novas · 01 a 26/jun/2026'},
   retencao:    {t:'Retenção', s:'Desligamentos, retenção e permanência · Junho/2026'},
   rh:          {t:'RH', s:'Horas Extras · Junho/2026'},
+  locacoes:    {t:'Locações', s:'Locação de espaços · Junho/2026'},
 };
 
 const navItems = document.querySelectorAll('.nav-item');
@@ -1456,13 +1562,17 @@ const PAGAMENTOS_POR_PERIODO = {
   '28jun-05jul': {label:'28/06 a 05/07/2026', qtd:153, total:687722.71, maiorQtd:25, maiorTotal:525289.83, menorQtd:128, menorTotal:162432.88,
     top:[{nome:'Gba Brasil Administracao De Pessoas Ltda',qtd:1,valor:157129.89,pct:22.85},{nome:'Buffet Bettino',qtd:1,valor:44700.0,pct:6.5},{nome:'Cia De Gas Do Estado Do Rs Sulgas',qtd:1,valor:42639.85,pct:6.2},{nome:'Santori Comercio De Moveis Eireli',qtd:2,valor:42549.6,pct:6.19},{nome:'Mercadopago.Com Representacoes Ltda.',qtd:15,valor:32802.26,pct:4.77},{nome:'3S Solucoes Em Servicos E Seguranca Ltda',qtd:1,valor:28076.48,pct:4.08},{nome:'Folha Pagamento',qtd:7,valor:27992.39,pct:4.07},{nome:'Avates Eventos Ltda',qtd:1,valor:24725.0,pct:3.6},{nome:'Earte Promocoes E Prod Artisticas Cult E Ensi',qtd:2,valor:23029.53,pct:3.35},{nome:'Eduardo Almeida Ltda',qtd:1,valor:18770.0,pct:2.73},{nome:'Banco Do Brasil',qtd:2,valor:15915.55,pct:2.31},{nome:'Centro De Integração Empresa Escola',qtd:1,valor:15718.6,pct:2.29},{nome:'41.326.303 Valdoir Rodrigues Dias',qtd:2,valor:11200.0,pct:1.63},{nome:'Higiemaster Sul Industria E Comercio De Sanea',qtd:1,valor:10730.06,pct:1.56},{nome:'Hub Instituicao De Pagamento S.A.',qtd:7,valor:10420.87,pct:1.52}],
     bancos:[{nome:'Banrisul',qtd:140,total:638936.73},{nome:'Caixa Sogipa',qtd:4,total:2260.29},{nome:'Proj Sogipa',qtd:4,total:14990.0},{nome:'Índices Cons',qtd:3,total:25219.92},{nome:'Banco Do Br',qtd:1,total:2101.72},{nome:'Projeto Olim',qtd:1,total:4214.05}]},
+  '06-10jul': {label:'06 a 10/07/2026', qtd:203, total:1349458.59, maiorQtd:29, maiorTotal:1146313.66, menorQtd:174, menorTotal:203144.93,
+    top:[{nome:'Folha Pagamento',qtd:23,valor:605920.63,pct:44.9},{nome:'Cl Solucoes Em Engenharia Ltda',qtd:2,valor:223200.0,pct:16.54},{nome:'Unimed Porto Alegre Soc. Coop. De Trabalho M',qtd:6,valor:93797.38,pct:6.95},{nome:'Center Broilo Com De Sistemas De Aquecim Ltd',qtd:1,valor:49000.0,pct:3.63},{nome:'Merithu Consultoria Em Gestao Empresarial',qtd:1,valor:32534.68,pct:2.41},{nome:'Capitale Energia Comercializadora Ltda.',qtd:1,valor:30807.16,pct:2.28},{nome:'Mercadopago.Com Representacoes Ltda.',qtd:17,valor:21489.99,pct:1.59},{nome:'3S Solucoes Em Servicos E Seguranca Ltda',qtd:1,valor:20286.23,pct:1.5},{nome:'Comite Brasileiro De Clubes',qtd:2,valor:19528.57,pct:1.45},{nome:'Cesar V Da Luz & Melero Cia Ltda',qtd:1,valor:14573.82,pct:1.08},{nome:'Jb Esporte E Marketing Ltda',qtd:1,valor:13471.79,pct:1.0},{nome:'Alexandro Yuler Flores',qtd:1,valor:11662.8,pct:0.86},{nome:'Galbo Engenharia Ltda - Epp',qtd:1,valor:9611.4,pct:0.71},{nome:'Hub Instituicao De Pagamento S.A.',qtd:1,valor:9449.42,pct:0.7},{nome:'Federação Gaucha De Basketball',qtd:1,valor:9000.0,pct:0.67}],
+    bancos:[{nome:'Banrisul',qtd:186,total:938863.17},{nome:'Índices Cons',qtd:6,total:296606.92},{nome:'Projeto Olim',qtd:1,total:58660.81},{nome:'Cbc Edit 11 R',qtd:1,total:50355.0},{nome:'Caixa Sogipa',qtd:6,total:2505.07},{nome:'Patrocínio A',qtd:1,total:1511.62}]},
 };
 const PERIODOS = [
   {key:'01-05jun',     temDados:{pagamentos:true}},
   {key:'08-12jun',     temDados:{pagamentos:true}},
   {key:'15-26jun',     temDados:{pagamentos:true}},
   {key:'29-30jun',     temDados:{pagamentos:true}},
-  {key:'28jun-05jul',  temDados:{pagamentos:true}, atual:true},
+  {key:'28jun-05jul',  temDados:{pagamentos:true}},
+  {key:'06-10jul',     temDados:{pagamentos:true}, atual:true},
 ];
 
 function popularFiltroSemanas(){
@@ -1481,7 +1591,7 @@ function popularFiltroSemanas(){
 // ═══════════════════════════════════════════════════════════
 const MES_DA_SEMANA = {
   '01-05jun':'jun2026', '08-12jun':'jun2026', '15-26jun':'jun2026', '29-30jun':'jun2026',
-  '28jun-05jul':'jul2026',
+  '28jun-05jul':'jul2026', '06-10jul':'jul2026',
 };
 
 const DADOS_MES = {
@@ -1520,6 +1630,12 @@ const DADOS_MES = {
     caixaLivre: 195.8, fundoObras: 1845.7, resultadoOper: -110.5, saldoTotal: 2041.5,
     caixaLivrePct: 9.6, fundoObrasPct: 90.4, negativo: false,
     receitaReal: 3239.3, despesaReal: 3349.7,
+    dataReferencia: '30/06/2026',
+    totaisReceitaDespesa: {
+      previsto:  {receita:3308.0, despesa:3309.5},
+      tendencia: {receita:3305.3, despesa:3400.2},
+      realizado: {receita:3239.3, despesa:3349.7},
+    },
     ptoAtencao: '<b>PONTO DE ATENÇÃO:</b> do saldo em banco de R$ 2,04 milhões, apenas <b>R$ 195,8 mil (9,6%)</b> é caixa operacional livre. Os outros <b>R$ 1,85 milhões (90,4%)</b> pertencem ao fundo Índices Construtivos.',
     retencao: {
       periodoTag:'01 a 30/jun/2026',
@@ -1551,71 +1667,118 @@ const DADOS_MES = {
         {nome:'Promo Amigo Indica', qtd:5, cor:'#00e5a0'},{nome:'Plano Teen', qtd:3, cor:'#f2b705'},
       ],
       alerta: null,
+    },
+    locacoes: {
+      periodoTag:'Junho/2026', meta:100000, realizado:100706.25,
+      contratos:[
+        {contrato:'38384', dataPgto:'03/06/2026', dataEvento:'12/06/2026', categoria:'Sócio', salao:'Dona Leopoldina', finalidade:'Casamento', contratante:'Rosilane Viana', valorContrato:1400.0, valorCaixa:700.0, pagamento:'Credito', obs:'Quitado'},
+        {contrato:'38405', dataPgto:'08/06/2026', dataEvento:'28/11/2026', categoria:'Não Sócio', salao:'Hannover', finalidade:'Festa De Final De Ano', contratante:'Sindifisco', valorContrato:10990.0, valorCaixa:5495.0, pagamento:'Pix', obs:'Restante em novembro'},
+        {contrato:'38428', dataPgto:'08/06/2026', dataEvento:'01/11/2026', categoria:'Não Sócio', salao:'Hannover, Baviera', finalidade:'Evento Empresarial', contratante:'Julia Weber', valorContrato:12890.0, valorCaixa:6445.0, pagamento:'Pix', obs:'Restante em outubro'},
+        {contrato:'38424', dataPgto:'08/06/2026', dataEvento:'26/11/2026', categoria:'Não Sócio', salao:'2º Andar', finalidade:'Festa', contratante:'Amarildo Silva', valorContrato:35400.0, valorCaixa:7080.0, pagamento:'Pix', obs:'Restante em outubro'},
+        {contrato:'38431', dataPgto:'11/06/2026', dataEvento:'27/02/2027', categoria:'Não Sócio', salao:'Salão Turner', finalidade:'Formatura', contratante:'Diogo Martins', valorContrato:2880.0, valorCaixa:1440.0, pagamento:'Pix', obs:'Restante em janeiro/27'},
+        {contrato:'38401', dataPgto:'11/06/2026', dataEvento:'05/08/2026', categoria:'Não Sócio', salao:'Salão de Festas', finalidade:'Evento Empresarial', contratante:'Setcergs', valorContrato:17385.0, valorCaixa:8692.5, pagamento:'Pix', obs:'Restante em julho'},
+        {contrato:'38438', dataPgto:'11/06/2026', dataEvento:'24/10/2026', categoria:'Não Sócio', salao:'Salão de Festas', finalidade:'Jantar', contratante:'Emmeline Dança', valorContrato:17000.0, valorCaixa:17000.0, pagamento:'Pix', obs:'Quitado'},
+        {contrato:'38451', dataPgto:'16/06/2026', dataEvento:'05/07/2026', categoria:'Não Sócio', salao:'Dona Leopoldina', finalidade:'Aniversário', contratante:'Henrique Oliveira', valorContrato:1645.0, valorCaixa:1645.0, pagamento:'Pix', obs:'Quitado'},
+        {contrato:'38442', dataPgto:'16/06/2026', dataEvento:'20/07/2026', categoria:'Não Sócio', salao:'Baviera', finalidade:'Feira', contratante:'Megams Sistemas', valorContrato:3196.75, valorCaixa:3196.75, pagamento:'Pix', obs:'Quitado'},
+        {contrato:'38447', dataPgto:'16/06/2026', dataEvento:'24/10/2026', categoria:'Não Sócio', salao:'DCG', finalidade:'Aniversário 15 Anos', contratante:'Fabiele Parizotti', valorContrato:5510.0, valorCaixa:5510.0, pagamento:'Pix', obs:'Quitado'},
+        {contrato:'38393', dataPgto:'16/06/2026', dataEvento:'13/06/2026', categoria:'Não Sócio', salao:'Anfiteatro', finalidade:'Formatura', contratante:'Rodrigo Goulart', valorContrato:2420.0, valorCaixa:1210.0, pagamento:'Pix', obs:'Quitado'},
+        {contrato:'38407', dataPgto:'16/06/2026', dataEvento:'04/07/2026', categoria:'Não Sócio', salao:'DCG', finalidade:'Festa', contratante:'Claiton Pras Marias', valorContrato:3500.0, valorCaixa:1330.0, pagamento:'Pix', obs:'Restante em julho'},
+        {contrato:'38407', dataPgto:'16/06/2026', dataEvento:'04/07/2026', categoria:'Não Sócio', salao:'DCG', finalidade:'Festa', contratante:'Claiton Pras Marias', valorContrato:3500.0, valorCaixa:720.0, pagamento:'Pix', obs:'Restante em julho'},
+        {contrato:'38441', dataPgto:'16/06/2026', dataEvento:'07/08/2026', categoria:'Sócio', salao:'Turner', finalidade:'Formatura', contratante:'Dener Bogorni', valorContrato:2880.0, valorCaixa:2880.0, pagamento:'Credito', obs:'Quitado'},
+        {contrato:'38425', dataPgto:'17/06/2026', dataEvento:'01/05/2027', categoria:'Não Sócio', salao:'Bav. Tur. Deck', finalidade:'Aniversário', contratante:'Felipe Deppe', valorContrato:5950.0, valorCaixa:2975.0, pagamento:'Credito', obs:'Restante em abril/27'},
+        {contrato:'38458', dataPgto:'23/06/2026', dataEvento:'06/11/2027', categoria:'Não Sócio', salao:'Salão de Festas', finalidade:'Aniversário 15 Anos', contratante:'Diego Tressino Pereira', valorContrato:17310.0, valorCaixa:8655.0, pagamento:'Credito', obs:'Restante em outubro/27'},
+        {contrato:'38459', dataPgto:'23/06/2026', dataEvento:'09/12/2026', categoria:'Sócio', salao:'Bav. Tur. Deck', finalidade:'Evento Empresarial', contratante:'Lucia Collares', valorContrato:3800.0, valorCaixa:3800.0, pagamento:'Pix', obs:'Quitado'},
+        {contrato:'38453', dataPgto:'23/06/2026', dataEvento:'03/07/2026', categoria:'Sócio', salao:'DCG', finalidade:'Festa', contratante:'Railtson Natel', valorContrato:4500.0, valorCaixa:2000.0, pagamento:'Credito', obs:'Restante em julho'},
+        {contrato:'38219', dataPgto:'24/06/2026', dataEvento:'27/06/2026', categoria:'Não Sócio', salao:'Bav. Tur. Deck', finalidade:'Aniversário', contratante:'Luiza Bileski', valorContrato:2200.0, valorCaixa:1000.0, pagamento:'Pix', obs:'Quitado'},
+        {contrato:'38415', dataPgto:'24/06/2026', dataEvento:'26/02/2027', categoria:'Não Sócio', salao:'Salão de Festas', finalidade:'Colação de Grau', contratante:'SP Produção', valorContrato:22440.0, valorCaixa:6732.0, pagamento:'Pix', obs:'Restante em janeiro/27'},
+        {contrato:'38452', dataPgto:'24/06/2026', dataEvento:'18/11/2026', categoria:'Não Sócio', salao:'Salão de Festas', finalidade:'Outros', contratante:'Associação Desportiva', valorContrato:30000.0, valorCaixa:10000.0, pagamento:'Dinheiro', obs:'Restante até outubro/26'},
+        {contrato:'38466', dataPgto:'26/06/2026', dataEvento:'17/07/2026', categoria:'Não Sócio', salao:'Turner', finalidade:'Aniversário', contratante:'Julio Cesar Mascarenhas', valorContrato:2200.0, valorCaixa:2200.0, pagamento:'Credito', obs:'Quitado'},
+      ],
     }
   },
   jul2026: {
     label: 'Julho/2026',
     despesas: [
-      {nome:'Pessoal de Apoio', prev:1583.4, tend:1583.1, real:15.7},
-      {nome:'Despesas de Funcionamento', prev:1368.3, tend:1363.4, real:204.1},
-      {nome:'Despesas Fixas', prev:324.7, tend:324.3, real:43.1},
-      {nome:'Esporte', prev:112.4, tend:111.8, real:12.4},
-      {nome:'Eventos', prev:166.9, tend:166.8, real:44.8},
-      {nome:'Imobilizado', prev:44.0, tend:43.8, real:8.8},
-      {nome:'Contingências (Indenizações)', prev:32.9, tend:32.9, real:0},
-      {nome:'Tarifas e Desp. Bancárias', prev:7.9, tend:7.9, real:3.1},
-      {nome:'Taxas IPTU', prev:0, tend:0, real:0},
+      {nome:'Pessoal de Apoio', prev:1469.0, tend:1473.0, real:509.1},
+      {nome:'Despesas de Funcionamento', prev:1347.5, tend:1341.1, real:386.9},
+      {nome:'Despesas Fixas', prev:284.3, tend:284.6, real:56.6},
+      {nome:'Esporte', prev:182.4, tend:181.3, real:57.0},
+      {nome:'Eventos', prev:163.9, tend:163.1, real:59.1},
+      {nome:'Imobilizado', prev:79.0, tend:78.3, real:68.3},
+      {nome:'Contingências (Indenizações)', prev:26.9, tend:27.2, real:17.3},
+      {nome:'Tarifas e Desp. Bancárias', prev:9.1, tend:9.3, real:3.9},
+      {nome:'Taxas e Impostos', prev:118.0, tend:118.1, real:1.1},
     ],
     receitas: [
-      {nome:'Boletos', prev:1452.0, tend:1449.9, real:74.9},
-      {nome:'Débito em Conta', prev:685.0, tend:685.0, real:0},
-      {nome:'Receitas Diversas', prev:463.0, tend:460.5, real:20.5},
-      {nome:'Cartões Crédito', prev:500.0, tend:500.3, real:30.3},
-      {nome:'Cartões Débito', prev:171.0, tend:169.8, real:9.8},
-      {nome:'Rendimento Aplicação', prev:0, tend:0, real:0},
+      {nome:'Boletos', prev:1480.0, tend:1474.9, real:471.9},
+      {nome:'Débito em Conta', prev:690.0, tend:690.0, real:0},
+      {nome:'Receitas Diversas', prev:550.0, tend:543.1, real:126.1},
+      {nome:'Cartões Crédito', prev:490.0, tend:490.5, real:125.5},
+      {nome:'Cartões Débito', prev:170.0, tend:160.9, real:41.9},
+      {nome:'Rendimento Aplicação', prev:0, tend:0.1, real:0.1},
       {nome:'Patrocínios', prev:0, tend:0, real:0},
     ],
+    totaisReceitaDespesa: {
+      previsto:  {receita:3380.0, despesa:3680.0},
+      tendencia: {receita:3359.4, despesa:3676.0},
+      realizado: {receita:765.4,  despesa:1159.2},
+    },
     obras: [
       {data:'09/07/2026', fornecedor:'CL Soluções em Engenharia Ltda', projeto:'Telhado Rest. Tênis', valor:78000.00},
+      {data:'09/07/2026', fornecedor:'CL Soluções em Engenharia Ltda', projeto:'Reforma Panorâmico', valor:145200.00},
       {data:'10/07/2026', fornecedor:'Center Broilo Com. de Sist. de Aquecimento', projeto:'Caldeira', valor:49000.00},
       {data:'14/07/2026', fornecedor:'Oglee Soluções Inovadoras Ltda', projeto:'Quadras Poliesportivas', valor:7066.00},
       {data:'10/08/2026', fornecedor:'Center Broilo Com. de Sist. de Aquecimento', projeto:'Caldeira', valor:49000.00},
       {data:'20/08/2026', fornecedor:'CL Soluções em Engenharia Ltda', projeto:'Telhado Rest. Tênis', valor:182000.00},
-      {data:'30/09/2026', fornecedor:'—', projeto:'Telhado Dn. Leopoldina', valor:421000.00},
+      {data:'30/09/2026', fornecedor:'CL Soluções em Engenharia Ltda', projeto:'Telhado Dn. Leopoldina', valor:421000.00},
     ],
-    obrasTotal: 708066.00,
-    caixaLivre: -10.1, fundoObras: 1880.6, resultadoOper: -196.4, saldoTotal: 1870.5,
+    obrasTotal: 931266.00,
+    caixaLivre: -207.5, fundoObras: 2665.3, resultadoOper: -393.8, saldoTotal: 2457.8,
     caixaLivrePct: null, fundoObrasPct: null, negativo: true,
-    receitaReal: 135.6, despesaReal: 332.0,
-    ptoAtencao: '<b>PONTO DE ATENÇÃO:</b> o caixa operacional já está <b>NEGATIVO em R$ 10,1 mil (02/jul)</b> — e fica negativo em boa parte dos dias de julho (06 a 10/jul, 20 a 31/jul), segundo a projeção. O saldo de R$ 1.870,5 mil em banco é quase todo (R$ 1.880,6 mil) do fundo Índices Construtivos, restrito a obras.',
+    receitaReal: 765.4, despesaReal: 1159.2,
+    dataReferencia: '08/07/2026',
+    ptoAtencao: '<b>PONTO DE ATENÇÃO:</b> o caixa operacional está <b>NEGATIVO em R$ 207,5 mil (08/jul)</b> — e segue negativo na maior parte dos dias projetados até final de agosto, com recomposições pontuais nos vencimentos de mensalidade (meados de cada mês). O saldo de R$ 2.457,8 mil em banco é majoritariamente (R$ 2.665,3 mil) do fundo Índices Construtivos, restrito a obras.',
     retencao: {
-      periodoTag:'01 a 06/07/2026',
+      periodoTag:'01 a 09/07/2026',
       kpis:[
-        {icone:'❌', cor:'#e8192c', bg:'rgba(232,25,44,.15)', label:'Desligamentos no Período', valor:'23', sub:'01 a 06/jul', valorCor:'#e8192c'},
-        {icone:'📁', cor:'#ffd32a', bg:'rgba(255,211,42,.15)', label:'Residual de Junho', valor:'19', sub:'casos anteriores', valorCor:'#ffd32a'},
-        {icone:'✅', cor:'#00e5a0', bg:'rgba(0,229,160,.15)', label:'Retenção', valor:'2', sub:'associados retidos', valorCor:'#00e5a0'},
-        {icone:'📋', cor:'#3d7bff', bg:'rgba(61,123,255,.15)', label:'Solicitações de Julho', valor:'3', sub:'novas no período'},
-        {icone:'✕', cor:'#e8192c', bg:'rgba(232,25,44,.15)', label:'Inativos (Julho)', valor:'4', sub:'0 programados p/ 01/08', valorCor:'#e8192c'},
+        {icone:'📋', cor:'#3d7bff', bg:'rgba(61,123,255,.15)', label:'Solicitações Totais', valor:'35', sub:'no período'},
+        {icone:'📁', cor:'#ffd32a', bg:'rgba(255,211,42,.15)', label:'Residuais', valor:'18', sub:'de períodos anteriores', valorCor:'#ffd32a'},
+        {icone:'🆕', cor:'#3d7bff', bg:'rgba(61,123,255,.15)', label:'Deste Mês', valor:'12', sub:'novas solicitações'},
+        {icone:'❌', cor:'#e8192c', bg:'rgba(232,25,44,.15)', label:'Desligados', valor:'30', sub:'do total de solicitações', valorCor:'#e8192c'},
+        {icone:'✅', cor:'#00e5a0', bg:'rgba(0,229,160,.15)', label:'Retidos', valor:'5', sub:'associados retidos', valorCor:'#00e5a0'},
       ],
       categorias:[
-        {nome:'Contribuinte', qtd:10, cor:'#3d7bff'},{nome:'Patrimonial', qtd:6, cor:'#00e5a0'},
-        {nome:'Contribuinte Individual', qtd:5, cor:'#a855f7'},{nome:'Veterano Contribuinte', qtd:2, cor:'#f2b705'},
+        {nome:'Contribuinte', qtd:14, cor:'#3d7bff'},{nome:'Patrimonial', qtd:6, cor:'#00e5a0'},
+        {nome:'Contribuinte Individual', qtd:4, cor:'#a855f7'},{nome:'Veterano Contribuinte', qtd:3, cor:'#f2b705'},
+        {nome:'Contribuinte Derivado', qtd:2, cor:'#06b6d4'},{nome:'Patrimonial Individual', qtd:1, cor:'#fb923c'},
       ],
       motivos:[
-        {motivo:'Não utilização', qtd:8, pct:34.78, cor:'#3d7bff'},{motivo:'Financeiro', qtd:6, pct:26.09, cor:'#00e5a0'},
-        {motivo:'Mudança', qtd:3, pct:13.04, cor:'#f2b705'},{motivo:'Saúde', qtd:2, pct:8.70, cor:'#a855f7'},
-        {motivo:'Desemprego', qtd:2, pct:8.70, cor:'#e8192c'},{motivo:'Viagem', qtd:1, pct:4.35, cor:'#fb923c'},
-        {motivo:'Insatisfação', qtd:1, pct:4.35, cor:'#06b6d4'},
+        {motivo:'Financeiro', qtd:10, pct:34.48, cor:'#00e5a0'},{motivo:'Não utilização', qtd:9, pct:31.03, cor:'#3d7bff'},
+        {motivo:'Mudança', qtd:3, pct:10.34, cor:'#f2b705'},{motivo:'Desemprego', qtd:3, pct:10.34, cor:'#e8192c'},
+        {motivo:'Saúde', qtd:2, pct:6.90, cor:'#a855f7'},{motivo:'Viagem', qtd:1, pct:3.45, cor:'#fb923c'},
+        {motivo:'Insatisfação', qtd:1, pct:3.45, cor:'#06b6d4'},
       ],
-      totalDesligamentos:23,
-      ticketMedio:'R$ 724,08', dependentes:'2,1', residual:'19', residualLabel:'Residual de Junho',
-      analise:'A categoria <b style="color:var(--text)">Contribuinte</b> concentrou o maior volume (43,5%), seguida por Patrimonial (26,1%) e Contribuinte Individual (21,7%). Motivos: <b style="color:var(--text)">Não utilização</b> segue como principal (34,8%), seguido de Financeiro (26,1%) e Mudança (13,0%). Desemprego aparece como motivo novo (8,7%).',
+      totalDesligamentos:30,
+      ticketMedio:'R$ 614,50', dependentes:'2,3', residual:'18', residualLabel:'Residual Acumulado', desligadosComTaxa:'R$ 1.002,00',
+      modalidadeTaxa:{sim:10, nao:20},
+      negociacoesDesligados:'R$ 0,00',
+      analise:'Atualização de 01 a 09/07 (dados completos): das <b style="color:var(--text)">35 solicitações totais</b>, 18 são residuais (de períodos anteriores) e 12 são novas deste mês. Do total, <b style="color:var(--text)">30 resultaram em desligamento</b> e 5 foram retidos. Por categoria, Contribuinte concentra 46,7% dos desligamentos, seguido por Patrimonial (20,0%) e Contribuinte Individual (13,3%). Por motivo, Financeiro (34,5%) e Não utilização (31,0%) são as causas mais comuns. Dos 30 desligados, 10 pagaram taxa de desligamento (R$ 1.002,00 em média) e 20 não pagaram. Ticket médio caiu para R$ 614,50 e a média de dependentes ficou em 2,3.',
     },
     vendas: {
       periodoTag:'Julho/2026 (parcial)',
       associacoesNovas:'1', valorArrecadado:'R$ 1.077,00', ticketMedio:'R$ 1.077,00',
       campanhas: null,
       alerta: 'Julho ainda está no início — só 1 associação nova registrada até agora, sem quebra por campanha ainda. Assim que tivermos mais volume, a distribuição por campanha volta a aparecer.',
+    },
+    locacoes: {
+      periodoTag:'Julho/2026 (parcial, até 10/07)', meta:100000, realizado:13906.00,
+      contratos:[
+        {contrato:'38468', dataPgto:'06/07/2026', dataEvento:'11/10/2026', categoria:'Sócio', salao:'Turner e Deck', finalidade:'Aniversário', contratante:'Rodrigo Dorneles Manica', valorContrato:3870.0, valorCaixa:3870.0, pagamento:'Credito', obs:'Quitado'},
+        {contrato:'38264', dataPgto:'06/07/2026', dataEvento:'15/12/2026', categoria:'Não Sócio', salao:'Salão de Festas', finalidade:'Formatura', contratante:'POA Produções e Eventos Ltda', valorContrato:22320.0, valorCaixa:6696.0, pagamento:'Pix', obs:'Restante em novembro'},
+        {contrato:'38397', dataPgto:'06/07/2026', dataEvento:'15/05/2026', categoria:'Não Sócio', salao:'Hannover', finalidade:'Casamento', contratante:'Victoria Sthephanie', valorContrato:7200.0, valorCaixa:1300.0, pagamento:'Pix', obs:'Restante em julho'},
+        {contrato:'38470', dataPgto:'06/07/2026', dataEvento:'24/04/2026', categoria:'Sócio', salao:'Dona Leopoldina', finalidade:'Aniversário', contratante:'Robert Kienzle', valorContrato:1400.0, valorCaixa:1400.0, pagamento:'Credito', obs:'Quitado'},
+        {contrato:'38465', dataPgto:'06/07/2026', dataEvento:'16/08/2026', categoria:'Sócio', salao:'Dona Leopoldina', finalidade:'Aniversário', contratante:'Joao Paulo Knackfuss', valorContrato:1050.0, valorCaixa:640.0, pagamento:'Credito', obs:'Restam R$350'},
+      ],
     }
   }
 };
@@ -1631,36 +1794,306 @@ function renderRetencaoPeriodo(mesKey){
     </div>`).join('');
   const el = document.getElementById('retencaoConteudo');
   el.innerHTML = `
-    <div class="kpi-row-icons">${kpisHtml}</div>
+    <div class="kpi-row-icons cols-5">${kpisHtml}</div>
     <div class="section-title">Relatório de Desempenho — Central de Relacionamento (${r.periodoTag})<div class="line"></div></div>
     <div class="grid-2 reverse">
       <div class="card"><div class="card-label">Distribuição por Categoria (Desligamentos)</div><div id="retencaoDonutCategoria" class="donut-wrap"></div></div>
       <div class="card"><div class="card-label">Motivos de Desligamento</div>
         <table><thead><tr><th>Motivo</th><th class="num">Qtd.</th><th class="num">%</th></tr></thead>
         <tbody id="tabelaMotivos"></tbody>
-        <tfoot><tr><td style="font-weight:700;">Total</td><td class="num" style="font-weight:700;">${r.totalDesligamentos}</td><td class="num" style="font-weight:700;">100%</td></tr></tfoot></table>
+        <tfoot><tr><td style="font-weight:700;">Total</td><td class="num" style="font-weight:700;">${r.motivos.reduce((s,m)=>s+m.qtd,0)}</td><td class="num" style="font-weight:700;">100%</td></tr></tfoot></table>
       </div>
     </div>
-    <div class="grid-3">
+    <div class="kpi-grid">
       <div class="card"><div class="card-label">🎫 Ticket Médio</div><div class="card-value">${r.ticketMedio}</div><div class="card-meta">das solicitações de desligamento</div></div>
       <div class="card"><div class="card-label">👨‍👩‍👧 Média de Dependentes</div><div class="card-value">${r.dependentes}</div><div class="card-meta">por solicitação</div></div>
       <div class="card"><div class="card-label">🔁 ${r.residualLabel}</div><div class="card-value">${r.residual}</div><div class="card-meta">pendentes de períodos anteriores</div></div>
+      ${r.desligadosComTaxa ? `<div class="card"><div class="card-label">💲 Desligados com Taxa</div><div class="card-value">${r.desligadosComTaxa}</div><div class="card-meta">valor médio de taxa cobrada${r.modalidadeTaxa ? ` · ${r.modalidadeTaxa.sim} pagaram, ${r.modalidadeTaxa.nao} não` : ''}</div></div>` : ''}
     </div>
     <div class="card full"><div class="card-label">Análise</div><div class="card-meta" style="font-size:13px; line-height:1.7;">${r.analise}</div></div>
+
+    <div class="section-title" style="margin-top:26px;">Histórico de Retenção<div class="line"></div></div>
+    <div class="card full">
+      <div class="card-label">Comparativo por Período</div>
+      <table>
+        <thead><tr><th>Período</th><th class="num">Desligamentos</th><th class="num">Retenção</th><th class="num">Residual</th><th class="num">Ticket Médio</th><th class="num">Dependentes</th></tr></thead>
+        <tbody id="tabelaHistoricoRetencao"></tbody>
+      </table>
+      <div class="card-meta" style="margin-top:10px;">💡 Guarda o resumo de cada período importado, sem apagar o histórico anterior.</div>
+    </div>
   `;
   drawDonut('retencaoDonutCategoria', r.categorias.map(c=>({nome:c.nome, valor:c.qtd, cor:c.cor})), String(r.totalDesligamentos), 'desligamentos');
   document.getElementById('tabelaMotivos').innerHTML = r.motivos.map(mo=>`
     <tr><td><span class="dot" style="background:${mo.cor}; margin-right:6px;"></span>${mo.motivo}</td><td class="num">${mo.qtd}</td><td class="num">${mo.pct.toFixed(2).replace('.',',')}%</td></tr>`).join('');
   drawDonut('vgRetencaoDonut', r.categorias.map(c=>({nome:c.nome, valor:c.qtd, cor:c.cor})), String(r.totalDesligamentos), 'desligamentos');
+
+  const keys = Object.keys(DADOS_MES);
+  document.getElementById('tabelaHistoricoRetencao').innerHTML = keys.map(k=>{
+    const rr = DADOS_MES[k].retencao;
+    const retido = rr.kpis.find(x=>x.label==='Retenção' || x.label==='Retidos');
+    return `<tr><td>${rr.periodoTag}</td><td class="num">${rr.totalDesligamentos}</td><td class="num">${retido ? retido.valor : '—'}</td><td class="num">${rr.residual}</td><td class="num">${rr.ticketMedio}</td><td class="num">${rr.dependentes}</td></tr>`;
+  }).join('');
 }
 
-function renderRH(){
-  const el = document.getElementById('rhConteudo');
+// ═══════════════════════════════════════════════════════════
+// RENDERIZAÇÃO — LOCAÇÕES DE ESPAÇOS
+// ═══════════════════════════════════════════════════════════
+function semanaDoMes(dataStr){
+  const dia = parseInt(dataStr.split('/')[0], 10);
+  if(dia<=7) return 'S1 (01-07)';
+  if(dia<=14) return 'S2 (08-14)';
+  if(dia<=21) return 'S3 (15-21)';
+  if(dia<=28) return 'S4 (22-28)';
+  return 'S5 (29-31)';
+}
+
+function renderLocacoesPeriodo(mesKey){
+  const m = DADOS_MES[mesKey]; if(!m) return;
+  const loc = m.locacoes;
+  document.getElementById('locacoesPeriodoTag').textContent = loc.periodoTag;
+  const el = document.getElementById('locacoesConteudo');
+
+  const pct = (loc.realizado/loc.meta*100);
+  const qtdContratos = loc.contratos.length;
+  const ticketMedio = loc.realizado/qtdContratos;
+
+  // agrupamento por semana (com base na Data de Pagamento)
+  const semanasOrdem = ['S1 (01-07)','S2 (08-14)','S3 (15-21)','S4 (22-28)','S5 (29-31)'];
+  const porSemana = {};
+  semanasOrdem.forEach(s=>porSemana[s]={qtd:0, valor:0});
+  loc.contratos.forEach(c=>{
+    const s = semanaDoMes(c.dataPgto);
+    porSemana[s].qtd++;
+    porSemana[s].valor += c.valorCaixa;
+  });
+  const semanasComDado = semanasOrdem.filter(s=>porSemana[s].qtd>0 || semanasOrdem.indexOf(s) <= semanasOrdem.findIndex(x=>porSemana[x].qtd>0 || porSemana[x].valor>0));
+
+  // agrupamento por salão
+  const porSalao = {};
+  loc.contratos.forEach(c=>{
+    if(!porSalao[c.salao]) porSalao[c.salao] = {qtd:0, valor:0};
+    porSalao[c.salao].qtd++;
+    porSalao[c.salao].valor += c.valorCaixa;
+  });
+  const saloes = Object.keys(porSalao).map(s=>({nome:s, qtd:porSalao[s].qtd, valor:porSalao[s].valor}))
+    .sort((a,b)=>b.valor-a.valor);
+  const coresSalao = ['#3d7bff','#00e5a0','#a855f7','#f2b705','#06b6d4','#fb923c','#e8192c','#b0b0d0'];
+
+  // agrupamento por categoria (Sócio x Não Sócio)
+  const porCategoria = {};
+  loc.contratos.forEach(c=>{
+    if(!porCategoria[c.categoria]) porCategoria[c.categoria] = {qtd:0, valor:0};
+    porCategoria[c.categoria].qtd++;
+    porCategoria[c.categoria].valor += c.valorCaixa;
+  });
+  const categorias = Object.keys(porCategoria).map((nome,i)=>({nome, valor:porCategoria[nome].valor, qtd:porCategoria[nome].qtd, cor: nome==='Sócio' ? '#00e5a0' : '#3d7bff'}));
+
   el.innerHTML = `
     <div class="kpi-row-icons cols-4">
       <div class="kpi-icon-card">
+        <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(242,183,5,.18); color:var(--gold);">🎯</div><div class="label">Meta do Mês</div></div>
+        <div class="kpi-icon-info"><div class="value">${fmtMilReais(loc.meta)}</div><div class="delta muted">orçado</div></div>
+      </div>
+      <div class="kpi-icon-card" style="${pct>=100?'border-color:var(--green); background:rgba(0,229,160,.06);':''}">
+        <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(0,229,160,.15); color:var(--green); font-weight:800;">R$</div><div class="label">Realizado</div></div>
+        <div class="kpi-icon-info"><div class="value" style="color:${pct>=100?'var(--green)':'var(--text)'};">${fmtMilReais(loc.realizado)}</div><div class="delta" style="color:${pct>=100?'var(--green)':'var(--gold)'}; font-weight:700;">${pct.toFixed(1).replace('.',',')}% da meta</div></div>
+      </div>
+      <div class="kpi-icon-card">
+        <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(61,123,255,.15); color:var(--blue);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" style="vertical-align:-3px;"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div><div class="label">Contratos Fechados</div></div>
+        <div class="kpi-icon-info"><div class="value">${qtdContratos}</div><div class="delta muted">no período</div></div>
+      </div>
+      <div class="kpi-icon-card">
+        <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(168,85,247,.15); color:var(--purple);">🎫</div><div class="label">Ticket Médio</div></div>
+        <div class="kpi-icon-info"><div class="value">${fmtMilReais(ticketMedio)}</div><div class="delta muted">valor recebido / contrato</div></div>
+      </div>
+    </div>
+
+    <div class="section-title" style="margin-top:26px;">Recebido por Semana — ${loc.periodoTag}<div class="line"></div></div>
+    <div class="card full">
+      <div class="card-label">Valor que Entrou no Caixa, por Semana (data de pagamento)</div>
+      <div id="locacoesChartSemanal"></div>
+    </div>
+
+    <div class="section-title" style="margin-top:26px;">Histórico Mensal (Jan-Jul/2026)<div class="line"></div></div>
+    <div class="card full">
+      <div class="card-label">Meta × Realizado por Mês</div>
+      <div id="locacoesChartHistorico" class="scrollx"></div>
+      <table style="margin-top:18px;">
+        <thead><tr><th>Mês</th><th class="num">Meta</th><th class="num">Realizado</th><th class="num">% Atingido</th></tr></thead>
+        <tbody id="tabelaHistoricoLocacoes"></tbody>
+      </table>
+      <div class="card-meta" style="margin-top:10px;">💡 Guarda o resumo de cada mês importado, sem apagar o histórico anterior. Meta só passou a ser definida a partir de Maio/2026.</div>
+    </div>
+    <div class="card full">
+      <div class="card-label">Acumulado no Ano (Jan → <span id="locacoesAcumuladoMesFim"></span>) — <span id="locacoesAcumuladoTotal" style="color:var(--green); font-weight:900;"></span></div>
+      <div id="locacoesChartAcumulado" class="scrollx"></div>
+    </div>
+
+    <div class="grid-2 reverse">
+      <div class="card">
+        <div class="card-label">Ranking por Salão</div>
+        <div id="locacoesRankingSalao" style="margin-top:10px;"></div>
+      </div>
+      <div class="card">
+        <div class="card-label">Sócio × Não Sócio</div>
+        <div id="locacoesDonutCategoria" class="donut-wrap"></div>
+      </div>
+    </div>
+
+    <div class="section-title" style="margin-top:26px;">Contratos do Período<div class="line"></div></div>
+    <div class="card full">
+      <div class="card-label">Detalhamento — ${loc.periodoTag}</div>
+      <div class="scrollx">
+      <table>
+        <thead><tr><th>Nº</th><th>Data Pgto</th><th>Data Evento</th><th>Categoria</th><th>Salão</th><th>Finalidade</th><th>Contratante</th><th class="num">Valor Contrato</th><th class="num">Valor no Caixa</th><th>Pagamento</th><th>Observação</th></tr></thead>
+        <tbody>
+          ${loc.contratos.map(c=>`
+          <tr>
+            <td class="muted">${c.contrato}</td>
+            <td>${c.dataPgto}</td>
+            <td class="muted">${c.dataEvento}</td>
+            <td>${c.categoria}</td>
+            <td>${c.salao}</td>
+            <td>${c.finalidade}</td>
+            <td>${c.contratante}</td>
+            <td class="num muted">${fmtBRL(c.valorContrato)}</td>
+            <td class="num" style="font-weight:700;">${fmtBRL(c.valorCaixa)}</td>
+            <td>${c.pagamento}</td>
+            <td class="muted">${c.obs}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+      </div>
+    </div>
+  `;
+
+  // gráfico semanal
+  const semanasChart = document.getElementById('locacoesChartSemanal');
+  const maxSem = Math.max(...semanasOrdem.map(s=>porSemana[s].valor)) * 1.15 || 1;
+  semanasChart.innerHTML = semanasOrdem.map(s=>`
+    <div class="cat-row">
+      <div class="cat-row-head"><span class="nome">${s}</span><span class="val">${fmtBRL0(porSemana[s].valor)} <span class="muted" style="font-weight:400;">(${porSemana[s].qtd})</span></span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:${(porSemana[s].valor/maxSem*100).toFixed(1)}%; background:#3d7bff;"></div></div>
+    </div>`).join('');
+
+  // histórico mensal
+  drawLocacoesHistorico('locacoesChartHistorico');
+  drawLocacoesAcumulado('locacoesChartAcumulado');
+  const totalAcumulado = LOCACOES_HISTORICO_MENSAL.reduce((s,h)=>s+h.realizado,0);
+  document.getElementById('locacoesAcumuladoTotal').textContent = fmtMilReais(totalAcumulado);
+  document.getElementById('locacoesAcumuladoMesFim').textContent = LOCACOES_HISTORICO_MENSAL[LOCACOES_HISTORICO_MENSAL.length-1].mes;
+  document.getElementById('tabelaHistoricoLocacoes').innerHTML = LOCACOES_HISTORICO_MENSAL.map(h=>{
+    const pctH = h.meta ? (h.realizado/h.meta*100) : null;
+    return `<tr>
+      <td>${h.mes}</td>
+      <td class="num">${h.meta ? fmtBRL0(h.meta) : '<span class="muted">—</span>'}</td>
+      <td class="num" style="font-weight:700;">${fmtBRL(h.realizado)}</td>
+      <td class="num" ${pctH!=null ? `style="color:${pctH>=100?'var(--green)':'var(--gold)'};"` : ''}>${pctH!=null ? pctH.toFixed(1).replace('.',',')+'%' : '<span class="muted">—</span>'}</td>
+    </tr>`;
+  }).join('');
+
+  // ranking por salão
+  renderSimpleBars('locacoesRankingSalao', saloes.map((s,i)=>({nome:s.nome, valor:s.valor, display:fmtBRL0(s.valor), cor:coresSalao[i%coresSalao.length]})));
+
+  // donut categoria
+  const totalCategoria = categorias.reduce((s,c)=>s+c.qtd,0);
+  drawDonut('locacoesDonutCategoria', categorias, String(totalCategoria), 'contratos');
+
+  // reflete também na Visão Geral
+  const vgLocPeriodo = document.getElementById('vgLocPeriodo');
+  if(vgLocPeriodo){
+    vgLocPeriodo.textContent = loc.periodoTag;
+    document.getElementById('vgLocMeta').textContent = fmtMilReais(loc.meta);
+    document.getElementById('vgLocRealizado').textContent = fmtMilReais(loc.realizado);
+    const pctEl = document.getElementById('vgLocPct');
+    pctEl.textContent = pct.toFixed(1).replace('.',',')+'%';
+    pctEl.style.color = pct>=100 ? 'var(--green)' : 'var(--gold)';
+  }
+}
+
+function drawLocacoesHistorico(elId){
+  const el = document.getElementById(elId);
+  const dados = LOCACOES_HISTORICO_MENSAL;
+  const W = 700, H = 260, padL=70, padR=20, padT=24, padB=40;
+  const max = Math.max.apply(null, dados.map(s=>Math.max(s.realizado, s.meta||0))) * 1.15;
+  const bw = (W-padL-padR)/dados.length;
+  const y = v => padT + (1-v/max)*(H-padT-padB);
+  let gridLines = '';
+  for(let s=0; s<=3; s++){
+    const v = max*s/3, yy = y(v);
+    gridLines += `<line x1="${padL}" y1="${yy}" x2="${W-padR}" y2="${yy}" stroke="#40415a" stroke-width="1"/>`;
+    gridLines += `<text x="${padL-8}" y="${yy+4}" text-anchor="end" fill="#b0b0d0" font-size="12">${fmtMilReais(v)}</text>`;
+  }
+  let bars = '', labels = '', metaTicks = '';
+  dados.forEach((s,i)=>{
+    const cx = padL + i*bw + bw/2, barW = bw*0.5;
+    const barH = (H-padB) - y(s.realizado);
+    const atingiu = s.meta ? s.realizado>=s.meta : null;
+    const cor = atingiu===null ? '#3d7bff' : (atingiu ? '#00e5a0' : '#ffd32a');
+    bars += `<rect x="${(cx-barW/2).toFixed(1)}" y="${y(s.realizado).toFixed(1)}" width="${barW.toFixed(1)}" height="${barH.toFixed(1)}" fill="${cor}" rx="3"><title>${s.mes}: ${fmtMilReais(s.realizado)}${s.meta?' (meta '+fmtMilReais(s.meta)+')':''}</title></rect>`;
+    bars += `<text x="${cx}" y="${y(s.realizado)-8}" text-anchor="middle" fill="${cor}" font-size="12" font-weight="800">${fmtMilReais(s.realizado)}</text>`;
+    if(s.meta){
+      const ym = y(s.meta);
+      metaTicks += `<line x1="${(cx-barW/2).toFixed(1)}" y1="${ym.toFixed(1)}" x2="${(cx+barW/2).toFixed(1)}" y2="${ym.toFixed(1)}" stroke="#e8192c" stroke-width="2" stroke-dasharray="3,2"/>`;
+    }
+    labels += `<text x="${cx}" y="${H-padB+20}" text-anchor="middle" fill="#b0b0d0" font-size="13">${s.mes}</text>`;
+  });
+  el.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="width:100%; max-width:100%; height:auto; display:block;">
+    <line x1="${padL}" y1="${H-padB}" x2="${W-padR}" y2="${H-padB}" stroke="#40415a"/>
+    ${gridLines}${bars}${metaTicks}${labels}
+  </svg>
+  <div style="margin-top:10px; font-size:12px; color:var(--muted);"><span style="color:#e8192c;">┅┅</span> linha tracejada = meta do mês (quando definida)</div>`;
+}
+
+function drawLocacoesAcumulado(elId){
+  const el = document.getElementById(elId);
+  const dados = LOCACOES_HISTORICO_MENSAL;
+  let acumulado = 0;
+  const pontos = dados.map(s=>{ acumulado += s.realizado; return {mes:s.mes, acumulado}; });
+  const W = 700, H = 220, padL=80, padR=20, padT=24, padB=36;
+  const max = Math.max.apply(null, pontos.map(p=>p.acumulado)) * 1.1;
+  const bw = (W-padL-padR)/(pontos.length-1);
+  const y = v => padT + (1-v/max)*(H-padT-padB);
+  const x = i => padL + i*bw;
+  let gridLines = '';
+  for(let s=0; s<=3; s++){
+    const v = max*s/3, yy = y(v);
+    gridLines += `<line x1="${padL}" y1="${yy}" x2="${W-padR}" y2="${yy}" stroke="#40415a" stroke-width="1"/>`;
+    gridLines += `<text x="${padL-8}" y="${yy+4}" text-anchor="end" fill="#b0b0d0" font-size="12">${fmtMilReais(v)}</text>`;
+  }
+  let path = '', areaPath = '', dots = '', labels = '', valueLabels = '';
+  pontos.forEach((p,i)=>{
+    const cx = x(i), cy = y(p.acumulado);
+    path += (i===0?'M':'L') + ` ${cx.toFixed(1)} ${cy.toFixed(1)}`;
+    dots += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="5" fill="#00e5a0" stroke="#13151d" stroke-width="1.5"><title>${p.mes}: acumulado ${fmtMilReais(p.acumulado)}</title></circle>`;
+    valueLabels += `<text x="${cx}" y="${cy-12}" text-anchor="middle" fill="#00e5a0" font-size="12" font-weight="800">${fmtMilReais(p.acumulado)}</text>`;
+    labels += `<text x="${cx}" y="${H-padB+20}" text-anchor="middle" fill="#b0b0d0" font-size="13">${p.mes}</text>`;
+  });
+  areaPath = path + ` L ${x(pontos.length-1).toFixed(1)} ${(H-padB).toFixed(1)} L ${padL} ${(H-padB).toFixed(1)} Z`;
+  el.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="width:100%; max-width:100%; height:auto; display:block;">
+    <line x1="${padL}" y1="${H-padB}" x2="${W-padR}" y2="${H-padB}" stroke="#40415a"/>
+    ${gridLines}
+    <path d="${areaPath}" fill="#00e5a0" opacity="0.08"/>
+    <path d="${path}" fill="none" stroke="#00e5a0" stroke-width="2.4"/>
+    ${dots}${valueLabels}${labels}
+  </svg>`;
+}
+
+function renderRH(mesKey){
+  setHEPeriodo(mesKey);
+  renderVisaoGeralHE();
+  const el = document.getElementById('rhConteudo');
+  const avisoSemDados = HE_MES_SEM_DADOS ? `
+    <div class="alert-box">
+      <span>🆕</span>
+      <div>Ainda não recebemos a planilha de Horas Extras de <b>${DADOS_MES[HE_MES_SEM_DADOS] ? DADOS_MES[HE_MES_SEM_DADOS].label : HE_MES_SEM_DADOS}</b>. Mostrando o último período disponível (<b>${HE_RESUMO.dataReferencia}</b>) como referência.</div>
+    </div>` : '';
+  el.innerHTML = `
+    ${avisoSemDados}
+    <div class="kpi-row-icons cols-4">
+      <div class="kpi-icon-card">
         <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(232,25,44,.15); color:var(--red); font-weight:800;">R$</div><div class="label">Total Pago em HE</div></div>
-        <div class="kpi-icon-info"><div class="value">${fmtBRL0(HE_RESUMO.totalValor)}</div><div class="delta muted">Junho/2026</div></div>
+        <div class="kpi-icon-info"><div class="value">${fmtBRL0(HE_RESUMO.totalValor)}</div><div class="delta muted">${HE_RESUMO.dataReferencia}</div></div>
       </div>
       <div class="kpi-icon-card">
         <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(61,123,255,.15); color:var(--blue);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" style="vertical-align:-3px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="label">Total de Horas</div></div>
@@ -1676,7 +2109,18 @@ function renderRH(){
       </div>
     </div>
 
-    <div class="section-title" style="margin-top:26px;">Composição do HE por Centro de Custo<div class="line"></div></div>
+    <div class="section-title" style="margin-top:26px;">Histórico de Horas Extras (Jan-Jun/2026)<div class="line"></div></div>
+    <div class="card full">
+      <div class="card-label">Evolução Mensal — Valor Pago em HE</div>
+      <div id="rhChartHistorico" class="scrollx"></div>
+      <table style="margin-top:18px;">
+        <thead><tr><th>Mês</th><th class="num">Total de Horas</th><th class="num">Valor Total</th><th class="num">Colaboradores com HE</th><th class="num">Centros de Custo</th></tr></thead>
+        <tbody id="tabelaHistoricoRH"></tbody>
+      </table>
+      <div class="card-meta" style="margin-top:10px;">💡 Guarda o resumo de cada mês importado, sem apagar o histórico anterior.</div>
+    </div>
+
+    <div class="section-title" style="margin-top:26px;">Composição do HE por Centro de Custo — ${HE_RESUMO.dataReferencia}<div class="line"></div></div>
     <div class="card">
       <div class="card-label">Distribuição do Valor Pago em HE — Top 5 Centros de Custo</div>
       <div id="rhDonutCC" class="donut-wrap"></div>
@@ -1696,6 +2140,43 @@ function renderRH(){
   `;
   renderRHRankingCC(0);
   drawDonut('rhDonutCC', HE_DONUT_SEGMENTS, fmtBRL0(HE_RESUMO.totalValor), 'total em HE');
+  drawHEHistorico('rhChartHistorico');
+  document.getElementById('tabelaHistoricoRH').innerHTML = HE_HISTORICO_MENSAL.map((h,i)=>`
+    <tr>
+      <td>${h.mes}</td>
+      <td class="num">${h.horas.toFixed(2).replace('.',',')}h</td>
+      <td class="num" style="font-weight:700;">${fmtBRL(h.valor)}</td>
+      <td class="num">${h.colaboradores} <span class="muted">de ${h.totalColab}</span></td>
+      <td class="num">${h.qtdCC}</td>
+    </tr>`).join('');
+}
+
+function drawHEHistorico(elId){
+  const el = document.getElementById(elId);
+  const dados = HE_HISTORICO_MENSAL;
+  const W = 700, H = 260, padL=70, padR=20, padT=24, padB=40;
+  const max = Math.max.apply(null, dados.map(s=>s.valor)) * 1.18;
+  const bw = (W-padL-padR)/dados.length;
+  const y = v => padT + (1-v/max)*(H-padT-padB);
+  let gridLines = '';
+  for(let s=0; s<=3; s++){
+    const v = max*s/3, yy = y(v);
+    gridLines += `<line x1="${padL}" y1="${yy}" x2="${W-padR}" y2="${yy}" stroke="#40415a" stroke-width="1"/>`;
+    gridLines += `<text x="${padL-8}" y="${yy+4}" text-anchor="end" fill="#b0b0d0" font-size="12">${fmtBRL0(v)}</text>`;
+  }
+  let bars = '', labels = '';
+  dados.forEach((s,i)=>{
+    const cx = padL + i*bw + bw/2, barW = bw*0.5;
+    const barH = (H-padB) - y(s.valor);
+    const cor = i===dados.length-1 ? '#e8192c' : '#3d7bff';
+    bars += `<rect x="${(cx-barW/2).toFixed(1)}" y="${y(s.valor).toFixed(1)}" width="${barW.toFixed(1)}" height="${barH.toFixed(1)}" fill="${cor}" rx="3"><title>${s.mes}: ${fmtBRL0(s.valor)} (${s.horas.toFixed(1)}h)</title></rect>`;
+    bars += `<text x="${cx}" y="${y(s.valor)-8}" text-anchor="middle" fill="${cor}" font-size="12" font-weight="800">${fmtBRL0(s.valor)}</text>`;
+    labels += `<text x="${cx}" y="${H-padB+20}" text-anchor="middle" fill="#b0b0d0" font-size="13">${s.mes}</text>`;
+  });
+  el.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="width:100%; max-width:100%; height:auto; display:block;">
+    <line x1="${padL}" y1="${H-padB}" x2="${W-padR}" y2="${H-padB}" stroke="#40415a"/>
+    ${gridLines}${bars}${labels}
+  </svg>`;
 }
 
 function renderRHRankingCC(selectedIdx){
@@ -1754,8 +2235,32 @@ function renderVendasPeriodo(mesKey){
   }
 }
 
+function renderHistoricoFechamentos(){
+  const el = document.getElementById('tabelaHistoricoFechamentos');
+  if(!el) return;
+  const keys = Object.keys(DADOS_MES);
+  el.innerHTML = keys.map((k,i)=>{
+    const m = DADOS_MES[k];
+    const isUltimo = i === keys.length-1;
+    const status = isUltimo
+      ? `<span class="tag" style="background:#ffd32a22; color:#ffd32a;">Em andamento (até ${m.dataReferencia})</span>`
+      : `<span class="tag" style="background:#00e5a022; color:#00e5a0;">Fechado</span>`;
+    return `<tr>
+      <td>${m.label}</td>
+      <td class="num">${m.saldoTotal.toFixed(1).replace('.',',')}</td>
+      <td class="num" ${m.caixaLivre<0?'style="color:var(--red);"':''}>${m.caixaLivre.toFixed(1).replace('.',',')}</td>
+      <td class="num">${m.fundoObras.toFixed(1).replace('.',',')}</td>
+      <td class="num">${m.receitaReal.toFixed(1).replace('.',',')}</td>
+      <td class="num">${m.despesaReal.toFixed(1).replace('.',',')}</td>
+      <td class="num" ${m.resultadoOper<0?'style="color:var(--red);"':''}>${m.resultadoOper.toFixed(1).replace('.',',')}</td>
+      <td>${status}</td>
+    </tr>`;
+  }).join('');
+}
+
 function renderFluxoCaixaPeriodo(mesKey){
   const m = DADOS_MES[mesKey]; if(!m) return;
+  CURRENT_MES_KEY = mesKey;
 
   DESPESAS_CATS = m.despesas;
   RECEITAS_CATS = m.receitas;
@@ -1766,20 +2271,28 @@ function renderFluxoCaixaPeriodo(mesKey){
     <tr><td>${o.data}</td><td class="muted">${o.fornecedor}</td><td>${o.projeto}</td><td class="num">${fmtBRL(o.valor)}</td></tr>`).join('');
   const totalObrasEl = document.querySelector('.total-highlight td:last-child');
   if(totalObrasEl) totalObrasEl.textContent = fmtBRL(m.obrasTotal);
+  drawReceitaDespesaChart('vgBarDespesas', true, m.totaisReceitaDespesa);
+  if(typeof renderHistoricoFechamentos === 'function') renderHistoricoFechamentos();
+  const stageActive = document.querySelector('.kpi-card.active');
+  if(stageActive) selectView(stageActive.id.replace('kpi-',''));
 
   // KPIs (Visão Geral)
   document.getElementById('vgCaixaLivre').textContent = (m.caixaLivre<0?'-':'') + 'R$ ' + Math.abs(m.caixaLivre).toFixed(1).replace('.',',') + ' mil';
-  document.getElementById('vgCaixaLivre').style.color = m.caixaLivre<0 ? 'var(--red)' : '';
+  document.getElementById('vgCaixaLivre').style.color = m.caixaLivre<0 ? 'var(--red)' : 'var(--green)';
   document.getElementById('vgCaixaLivreSub').textContent = m.negativo ? 'negativo no período' : (m.caixaLivrePct.toFixed(1).replace('.',',')+'% do saldo total');
   document.getElementById('vgResultadoOper').textContent = (m.resultadoOper<0?'-':'') + 'R$ ' + Math.abs(m.resultadoOper).toFixed(1).replace('.',',') + ' mil';
+  document.getElementById('vgResultadoOper').style.color = m.resultadoOper<0 ? 'var(--red)' : 'var(--green)';
   document.getElementById('vgFundoObras').textContent = fmtMil(m.fundoObras);
   document.getElementById('alertaPontoAtencaoVG').innerHTML = m.ptoAtencao + ' Detalhes na aba <b>Fluxo de Caixa</b>.';
   document.getElementById('alertaPontoAtencaoFC').innerHTML = m.ptoAtencao;
+  document.getElementById('alertaFechamentoFC').innerHTML = `<b>Fechamento em andamento:</b> dados de <b>${m.label}</b> atualizados pela Controladoria até <b>${m.dataReferencia}</b>. Os valores de "Tendência" e "Realizado" seguem sendo ajustados conforme novos lançamentos chegam.`;
 
   // KPIs (aba Fluxo de Caixa)
   document.getElementById('fcVal1').textContent = (m.caixaLivre<0?'-':'') + 'R$ ' + Math.abs(m.caixaLivre).toFixed(1).replace('.',',') + ' mil';
+  document.getElementById('fcVal1').style.color = m.caixaLivre<0 ? 'var(--red)' : 'var(--green)';
   document.getElementById('fcVal2').textContent = fmtMil(m.fundoObras);
   document.getElementById('fcVal4').textContent = (m.resultadoOper<0?'-':'') + 'R$ ' + Math.abs(m.resultadoOper).toFixed(1).replace('.',',') + ' mil';
+  document.getElementById('fcVal4').style.color = m.resultadoOper<0 ? 'var(--red)' : 'var(--green)';
   document.getElementById('fcMeta4').textContent = `Receita ${fmtMil(m.receitaReal)} − Despesa ${fmtMil(m.despesaReal)}`;
 
   // Composição do saldo
@@ -1804,6 +2317,10 @@ function aplicarMes(mesKey){
   renderFluxoCaixaPeriodo(mesKey);
   renderRetencaoPeriodo(mesKey);
   renderVendasPeriodo(mesKey);
+  renderReingresso(mesKey);
+  renderRH(mesKey);
+  renderLocacoesPeriodo(mesKey);
+  renderNegociacaoResumo(mesKey);
 }
 
 
@@ -1912,8 +2429,8 @@ function atualizarDataAtual(){
   el.textContent = formatado.charAt(0).toUpperCase() + formatado.slice(1);
 }
 atualizarDataAtual();
+drawPagamentosSemanal('pagChartSemanal');
 popularFiltroSemanas();
-renderRH();
 </script>
 </body>
 </html>
