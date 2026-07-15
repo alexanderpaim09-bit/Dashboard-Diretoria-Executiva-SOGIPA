@@ -87,7 +87,7 @@
   .filter-field label{ font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.3px; }
   .filter-field input, .filter-field select{
     background:#13151d; border:1px solid var(--border); color:var(--text); border-radius:8px;
-    padding:10px 14px; font-size:15px; font-family:inherit;
+    padding:10px 14px; font-size:15px; font-family:inherit; color-scheme:dark;
   }
   .btn-apply{
     background:var(--red); color:#fff; border:none; border-radius:8px; padding:11px 24px;
@@ -125,6 +125,7 @@
   .grid-2{display:grid; grid-template-columns:1.1fr .9fr; gap:20px; margin-bottom:28px;}
   .grid-2.reverse{grid-template-columns:.9fr 1.1fr;}
   .kpi-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:28px;}
+  .kpi-grid.cols-5{grid-template-columns:repeat(5,1fr);}
 
   .card{ background:var(--card); border:1px solid var(--border); border-radius:12px; padding:26px; position:relative; min-width:0; overflow:hidden; }
   .grid-3 > *, .grid-2 > *, .kpi-grid > *, .kpi-row-icons > * { min-width:0; }
@@ -235,7 +236,7 @@
     .sidebar-logo .sub{ display:none; }
     .nav-item{ padding:13px 14px; font-size:14px; gap:10px; }
     .sidebar-foot{ display:none; }
-    .kpi-row-icons, .kpi-row-icons.cols-4, .kpi-row-icons.cols-6, .kpi-row-icons.cols-5{ grid-template-columns:repeat(3,1fr); }
+    .kpi-row-icons, .kpi-row-icons.cols-4, .kpi-row-icons.cols-6, .kpi-row-icons.cols-5, .kpi-grid.cols-5{ grid-template-columns:repeat(3,1fr); }
     .grid-3{ grid-template-columns:1fr; }
     .kpi-grid{grid-template-columns:repeat(2,1fr);}
     .grid-2, .grid-2.reverse{grid-template-columns:1fr;}
@@ -281,7 +282,7 @@
     .content{ padding:20px 16px 50px; }
     .section-title{ font-size:17px; margin:24px 0 12px; }
 
-    .kpi-row-icons, .kpi-row-icons.cols-4, .kpi-row-icons.cols-6, .kpi-row-icons.cols-5, .kpi-grid{ grid-template-columns:repeat(2,1fr); gap:10px; }
+    .kpi-row-icons, .kpi-row-icons.cols-4, .kpi-row-icons.cols-6, .kpi-row-icons.cols-5, .kpi-grid, .kpi-grid.cols-5{ grid-template-columns:repeat(2,1fr); gap:10px; }
     .kpi-icon-card{ padding:14px; min-height:auto; }
     .kpi-icon-info .value{ font-size:22px; }
     .kpi-icon-info .label{ font-size:10.5px; }
@@ -295,7 +296,7 @@
   }
 
   @media (max-width:420px){
-    .kpi-row-icons, .kpi-row-icons.cols-4, .kpi-row-icons.cols-6, .kpi-row-icons.cols-5, .kpi-grid{ grid-template-columns:1fr; }
+    .kpi-row-icons, .kpi-row-icons.cols-4, .kpi-row-icons.cols-6, .kpi-row-icons.cols-5, .kpi-grid, .kpi-grid.cols-5{ grid-template-columns:1fr; }
   }
 </style>
 </head>
@@ -333,20 +334,23 @@
     <div class="topbar-right">
       <div class="topbar-date">
         <div id="dataAtual">quinta-feira, 2 de julho de 2026</div>
-        <div class="periodo-range" id="periodoRangeBig">21/06 → 27/06/2026</div>
-        <div class="periodo-count" id="periodoCountSmall"></div>
       </div>
       <div class="status-pill atualizado pulsando" id="statusPill"><span class="blink"></span> DADOS ATUALIZADOS</div>
     </div>
   </div>
 
   <div class="filterbar">
-    <span class="filterbar-label">SEMANA</span>
-    <div class="filter-field" style="min-width:280px;">
-      <label>Selecionar</label>
-      <select id="filtroSemana"></select>
+    <span class="filterbar-label">PERÍODO</span>
+    <div class="filter-field">
+      <label>De</label>
+      <input type="date" id="filtroDe">
     </div>
-    <button class="btn-apply" onclick="aplicarFiltro()">APLICAR</button>
+    <div class="filter-field">
+      <label>Até</label>
+      <input type="date" id="filtroAte">
+    </div>
+    <button class="btn-apply" onclick="aplicarFiltroData()">APLICAR</button>
+    <button class="btn-apply" style="background:transparent; border:1px solid var(--border); color:var(--muted);" onclick="limparFiltroData()">LIMPAR</button>
   </div>
 
   <div class="content">
@@ -471,7 +475,7 @@
       </div>
 
       <div class="section-title" style="margin-top:26px;">Clique em um card para explorar<div class="line"></div></div>
-      <div class="kpi-grid">
+      <div class="kpi-grid cols-5">
         <div class="card kpi-card" id="kpi-operacional" onclick="selectView('operacional')" style="--accent:#3d7bff;">
           <div class="card-label" id="fcLabel1">① Caixa Operacional Livre</div>
           <div class="card-value" style="color:var(--red)" id="fcVal1">-R$ 10,1 mil</div>
@@ -491,6 +495,11 @@
           <div class="card-label" id="fcLabel4">Resultado Operacional</div>
           <div class="card-value" style="color:var(--red)" id="fcVal4">-R$ 196,4 mil</div>
           <div class="card-meta" id="fcMeta4">Receita R$ 3,24 milhões − Despesa R$ 3,35 milhões</div>
+        </div>
+        <div class="card kpi-card" id="kpi-projecao" onclick="selectView('projecao')" style="--accent:#f2b705;">
+          <div class="card-label">⑤ Tendência Diária (KAYSER)</div>
+          <div class="card-value" style="color:var(--gold)">09/jul-27/ago</div>
+          <div class="card-meta">Resultado operacional dia a dia, direto do sistema</div>
         </div>
       </div>
 
@@ -557,6 +566,7 @@
     <!-- ══════════════════ PAGAMENTOS ══════════════════ -->
     <div class="page-section" id="page-pagamentos">
       <div class="section-title">Pagamentos <span class="tag" id="pagPeriodoTag" style="background:rgba(136,136,170,.15); color:var(--muted);">28/06 a 05/07/2026</span><div class="line"></div></div>
+      <div id="pagAvisoSemDados"></div>
 
       <div class="kpi-row-icons cols-4">
         <div class="kpi-icon-card">
@@ -654,8 +664,11 @@
 
     <!-- ══════════════════ VENDAS ══════════════════ -->
     <div class="page-section" id="page-vendas">
-      <div class="section-title">Vendas — Associações Novas <span class="tag" id="vendasPeriodoTag" style="background:rgba(136,136,170,.15); color:var(--muted);">01 a 26/jun/2026</span><div class="line"></div></div>
+      <div class="section-title">Vendas — Associações Novas<div class="line"></div></div>
       <div id="vendasConteudo"></div>
+
+      <div class="section-title" style="margin-top:26px;">Central de Vendas — Funil de Conversão<div class="line"></div></div>
+      <div id="funilVendasConteudo"></div>
     </div>
 
     <!-- ══════════════════ RETENÇÃO ══════════════════ -->
@@ -708,44 +721,58 @@ let RECEITAS_CATS = [
   {nome:'Patrocínios',        prev:0,      tend:0,      real:0},
 ];
 const PROJECAO = [
-  {d:'03/jul', mov:-82567,   banco:-92671,  indices:2688484},
-  {d:'06/jul', mov:-399293,  banco:-491964, indices:2688484},
-  {d:'07/jul', mov:209113,   banco:-282851, indices:2679849},
-  {d:'08/jul', mov:75333,    banco:-207518, indices:2665349},
-  {d:'09/jul', mov:66133,    banco:-141385, indices:2587349},
-  {d:'10/jul', mov:-124200,  banco:-265585, indices:2538349},
-  {d:'13/jul', mov:1086088,  banco:820503,  indices:2538349},
-  {d:'14/jul', mov:210000,   banco:1030503, indices:2531283},
-  {d:'15/jul', mov:32645,    banco:1063148, indices:2531283},
-  {d:'16/jul', mov:-25000,   banco:1038148, indices:2531283},
-  {d:'17/jul', mov:-56000,   banco:982148,  indices:2531283},
-  {d:'20/jul', mov:-971100,  banco:11048,   indices:2531283},
-  {d:'21/jul', mov:10000,    banco:21048,   indices:2531283},
-  {d:'22/jul', mov:-5000,    banco:16048,   indices:2531283},
-  {d:'23/jul', mov:-39100,   banco:-23052,  indices:2531283},
-  {d:'24/jul', mov:-99000,   banco:-122052, indices:2531283},
-  {d:'27/jul', mov:15300,    banco:-106752, indices:2531283},
-  {d:'28/jul', mov:10000,    banco:-96752,  indices:2531283},
-  {d:'29/jul', mov:10000,    banco:-86752,  indices:2531283},
-  {d:'30/jul', mov:9500,     banco:-77252,  indices:2531283},
-  {d:'31/jul', mov:-53000,   banco:-130252, indices:2531283},
-  {d:'03/ago', mov:31400,    banco:-98852,  indices:2531283},
-  {d:'04/ago', mov:70000,    banco:-28852,  indices:2531283},
-  {d:'05/ago', mov:50000,    banco:21148,   indices:2531283},
-  {d:'06/ago', mov:-424500,  banco:-403352, indices:3361283},
-  {d:'07/ago', mov:-39200,   banco:-442552, indices:3361283},
-  {d:'10/ago', mov:-51500,   banco:-494052, indices:3312283},
-  {d:'11/ago', mov:1395000,  banco:900948,  indices:3312283},
-  {d:'12/ago', mov:162000,   banco:1062948, indices:3312283},
-  {d:'13/ago', mov:-186200,  banco:876748,  indices:3312283},
-  {d:'14/ago', mov:10645,    banco:887394,  indices:3305217},
-  {d:'17/ago', mov:-71000,   banco:816394,  indices:3305217},
-  {d:'18/ago', mov:10000,    banco:826394,  indices:3305217},
-  {d:'19/ago', mov:10000,    banco:836394,  indices:3305217},
-  {d:'20/ago', mov:-997600,  banco:-161206, indices:3123217},
-  {d:'21/ago', mov:-68000,   banco:-229206, indices:3123217},
+  {d:'09/jul', mov:52006,    banco:-155512, indices:2442296},
+  {d:'10/jul', mov:-51441,   banco:-206953, indices:2393075},
+  {d:'13/jul', mov:1159388,  banco:952434,  indices:2393075},
+  {d:'14/jul', mov:168000,   banco:1120434, indices:2386009},
+  {d:'15/jul', mov:12000,    banco:1132434, indices:2386009},
+  {d:'16/jul', mov:-25000,   banco:1107434, indices:2386009},
+  {d:'17/jul', mov:-136000,  banco:971434,  indices:2386009},
+  {d:'20/jul', mov:-966100,  banco:5334,    indices:2386009},
+  {d:'21/jul', mov:10000,    banco:15334,   indices:2386009},
+  {d:'22/jul', mov:-5000,    banco:10334,   indices:2386009},
+  {d:'23/jul', mov:-39100,   banco:-28766,  indices:2386009},
+  {d:'24/jul', mov:-89000,   banco:-117766, indices:2386009},
+  {d:'27/jul', mov:15300,    banco:-102466, indices:2386009},
+  {d:'28/jul', mov:10000,    banco:-92466,  indices:2386009},
+  {d:'29/jul', mov:10000,    banco:-82466,  indices:2386009},
+  {d:'30/jul', mov:9500,     banco:-72966,  indices:2386009},
+  {d:'31/jul', mov:-53000,   banco:-125966, indices:2386009},
+  {d:'03/ago', mov:31400,    banco:-94566,  indices:2386009},
+  {d:'04/ago', mov:70000,    banco:-24566,  indices:2386009},
+  {d:'05/ago', mov:50000,    banco:25434,   indices:2386009},
+  {d:'06/ago', mov:-424500,  banco:-399066, indices:3216009},
+  {d:'07/ago', mov:-159200,  banco:-558266, indices:3216009},
+  {d:'10/ago', mov:48500,    banco:-509766, indices:3167009},
+  {d:'11/ago', mov:1395000,  banco:885234,  indices:3167009},
+  {d:'12/ago', mov:162000,   banco:1047234, indices:3167009},
+  {d:'13/ago', mov:-186200,  banco:861034,  indices:3167009},
+  {d:'14/ago', mov:10645,    banco:871680,  indices:3159943},
+  {d:'17/ago', mov:-71000,   banco:800680,  indices:3159943},
+  {d:'18/ago', mov:10000,    banco:810680,  indices:3159943},
+  {d:'19/ago', mov:10000,    banco:820680,  indices:3159943},
+  {d:'20/ago', mov:-997600,  banco:-176920, indices:2977943},
+  {d:'21/ago', mov:-68000,   banco:-244920, indices:2977943},
+  {d:'24/ago', mov:-34000,   banco:-278920, indices:2977943},
+  {d:'25/ago', mov:10000,    banco:-268920, indices:2977943},
+  {d:'26/ago', mov:-15000,   banco:-283920, indices:2977943},
+  {d:'27/ago', mov:-24200,   banco:-308120, indices:2977943},
 ];
 const LIMITE_CREDITO_TOTAL = 6400000;
+let PROJECAO_ATUAL = PROJECAO; // filtrado dinamicamente pelo período selecionado no filtro de data
+function projecaoDataISO(d){
+  const meses = {jan:'01',fev:'02',mar:'03',abr:'04',mai:'05',jun:'06',jul:'07',ago:'08',set:'09',out:'10',nov:'11',dez:'12'};
+  const [dia, mes] = d.split('/');
+  return `2026-${meses[mes]}-${dia.padStart(2,'0')}`;
+}
+function filtrarProjecaoPorIntervalo(de, ate){
+  if(!de || !ate){ PROJECAO_ATUAL = PROJECAO; return; }
+  const filtrado = PROJECAO.filter(p=>{
+    const iso = projecaoDataISO(p.d);
+    return iso >= de && iso <= ate;
+  });
+  PROJECAO_ATUAL = filtrado.length ? filtrado : PROJECAO;
+}
 
 let OBRAS = [
   {data:'09/07/2026', fornecedor:'CL Soluções em Engenharia Ltda', projeto:'Telhado Rest. Tênis', valor:78000.00},
@@ -766,10 +793,20 @@ const REINGRESSO_HISTORICO = [
     campanhas: null, alerta: 'Período parcial de julho — ainda sem quebra por campanha específica. Assim que tivermos mais detalhamento, a distribuição por campanha volta a aparecer.'},
 ];
 const VENDAS_CAMPANHAS = [
-  {nome:'Check-in Excluídos',  qtd:6, cor:'#3d7bff'},
-  {nome:'Plano Senior',        qtd:5, cor:'#a855f7'},
-  {nome:'Promo Amigo Indica',  qtd:5, cor:'#00e5a0'},
-  {nome:'Plano Teen',          qtd:3, cor:'#f2b705'},
+  {nome:'Promo Amigo Indica',       qtd:4, cor:'#3d7bff'},
+  {nome:'Divulgação nas Redes',     qtd:2, cor:'#00e5a0'},
+  {nome:'Ex Sócio Dependente',      qtd:2, cor:'#a855f7'},
+];
+// Funil de conversão da Central de Vendas (leads/contatos/visitas/vendas) — dado diário real
+const VENDAS_FUNIL_DIARIO = [
+  {data:'2026-07-06', leads:7,  contatos:19, visitas:0, vendas:0, retNeg:1, acomp:5},
+  {data:'2026-07-07', leads:13, contatos:23, visitas:0, vendas:1, retNeg:0, acomp:11},
+  {data:'2026-07-08', leads:9,  contatos:16, visitas:2, vendas:4, retNeg:1, acomp:8},
+  {data:'2026-07-09', leads:17, contatos:14, visitas:0, vendas:2, retNeg:0, acomp:4},
+  {data:'2026-07-10', leads:5,  contatos:25, visitas:0, vendas:0, retNeg:0, acomp:5},
+  {data:'2026-07-11', leads:0,  contatos:0,  visitas:0, vendas:0, retNeg:0, acomp:0},
+  {data:'2026-07-13', leads:17, contatos:32, visitas:1, vendas:1, retNeg:2, acomp:3},
+  {data:'2026-07-14', leads:12, contatos:20, visitas:0, vendas:0, retNeg:3, acomp:4},
 ];
 const NEGOCIACOES = [
   {mes:'Mar/26', valor:59492,  contatos:37},
@@ -886,19 +923,19 @@ let HE_DONUT_SEGMENTS = HE_POR_MES.jun2026.donutSegments;
 let HE_MES_SEM_DADOS = null; // guarda o mesKey pedido quando não há dado de HE ainda
 
 function setHEPeriodo(mesKey){
-  if(HE_POR_MES[mesKey]){
+  if(mesKey && HE_POR_MES[mesKey]){
     HE_RESUMO = HE_POR_MES[mesKey].resumo;
     HE_CC_RANKING = HE_POR_MES[mesKey].ccRanking;
     HE_DONUT_SEGMENTS = HE_POR_MES[mesKey].donutSegments;
     HE_MES_SEM_DADOS = null;
   } else {
-    // sem dado ainda para este mês: mantém o último disponível, mas avisa
+    // sem dado ainda para este período: mantém o último disponível, mas avisa
     const keys = Object.keys(HE_POR_MES).filter(k=>HE_POR_MES[k]);
     const fallback = keys[keys.length-1];
     HE_RESUMO = HE_POR_MES[fallback].resumo;
     HE_CC_RANKING = HE_POR_MES[fallback].ccRanking;
     HE_DONUT_SEGMENTS = HE_POR_MES[fallback].donutSegments;
-    HE_MES_SEM_DADOS = mesKey;
+    HE_MES_SEM_DADOS = mesKey && DADOS_MES[mesKey] ? mesKey : 'periodo-fora-do-alcance';
   }
 }
 
@@ -1052,16 +1089,16 @@ function renderSimpleBars(elId, items){
 function drawLineChart(elId, serieKey, opts){
   opts = opts || {};
   const el = document.getElementById(elId);
-  const W = Math.max(700, PROJECAO.length*30), H = 300;
+  const W = Math.max(700, PROJECAO_ATUAL.length*30), H = 300;
   const padL=76, padR=16, padT=20, padB=36;
-  const vals = PROJECAO.map(p=>p[serieKey]);
+  const vals = PROJECAO_ATUAL.map(p=>p[serieKey]);
   let min = Math.min(...vals), max = Math.max(...vals);
   const spread = max-min || 1;
   min -= spread*0.12; max += spread*0.12;
   if(opts.includeZero){ min = Math.min(min,0); }
-  const x = i => padL + i*( (W-padL-padR)/(PROJECAO.length-1) );
+  const x = i => padL + i*( (W-padL-padR)/(PROJECAO_ATUAL.length-1) );
   const y = v => padT + (1 - (v-min)/(max-min)) * (H-padT-padB);
-  let path = PROJECAO.map((p,i)=> `${i===0?'M':'L'} ${x(i).toFixed(1)} ${y(p[serieKey]).toFixed(1)}`).join(' ');
+  let path = PROJECAO_ATUAL.map((p,i)=> `${i===0?'M':'L'} ${x(i).toFixed(1)} ${y(p[serieKey]).toFixed(1)}`).join(' ');
   let gridLines = '';
   for(let s=0; s<=3; s++){
     const v = min + (max-min)*s/3, yy = y(v);
@@ -1074,12 +1111,12 @@ function drawLineChart(elId, serieKey, opts){
     zeroLine = `<line x1="${padL}" y1="${yz}" x2="${W-padR}" y2="${yz}" stroke="#e8192c" stroke-width="1.3" stroke-dasharray="4,3"/>`;
   }
   let dots = '', labels = '';
-  PROJECAO.forEach((p,i)=>{
+  PROJECAO_ATUAL.forEach((p,i)=>{
     const val = p[serieKey], cx = x(i), cy = y(val), isNeg = val<0;
     const color = isNeg ? '#e8192c' : (opts.dotColor || '#3d7bff');
     const r = isNeg ? 6 : (Math.abs(p.mov) > 300000 ? 5 : 2.8);
     dots += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${color}" stroke="#13151d" stroke-width="1"><title>${p.d}: ${fmtBRL0(val)}</title></circle>`;
-    if(i % 4 === 0 || i===PROJECAO.length-1){ labels += `<text x="${cx}" y="${H-10}" text-anchor="middle" fill="#b0b0d0" font-size="12">${p.d}</text>`; }
+    if(i % 4 === 0 || i===PROJECAO_ATUAL.length-1){ labels += `<text x="${cx}" y="${H-10}" text-anchor="middle" fill="#b0b0d0" font-size="12">${p.d}</text>`; }
   });
   el.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="width:100%; max-width:100%; height:auto; display:block;">
     ${gridLines}${zeroLine}
@@ -1092,10 +1129,10 @@ function drawLineChart(elId, serieKey, opts){
 function drawBarChartDaily(elId, serieKey, opts){
   opts = opts || {};
   const el = document.getElementById(elId);
-  const n = PROJECAO.length;
+  const n = PROJECAO_ATUAL.length;
   const W = Math.max(700, n*34), H = 400;
   const padL=76, padR=16, padT=38, padB=36;
-  const vals = PROJECAO.map(p=>p[serieKey]);
+  const vals = PROJECAO_ATUAL.map(p=>p[serieKey]);
   let min = Math.min(...vals), max = Math.max(...vals);
   const spread = max-min || 1;
   min -= spread*0.10; max += spread*0.10;
@@ -1112,7 +1149,7 @@ function drawBarChartDaily(elId, serieKey, opts){
   let bars = '', labels = '';
   let idxMin = 0, idxMax = 0;
   vals.forEach((v,i)=>{ if(v<vals[idxMin]) idxMin=i; if(v>vals[idxMax]) idxMax=i; });
-  PROJECAO.forEach((p,i)=>{
+  PROJECAO_ATUAL.forEach((p,i)=>{
     const val = p[serieKey];
     const cx = padL + i*bw + bw/2;
     const barW = bw*0.62;
@@ -1272,7 +1309,15 @@ function showSerieDetalhe(nome, chartElId, detailElId){
 }
 
 // ── Resumo dinâmico da Negociação (sempre calculado a partir de INADIMPLENCIA/NEGOCIACOES) ──
-function renderNegociacaoResumo(mesKey){
+function renderNegociacaoResumo(mesKey, de, ate){
+  if(mesKey === 'sem-dado'){
+    const avisoEl = document.getElementById('negAvisoPeriodo');
+    if(avisoEl) avisoEl.innerHTML = `<div class="alert-box"><span>🚫</span><div><b>Não há dados de inadimplência/negociação para o período selecionado.</b> Nosso histórico cobre Março a Junho/2026.</div></div>`;
+    document.getElementById('negAlertaTopo').innerHTML = 'Selecione um intervalo entre Março e Junho/2026 para ver a análise de inadimplência.';
+    document.getElementById('negResumoCards').innerHTML = '';
+    document.getElementById('negAlertaRodape').innerHTML = '';
+    return;
+  }
   const comInad = INADIMPLENCIA.filter(d=>d.real!=null);
   const primeira = comInad[0];
   const ultima = comInad[comInad.length-1];
@@ -1390,7 +1435,12 @@ renderLegendaNegociacoes('tabelaLegendaNeg');
 function renderReingresso(mesKey){
   const historico = REINGRESSO_HISTORICO;
   const doMes = historico.filter(h=>h.mesKey===mesKey);
-  const r = doMes.length ? doMes[doMes.length-1] : historico[historico.length-1];
+  if(!mesKey || !doMes.length){
+    document.getElementById('reingressoConteudo').innerHTML = `<div class="alert-box"><span>🚫</span><div><b>Não há dados de Reingresso para o período selecionado.</b> Temos fechamentos completos de Junho/2026 e Julho/2026 (parcial). Selecione um intervalo dentro de um desses meses.</div></div>`;
+    document.getElementById('reingressoPeriodoTag').textContent = 'sem dados no período';
+    return;
+  }
+  const r = doMes[doMes.length-1];
   document.getElementById('reingressoPeriodoTag').textContent = r.periodoTag;
   const el = document.getElementById('reingressoConteudo');
   let html = '';
@@ -1435,18 +1485,18 @@ drawDonut('pagDonutFaixa', [
 // PALCO INTERATIVO — Fluxo de Caixa
 // ═══════════════════════════════════════════════════════════
 let CURRENT_MES_KEY = 'jul2026';
-const DISPONIVEL_MINIMO = 8596519.99; // menor "Disponível ou Necessidade" observado no período (06/jul) — fonte: Resumo de Necessidades da Controladoria
+const DISPONIVEL_MINIMO = 8586121.21; // menor "Disponível ou Necessidade" observado no período (10/jul) — fonte: Resumo de Necessidades da Controladoria, atualização 14/07/26
 
 const VIEWS = {
   operacional: {
     icon:'💧', title:'Caixa Operacional Livre', badge:'BLOCO 1 · OPERACIONAL', accent:'#3d7bff',
-    desc:'Somente o caixa de uso livre do clube — sem misturar com fundo de obras ou limite de crédito. Projeção diária da Controladoria, 03/jul a 21/ago/2026.',
+    get desc(){ return `Somente o caixa de uso livre do clube — sem misturar com fundo de obras ou limite de crédito. Projeção diária da Controladoria, ${PROJECAO[0].d} a ${PROJECAO[PROJECAO.length-1].d}/2026.`; },
     render(container){ drawBarChartDaily('stageChart', 'banco', {includeZero:true, barColor:'#3d7bff', callouts:true}); },
     get alerts(){
-      const pior = PROJECAO.reduce((a,b)=> b.banco<a.banco ? b : a);
-      const melhor = PROJECAO.reduce((a,b)=> b.banco>a.banco ? b : a);
-      const diasNegativos = PROJECAO.filter(p=>p.banco<0).length;
-      return `<div class="alert-box red"><span>🔻</span><div><b>Pior dia — ${pior.d}:</b> caixa operacional projetado em <b>-${fmtBRL0(Math.abs(pior.banco))}</b>. ${diasNegativos} de ${PROJECAO.length} dias projetados ficam com o caixa livre negativo.</div></div>
+      const pior = PROJECAO_ATUAL.reduce((a,b)=> b.banco<a.banco ? b : a);
+      const melhor = PROJECAO_ATUAL.reduce((a,b)=> b.banco>a.banco ? b : a);
+      const diasNegativos = PROJECAO_ATUAL.filter(p=>p.banco<0).length;
+      return `<div class="alert-box red"><span>🔻</span><div><b>Pior dia — ${pior.d}:</b> caixa operacional projetado em <b>-${fmtBRL0(Math.abs(pior.banco))}</b>. ${diasNegativos} de ${PROJECAO_ATUAL.length} dias projetados ficam com o caixa livre negativo.</div></div>
         <div class="alert-box"><span>🔺</span><div><b>Maior recomposição — ${melhor.d}:</b> caixa chega a ${fmtBRL0(melhor.banco)}, puxado pelo vencimento de mensalidades.</div></div>`;
     }
   },
@@ -1471,14 +1521,14 @@ const VIEWS = {
     icon:'🛟', title:'Limite de Crédito Garantido', badge:'BLOCO 3 · FINANCIAMENTO', accent:'#06b6d4',
     desc:'Linhas contratadas junto a Banrisul e Itaú. É um backstop, não caixa.',
     render(container){
-      const usoMaxNecessario = Math.abs(Math.min(...PROJECAO.map(p=>p.banco)));
+      const usoMaxNecessario = Math.abs(Math.min(...PROJECAO_ATUAL.map(p=>p.banco)));
       const pctUso = (usoMaxNecessario/LIMITE_CREDITO_TOTAL*100);
-      const piorDia = PROJECAO.reduce((a,b)=> b.banco<a.banco ? b : a).d;
+      const piorDia = PROJECAO_ATUAL.reduce((a,b)=> b.banco<a.banco ? b : a).d;
       container.innerHTML = `<div style="display:flex; height:34px; border-radius:8px; overflow:hidden; border:1px solid var(--border); margin:6px 0 8px; background:#13151d;">
           <div style="width:${pctUso.toFixed(2)}%; background:var(--cyan); min-width:3px;"></div></div>
         <div class="legend-row">Uso projetado no pior dia (${piorDia}): <b style="color:var(--text)">${fmtBRL0(usoMaxNecessario)}</b> — apenas <b style="color:var(--cyan)">${pctUso.toFixed(1)}%</b> do limite total</div>`;
     },
-    alerts:`<div class="alert-box"><span>💡</span><div>Mesmo no pior dia projetado (03/jul a 21/ago), o disponível entre fundo + limite de crédito nunca cai abaixo de <b>${fmtBRL0(DISPONIVEL_MINIMO)}</b> — bem acima da necessidade operacional do período.</div></div>`
+    get alerts(){ return `<div class="alert-box"><span>💡</span><div>Mesmo no pior dia projetado (${PROJECAO[0].d} a ${PROJECAO[PROJECAO.length-1].d}), o disponível entre fundo + limite de crédito nunca cai abaixo de <b>${fmtBRL0(DISPONIVEL_MINIMO)}</b> — bem acima da necessidade operacional do período.</div></div>`; }
   },
   resultado: {
     icon:'📊',
@@ -1497,8 +1547,67 @@ const VIEWS = {
       const pior = m.resultadoOper<0;
       return `<div class="alert-box ${pior?'red':''}"><span>${pior?'⚠️':'✅'}</span><div>${pior?'Despesa superou receita em':'Receita superou despesa em'} <b>${fmtMil(Math.abs(m.resultadoOper))}</b> no acumulado até ${m.dataReferencia}.</div></div>`;
     }
+  },
+  projecao: {
+    icon:'🔮', title:'Tendência do Resultado Operacional — 09/jul a 27/ago/2026', badge:'BASE: SISTEMA KAYSER', accent:'#f2b705',
+    desc:'Resultado operacional (tendência) dia a dia, conforme lançado no sistema KAYSER. Mostra só o período que a Controladoria já projetou — os próximos meses entram assim que forem importados.',
+    render(container){
+      container.innerHTML = `<div id="stageProjecaoChart"></div>`;
+      drawProjecaoTendencia('stageProjecaoChart');
+    },
+    alerts:`
+      <div class="alert-box red">
+        <span>⚠️</span>
+        <div><b>Dado incompleto no sistema:</b> até 09/07/2026, havia <b>R$ 442.526,94</b> em despesas já previstas pelos setores que ainda não tinham sido lançadas no KAYSER. Ou seja, o resultado real tende a ser <u>pior</u> do que a linha de tendência abaixo mostra, em até esse valor — o painel só reflete o que está lançado no sistema. Setores lançarem despesas em dia é o que garante uma tendência confiável aqui.</div>
+      </div>
+      <div class="alert-box"><span>ℹ️</span><div>Padrão observado nos dias já projetados: <b style="color:var(--green);">dia 10</b> costuma ser o de maior recebimento (recebimentos com liquidação D+3, resultado tende a positivo); <b style="color:#3d7bff;">14 a 19</b> costuma ser boa janela para pagar fornecedores; <b style="color:var(--orange);">21 a 25</b> concentra maior saída de caixa; <b style="color:var(--red);">dia 20</b> se destaca por juntar adiantamento de folha de pagamento + impostos, sendo o dia de maior saída do mês.</div></div>`
   }
 };
+
+function classificaDiaRegra(dataStr){
+  const dia = parseInt(dataStr.split('/')[0], 10);
+  if(dia===20) return {cor:'#e8192c', label:'Folha + Impostos'};
+  if(dia===10) return {cor:'#00e5a0', label:'Recebimento (D+3)'};
+  if(dia>=21 && dia<=25) return {cor:'#fb923c', label:'Alto fluxo de saída'};
+  if(dia>=14 && dia<=19) return {cor:'#3d7bff', label:'Bom p/ pagar fornecedores'};
+  return null;
+}
+
+function drawProjecaoTendencia(elId){
+  const el = document.getElementById(elId);
+  const dados = PROJECAO; // dado real da Controladoria/KAYSER, 09/jul a 27/ago
+  const W = Math.max(760, dados.length*32), H = 320, padL=80, padR=20, padT=28, padB=64;
+  const vals = dados.map(d=>d.mov);
+  const maxAbs = Math.max(...vals.map(v=>Math.abs(v))) * 1.2;
+  const bw = (W-padL-padR)/dados.length;
+  const y0 = padT + (H-padT-padB)/2;
+  const y = v => y0 - (v/maxAbs)*((H-padT-padB)/2);
+  let gridLine = `<line x1="${padL}" y1="${y0}" x2="${W-padR}" y2="${y0}" stroke="#40415a" stroke-width="1.4"/>`;
+  let bars = '', labels = '', marcadores = '';
+  dados.forEach((d,i)=>{
+    const cx = padL + i*bw + bw/2, barW = bw*0.55;
+    const regra = classificaDiaRegra(d.d);
+    const corPadrao = d.mov>=0 ? '#00e5a0' : '#e8192c';
+    const cor = regra ? regra.cor : corPadrao;
+    const yTop = y(Math.max(d.mov,0)), yBot = y(Math.min(d.mov,0));
+    const barH = Math.max(yBot-yTop, 2);
+    bars += `<rect x="${(cx-barW/2).toFixed(1)}" y="${yTop.toFixed(1)}" width="${barW.toFixed(1)}" height="${barH.toFixed(1)}" fill="${cor}" rx="2"><title>${d.d}${regra?' — '+regra.label:''}: ${fmtMilReais(d.mov)}</title></rect>`;
+    if(regra){
+      const yMark = d.mov>=0 ? yTop-14 : yBot+14;
+      marcadores += `<circle cx="${cx.toFixed(1)}" cy="${yMark.toFixed(1)}" r="3.5" fill="${cor}"><title>${regra.label}</title></circle>`;
+    }
+    labels += `<text x="${cx}" y="${H-padB+20}" text-anchor="middle" fill="#b0b0d0" font-size="12" transform="rotate(-40 ${cx} ${H-padB+20})">${d.d}</text>`;
+  });
+  el.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="width:100%; max-width:100%; height:auto; display:block;">
+    ${gridLine}${bars}${marcadores}${labels}
+  </svg>
+  <div style="margin-top:10px; font-size:12px; color:var(--muted); display:flex; flex-wrap:wrap; gap:14px;">
+    <span><span style="color:#00e5a0;">●</span> Dia 10 — recebimento</span>
+    <span><span style="color:#3d7bff;">●</span> 14-19 — bom p/ pagar fornecedores</span>
+    <span><span style="color:#fb923c;">●</span> 21-25 — alto fluxo de saída</span>
+    <span><span style="color:#e8192c;">●</span> Dia 20 — folha + impostos</span>
+  </div>`;
+}
 
 function selectView(key){
   const v = VIEWS[key];
@@ -1564,28 +1673,95 @@ const PAGAMENTOS_POR_PERIODO = {
   '28jun-05jul': {label:'28/06 a 05/07/2026', qtd:153, total:687722.71, maiorQtd:25, maiorTotal:525289.83, menorQtd:128, menorTotal:162432.88,
     top:[{nome:'Gba Brasil Administracao De Pessoas Ltda',qtd:1,valor:157129.89,pct:22.85},{nome:'Buffet Bettino',qtd:1,valor:44700.0,pct:6.5},{nome:'Cia De Gas Do Estado Do Rs Sulgas',qtd:1,valor:42639.85,pct:6.2},{nome:'Santori Comercio De Moveis Eireli',qtd:2,valor:42549.6,pct:6.19},{nome:'Mercadopago.Com Representacoes Ltda.',qtd:15,valor:32802.26,pct:4.77},{nome:'3S Solucoes Em Servicos E Seguranca Ltda',qtd:1,valor:28076.48,pct:4.08},{nome:'Folha Pagamento',qtd:7,valor:27992.39,pct:4.07},{nome:'Avates Eventos Ltda',qtd:1,valor:24725.0,pct:3.6},{nome:'Earte Promocoes E Prod Artisticas Cult E Ensi',qtd:2,valor:23029.53,pct:3.35},{nome:'Eduardo Almeida Ltda',qtd:1,valor:18770.0,pct:2.73},{nome:'Banco Do Brasil',qtd:2,valor:15915.55,pct:2.31},{nome:'Centro De Integração Empresa Escola',qtd:1,valor:15718.6,pct:2.29},{nome:'41.326.303 Valdoir Rodrigues Dias',qtd:2,valor:11200.0,pct:1.63},{nome:'Higiemaster Sul Industria E Comercio De Sanea',qtd:1,valor:10730.06,pct:1.56},{nome:'Hub Instituicao De Pagamento S.A.',qtd:7,valor:10420.87,pct:1.52}],
     bancos:[{nome:'Banrisul',qtd:140,total:638936.73},{nome:'Caixa Sogipa',qtd:4,total:2260.29},{nome:'Proj Sogipa',qtd:4,total:14990.0},{nome:'Índices Cons',qtd:3,total:25219.92},{nome:'Banco Do Br',qtd:1,total:2101.72},{nome:'Projeto Olim',qtd:1,total:4214.05}]},
-  '06-10jul': {label:'06 a 10/07/2026', qtd:203, total:1349458.59, maiorQtd:29, maiorTotal:1146313.66, menorQtd:174, menorTotal:203144.93,
-    top:[{nome:'Folha Pagamento',qtd:23,valor:605920.63,pct:44.9},{nome:'Cl Solucoes Em Engenharia Ltda',qtd:2,valor:223200.0,pct:16.54},{nome:'Unimed Porto Alegre Soc. Coop. De Trabalho M',qtd:6,valor:93797.38,pct:6.95},{nome:'Center Broilo Com De Sistemas De Aquecim Ltd',qtd:1,valor:49000.0,pct:3.63},{nome:'Merithu Consultoria Em Gestao Empresarial',qtd:1,valor:32534.68,pct:2.41},{nome:'Capitale Energia Comercializadora Ltda.',qtd:1,valor:30807.16,pct:2.28},{nome:'Mercadopago.Com Representacoes Ltda.',qtd:17,valor:21489.99,pct:1.59},{nome:'3S Solucoes Em Servicos E Seguranca Ltda',qtd:1,valor:20286.23,pct:1.5},{nome:'Comite Brasileiro De Clubes',qtd:2,valor:19528.57,pct:1.45},{nome:'Cesar V Da Luz & Melero Cia Ltda',qtd:1,valor:14573.82,pct:1.08},{nome:'Jb Esporte E Marketing Ltda',qtd:1,valor:13471.79,pct:1.0},{nome:'Alexandro Yuler Flores',qtd:1,valor:11662.8,pct:0.86},{nome:'Galbo Engenharia Ltda - Epp',qtd:1,valor:9611.4,pct:0.71},{nome:'Hub Instituicao De Pagamento S.A.',qtd:1,valor:9449.42,pct:0.7},{nome:'Federação Gaucha De Basketball',qtd:1,valor:9000.0,pct:0.67}],
-    bancos:[{nome:'Banrisul',qtd:186,total:938863.17},{nome:'Índices Cons',qtd:6,total:296606.92},{nome:'Projeto Olim',qtd:1,total:58660.81},{nome:'Cbc Edit 11 R',qtd:1,total:50355.0},{nome:'Caixa Sogipa',qtd:6,total:2505.07},{nome:'Patrocínio A',qtd:1,total:1511.62}]},
+  '06-10jul': {label:'06 a 10/07/2026', qtd:205, total:1352202.48, maiorQtd:29, maiorTotal:1146313.66, menorQtd:176, menorTotal:205888.82,
+    top:[{nome:'Folha Pagamento',qtd:23,valor:605920.63,pct:44.9},{nome:'Cl Solucoes Em Engenharia Ltda',qtd:2,valor:223200.0,pct:16.54},{nome:'Unimed Porto Alegre Soc. Coop. De Trabalho M',qtd:6,valor:93797.38,pct:6.95},{nome:'Center Broilo Com De Sistemas De Aquecim Ltd',qtd:1,valor:49000.0,pct:3.63},{nome:'Merithu Consultoria Em Gestao Empresarial',qtd:1,valor:32534.68,pct:2.41},{nome:'Capitale Energia Comercializadora Ltda.',qtd:1,valor:30807.16,pct:2.28},{nome:'Mercadopago.Com Representacoes Ltda.',qtd:17,valor:21489.99,pct:1.59},{nome:'3S Solucoes Em Servicos E Seguranca Ltda',qtd:1,valor:20286.23,pct:1.5},{nome:'Comite Brasileiro De Clubes',qtd:2,valor:19528.57,pct:1.45},{nome:'Cesar V Da Luz & Melero Cia Ltda',qtd:1,valor:14573.82,pct:1.08},{nome:'Jb Esporte E Marketing Ltda',qtd:1,valor:13471.79,pct:1.0},{nome:'Alexandro Yuler Flores',qtd:1,valor:11662.8,pct:0.86},{nome:'Galbo Engenharia Ltda - Epp',qtd:1,valor:9611.4,pct:0.71},{nome:'Hub Instituicao De Pagamento S.A.',qtd:1,valor:9449.42,pct:0.7},{nome:'Federação Gaucha De Basketball',qtd:1,valor:9000.0,pct:0.67},{nome:'Thomson Reuters Brasil Conteudo E Tecnol Ltda',qtd:2,valor:2743.89,pct:0.20}],
+    bancos:[{nome:'Banrisul',qtd:188,total:941607.06},{nome:'Índices Cons',qtd:6,total:296606.92},{nome:'Projeto Olim',qtd:1,total:58660.81},{nome:'Cbc Edit 11 R',qtd:1,total:50355.0},{nome:'Caixa Sogipa',qtd:6,total:2505.07},{nome:'Patrocínio A',qtd:1,total:1511.62}]},
 };
 const PERIODOS = [
-  {key:'01-05jun',     temDados:{pagamentos:true}},
-  {key:'08-12jun',     temDados:{pagamentos:true}},
-  {key:'15-26jun',     temDados:{pagamentos:true}},
-  {key:'29-30jun',     temDados:{pagamentos:true}},
-  {key:'28jun-05jul',  temDados:{pagamentos:true}},
-  {key:'06-10jul',     temDados:{pagamentos:true}, atual:true},
+  {key:'01-05jun',     temDados:{pagamentos:true}, ini:'2026-06-01', fim:'2026-06-05'},
+  {key:'08-12jun',     temDados:{pagamentos:true}, ini:'2026-06-08', fim:'2026-06-12'},
+  {key:'15-26jun',     temDados:{pagamentos:true}, ini:'2026-06-15', fim:'2026-06-26'},
+  {key:'29-30jun',     temDados:{pagamentos:true}, ini:'2026-06-29', fim:'2026-06-30'},
+  {key:'28jun-05jul',  temDados:{pagamentos:true}, ini:'2026-06-28', fim:'2026-07-05'},
+  {key:'06-10jul',     temDados:{pagamentos:true}, ini:'2026-07-06', fim:'2026-07-10', atual:true},
 ];
+// Janelas de cobertura para as abas que só têm fechamento mensal (Retenção, Vendas, RH, Reingresso)
+const COBERTURA_MES = {
+  jun2026: {ini:'2026-06-01', fim:'2026-06-30'},
+  jul2026: {ini:'2026-07-01', fim:'2026-07-31'},
+};
+// Negociação/Inadimplência tem histórico próprio (Mar-Jun), independente do resto
+const COBERTURA_NEGOCIACAO = {ini:'2026-03-01', fim:'2026-06-30'};
+
+function parseDataISO(str){ return new Date(str+'T00:00:00'); }
+function faixasSeSobrepoem(iniA, fimA, iniB, fimB){
+  return parseDataISO(iniA) <= parseDataISO(fimB) && parseDataISO(fimA) >= parseDataISO(iniB);
+}
+function faixaContidaEm(iniA, fimA, iniB, fimB){
+  return parseDataISO(iniA) >= parseDataISO(iniB) && parseDataISO(fimA) <= parseDataISO(fimB);
+}
+// Determina qual "mês" (jun2026/jul2026) cobre integralmente o intervalo selecionado, ou null se não houver
+function mesKeyParaIntervalo(de, ate){
+  for(const mesKey in COBERTURA_MES){
+    const c = COBERTURA_MES[mesKey];
+    if(faixaContidaEm(de, ate, c.ini, c.fim)) return mesKey;
+  }
+  return null;
+}
+// Determina qual semana de Pagamentos melhor cobre o intervalo (maior sobreposição), ou null
+function semanaPagamentosParaIntervalo(de, ate){
+  let melhor = null, melhorSobreposicao = 0;
+  PERIODOS.forEach(p=>{
+    if(!faixasSeSobrepoem(de, ate, p.ini, p.fim)) return;
+    const inicio = parseDataISO(de) > parseDataISO(p.ini) ? parseDataISO(de) : parseDataISO(p.ini);
+    const fimSobrep = parseDataISO(ate) < parseDataISO(p.fim) ? parseDataISO(ate) : parseDataISO(p.fim);
+    const dias = (fimSobrep - inicio) / 86400000;
+    if(dias >= melhorSobreposicao){ melhorSobreposicao = dias; melhor = p.key; }
+  });
+  return melhor;
+}
 
 function popularFiltroSemanas(){
-  const sel = document.getElementById('filtroSemana');
-  sel.innerHTML = PERIODOS.map(p=>{
-    const d = PAGAMENTOS_POR_PERIODO[p.key];
-    const tag = p.atual ? ' — período atual' : '';
-    return `<option value="${p.key}">${d.label}${tag}</option>`;
-  }).join('');
-  sel.value = PERIODOS[PERIODOS.length-1].key; // seleciona o período mais recente por padrão
-  aplicarFiltro();
+  // define o intervalo padrão = período mais recente conhecido (última semana de pagamentos)
+  const ultimo = PERIODOS[PERIODOS.length-1];
+  document.getElementById('filtroDe').value = ultimo.ini;
+  document.getElementById('filtroAte').value = ultimo.fim;
+  aplicarFiltroData();
+}
+
+function limparFiltroData(){
+  document.getElementById('filtroDe').value = '';
+  document.getElementById('filtroAte').value = '';
+}
+
+function aplicarFiltroData(){
+  const de = document.getElementById('filtroDe').value;
+  const ate = document.getElementById('filtroAte').value;
+  if(!de || !ate){
+    alert('Selecione as duas datas (De e Até) antes de aplicar o filtro.');
+    return;
+  }
+  if(parseDataISO(de) > parseDataISO(ate)){
+    alert('A data "De" não pode ser depois da data "Até".');
+    return;
+  }
+
+  // Pagamentos: acha a semana com maior sobreposição real
+  const semanaKey = semanaPagamentosParaIntervalo(de, ate);
+  renderPagamentosPeriodo(semanaKey, de, ate);
+
+  // Fluxo de Caixa / Retenção / Vendas / Reingresso / RH / Locações: por mês de cobertura
+  const mesKey = mesKeyParaIntervalo(de, ate);
+  renderFluxoCaixaPeriodo(mesKey, de, ate);
+  renderRetencaoPeriodo(mesKey);
+  renderVendasPeriodo(mesKey);
+  renderFunilVendas(de, ate);
+  renderReingresso(mesKey);
+  renderRH(mesKey);
+  renderLocacoesPeriodo(mesKey, de, ate);
+
+  // Negociação: cobertura própria (Mar-Jun/26), independente do resto
+  renderNegociacaoResumo(faixaContidaEm(de, ate, COBERTURA_NEGOCIACAO.ini, COBERTURA_NEGOCIACAO.fim) ? mesKey : 'sem-dado', de, ate);
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -1662,11 +1838,27 @@ const DADOS_MES = {
       analise:'A categoria <b style="color:var(--text)">Patrimonial</b> concentrou o maior volume (31,6%), seguida por <b style="color:var(--text)">Contribuinte</b> e <b style="color:var(--text)">Contribuinte Individual</b> (26,3% cada). Motivos: <b style="color:var(--text)">Não utilização</b> foi o principal (47,4%), seguido de Financeiro (21,1%) e Mudança (15,8%).',
     },
     vendas: {
-      periodoTag:'01 a 26/jun/2026',
-      associacoesNovas:'22', valorArrecadado:'R$ 16.896,00', ticketMedio:'R$ 768,00',
+      periodoTag:'01 a 30/jun/2026',
+      associacoesNovas:'23', valorArrecadado:'R$ 17.973,00', ticketMedio:'R$ 781,43',
       campanhas:[
-        {nome:'Check-in Excluídos', qtd:6, cor:'#3d7bff'},{nome:'Plano Senior', qtd:5, cor:'#a855f7'},
-        {nome:'Promo Amigo Indica', qtd:5, cor:'#00e5a0'},{nome:'Plano Teen', qtd:3, cor:'#f2b705'},
+        {nome:'Promo Amigo Indica', qtd:4, cor:'#3d7bff'},
+        {nome:'Divulgação nas Redes', qtd:2, cor:'#00e5a0'},
+        {nome:'Ex Sócio Dependente', qtd:2, cor:'#a855f7'},
+        {nome:'Captação - Dohms', qtd:1, cor:'#f2b705'},
+        {nome:'Captação - Usuário Check In', qtd:1, cor:'#06b6d4'},
+        {nome:'Captação - Usuário de Escola', qtd:1, cor:'#fb923c'},
+        {nome:'Presencial', qtd:1, cor:'#e8192c'},
+        {nome:'Presencial / Amigo Indica', qtd:1, cor:'#b0b0d0'},
+        {nome:'Presencial / Pilates', qtd:1, cor:'#3d7bff'},
+        {nome:'Sauna', qtd:1, cor:'#00e5a0'},
+        {nome:'Usuário Check In', qtd:1, cor:'#a855f7'},
+        {nome:'Usuário de Escola', qtd:1, cor:'#f2b705'},
+        {nome:'Visita/Estágio', qtd:1, cor:'#06b6d4'},
+        {nome:'WhatsApp', qtd:1, cor:'#fb923c'},
+        {nome:'WhatsApp + Tour Guiado', qtd:1, cor:'#e8192c'},
+        {nome:'WhatsApp / Dohms', qtd:1, cor:'#b0b0d0'},
+        {nome:'WhatsApp / Tênis', qtd:1, cor:'#3d7bff'},
+        {nome:'WhatsApp / Visita', qtd:1, cor:'#00e5a0'},
       ],
       alerta: null,
     },
@@ -1701,29 +1893,29 @@ const DADOS_MES = {
   jul2026: {
     label: 'Julho/2026',
     despesas: [
-      {nome:'Pessoal de Apoio', prev:1469.0, tend:1473.0, real:509.1},
-      {nome:'Despesas de Funcionamento', prev:1347.5, tend:1341.1, real:386.9},
-      {nome:'Despesas Fixas', prev:284.3, tend:284.6, real:56.6},
-      {nome:'Esporte', prev:182.4, tend:181.3, real:57.0},
-      {nome:'Eventos', prev:163.9, tend:163.1, real:59.1},
+      {nome:'Pessoal de Apoio', prev:1469.0, tend:1479.2, real:628.3},
+      {nome:'Despesas de Funcionamento', prev:1347.5, tend:1334.1, real:461.6},
+      {nome:'Despesas Fixas', prev:284.3, tend:266.3, real:93.5},
+      {nome:'Esporte', prev:182.4, tend:188.4, real:123.4},
+      {nome:'Eventos', prev:163.9, tend:163.0, real:61.0},
       {nome:'Imobilizado', prev:79.0, tend:78.3, real:68.3},
       {nome:'Contingências (Indenizações)', prev:26.9, tend:27.2, real:17.3},
-      {nome:'Tarifas e Desp. Bancárias', prev:9.1, tend:9.3, real:3.9},
+      {nome:'Tarifas e Desp. Bancárias', prev:9.1, tend:9.4, real:4.5},
       {nome:'Taxas e Impostos', prev:118.0, tend:118.1, real:1.1},
     ],
     receitas: [
-      {nome:'Boletos', prev:1480.0, tend:1474.9, real:471.9},
+      {nome:'Boletos', prev:1480.0, tend:1474.8, real:591.8},
       {nome:'Débito em Conta', prev:690.0, tend:690.0, real:0},
-      {nome:'Receitas Diversas', prev:550.0, tend:543.1, real:126.1},
-      {nome:'Cartões Crédito', prev:490.0, tend:490.5, real:125.5},
-      {nome:'Cartões Débito', prev:170.0, tend:160.9, real:41.9},
+      {nome:'Receitas Diversas', prev:550.0, tend:540.2, real:188.2},
+      {nome:'Cartões Crédito', prev:490.0, tend:490.5, real:228.5},
+      {nome:'Cartões Débito', prev:170.0, tend:156.0, real:57.0},
       {nome:'Rendimento Aplicação', prev:0, tend:0.1, real:0.1},
       {nome:'Patrocínios', prev:0, tend:0, real:0},
     ],
     totaisReceitaDespesa: {
       previsto:  {receita:3380.0, despesa:3680.0},
-      tendencia: {receita:3359.4, despesa:3676.0},
-      realizado: {receita:765.4,  despesa:1159.2},
+      tendencia: {receita:3351.7, despesa:3664.0},
+      realizado: {receita:1065.7, despesa:1459.0},
     },
     obras: [
       {data:'09/07/2026', fornecedor:'CL Soluções em Engenharia Ltda', projeto:'Telhado Rest. Tênis', valor:78000.00},
@@ -1735,42 +1927,50 @@ const DADOS_MES = {
       {data:'30/09/2026', fornecedor:'CL Soluções em Engenharia Ltda', projeto:'Telhado Dn. Leopoldina', valor:421000.00},
     ],
     obrasTotal: 931266.00,
-    caixaLivre: -207.5, fundoObras: 2665.3, resultadoOper: -393.8, saldoTotal: 2457.8,
+    caixaLivre: -206.95, fundoObras: 2393.08, resultadoOper: -393.3, saldoTotal: 2186.1,
     caixaLivrePct: null, fundoObrasPct: null, negativo: true,
-    receitaReal: 765.4, despesaReal: 1159.2,
-    dataReferencia: '08/07/2026',
-    ptoAtencao: '<b>PONTO DE ATENÇÃO:</b> o caixa operacional está <b>NEGATIVO em R$ 207,5 mil (08/jul)</b> — e segue negativo na maior parte dos dias projetados até final de agosto, com recomposições pontuais nos vencimentos de mensalidade (meados de cada mês). O saldo de R$ 2.457,8 mil em banco é majoritariamente (R$ 2.665,3 mil) do fundo Índices Construtivos, restrito a obras.',
+    receitaReal: 1065.7, despesaReal: 1459.0,
+    dataReferencia: '10/07/2026',
+    ptoAtencao: '<b>PONTO DE ATENÇÃO:</b> o caixa operacional está <b>NEGATIVO em R$ 206,95 mil (10/jul)</b> — e segue negativo na maior parte dos dias projetados até final de agosto, com recomposições pontuais nos vencimentos de mensalidade (meados de cada mês). O saldo de R$ 2.186,1 mil em banco é majoritariamente (R$ 2.393,1 mil) do fundo Índices Construtivos, restrito a obras.',
     retencao: {
-      periodoTag:'01 a 09/07/2026',
+      periodoTag:'01 a 15/07/2026',
       kpis:[
-        {icone:'📋', cor:'#3d7bff', bg:'rgba(61,123,255,.15)', label:'Solicitações Totais', valor:'35', sub:'no período'},
+        {icone:'📋', cor:'#3d7bff', bg:'rgba(61,123,255,.15)', label:'Solicitações Totais', valor:'62', sub:'no período'},
         {icone:'📁', cor:'#ffd32a', bg:'rgba(255,211,42,.15)', label:'Residuais', valor:'18', sub:'de períodos anteriores', valorCor:'#ffd32a'},
-        {icone:'🆕', cor:'#3d7bff', bg:'rgba(61,123,255,.15)', label:'Deste Mês', valor:'12', sub:'novas solicitações'},
-        {icone:'❌', cor:'#e8192c', bg:'rgba(232,25,44,.15)', label:'Desligados', valor:'30', sub:'do total de solicitações', valorCor:'#e8192c'},
-        {icone:'✅', cor:'#00e5a0', bg:'rgba(0,229,160,.15)', label:'Retidos', valor:'5', sub:'associados retidos', valorCor:'#00e5a0'},
+        {icone:'🆕', cor:'#3d7bff', bg:'rgba(61,123,255,.15)', label:'Deste Mês', valor:'34', sub:'novas solicitações'},
+        {icone:'❌', cor:'#e8192c', bg:'rgba(232,25,44,.15)', label:'Desligados', valor:'52', sub:'do total de solicitações', valorCor:'#e8192c'},
+        {icone:'✅', cor:'#00e5a0', bg:'rgba(0,229,160,.15)', label:'Retidos', valor:'10', sub:'associados retidos', valorCor:'#00e5a0'},
       ],
       categorias:[
-        {nome:'Contribuinte', qtd:14, cor:'#3d7bff'},{nome:'Patrimonial', qtd:6, cor:'#00e5a0'},
-        {nome:'Contribuinte Individual', qtd:4, cor:'#a855f7'},{nome:'Veterano Contribuinte', qtd:3, cor:'#f2b705'},
-        {nome:'Contribuinte Derivado', qtd:2, cor:'#06b6d4'},{nome:'Patrimonial Individual', qtd:1, cor:'#fb923c'},
+        {nome:'Contribuinte', qtd:26, cor:'#3d7bff'},{nome:'Patrimonial', qtd:12, cor:'#00e5a0'},
+        {nome:'Contribuinte Individual', qtd:12, cor:'#a855f7'},{nome:'Veterano (Isento)', qtd:2, cor:'#f2b705'},
       ],
       motivos:[
-        {motivo:'Financeiro', qtd:10, pct:34.48, cor:'#00e5a0'},{motivo:'Não utilização', qtd:9, pct:31.03, cor:'#3d7bff'},
-        {motivo:'Mudança', qtd:3, pct:10.34, cor:'#f2b705'},{motivo:'Desemprego', qtd:3, pct:10.34, cor:'#e8192c'},
-        {motivo:'Saúde', qtd:2, pct:6.90, cor:'#a855f7'},{motivo:'Viagem', qtd:1, pct:3.45, cor:'#fb923c'},
-        {motivo:'Insatisfação', qtd:1, pct:3.45, cor:'#06b6d4'},
+        {motivo:'Não utilização', qtd:26, pct:50.0, cor:'#3d7bff'},{motivo:'Financeiro', qtd:13, pct:25.0, cor:'#00e5a0'},
+        {motivo:'Mudança', qtd:8, pct:15.38, cor:'#f2b705'},{motivo:'Viagem', qtd:2, pct:3.85, cor:'#fb923c'},
+        {motivo:'Localização', qtd:1, pct:1.92, cor:'#06b6d4'},{motivo:'Saúde', qtd:1, pct:1.92, cor:'#a855f7'},
+        {motivo:'Insatisfação', qtd:1, pct:1.92, cor:'#e8192c'},
       ],
-      totalDesligamentos:30,
-      ticketMedio:'R$ 614,50', dependentes:'2,3', residual:'18', residualLabel:'Residual Acumulado', desligadosComTaxa:'R$ 1.002,00',
-      modalidadeTaxa:{sim:10, nao:20},
+      totalDesligamentos:52,
+      ticketMedio:'R$ 567,90', dependentes:'2,0', residual:'18', residualLabel:'Residual Acumulado', desligadosComTaxa:'R$ 0,00',
+      modalidadeTaxa:{sim:15, nao:37},
       negociacoesDesligados:'R$ 0,00',
-      analise:'Atualização de 01 a 09/07 (dados completos): das <b style="color:var(--text)">35 solicitações totais</b>, 18 são residuais (de períodos anteriores) e 12 são novas deste mês. Do total, <b style="color:var(--text)">30 resultaram em desligamento</b> e 5 foram retidos. Por categoria, Contribuinte concentra 46,7% dos desligamentos, seguido por Patrimonial (20,0%) e Contribuinte Individual (13,3%). Por motivo, Financeiro (34,5%) e Não utilização (31,0%) são as causas mais comuns. Dos 30 desligados, 10 pagaram taxa de desligamento (R$ 1.002,00 em média) e 20 não pagaram. Ticket médio caiu para R$ 614,50 e a média de dependentes ficou em 2,3.',
+      analise:'Atualização de 01 a 15/07: das <b style="color:var(--text)">62 solicitações totais</b>, 18 são residuais (de períodos anteriores) e 34 são novas deste mês. Do total, <b style="color:var(--text)">52 resultaram em desligamento</b> e 10 foram retidos (mais 5 licenças). Por categoria, Contribuinte concentra a maioria (26 de 52), seguido por Patrimonial e Contribuinte Individual (12 cada). Por motivo, Não utilização (50%) e Financeiro (25%) seguem como principais causas. Nenhum desligado pagou taxa neste corte. Ticket médio caiu para R$ 567,90 e a média de dependentes ficou em 2,0. Quadro social atual: 55.',
     },
     vendas: {
-      periodoTag:'Julho/2026 (parcial)',
-      associacoesNovas:'8', valorArrecadado:'R$ 6.697,25', ticketMedio:'R$ 837,16',
-      campanhas: null,
-      alerta: 'Julho ainda está no início — 8 associações novas registradas até agora, sem quebra por campanha ainda. Assim que tivermos mais volume, a distribuição por campanha volta a aparecer.',
+      periodoTag:'Julho/2026 (parcial, até 15/07)',
+      associacoesNovas:'9', valorArrecadado:'R$ 7.774,25', ticketMedio:'R$ 863,81',
+      campanhas:[
+        {nome:'Visita/Aula Exper. Tênis', qtd:2, cor:'#3d7bff'},
+        {nome:'Captação Usuário de Escola', qtd:1, cor:'#00e5a0'},
+        {nome:'Dependente', qtd:1, cor:'#a855f7'},
+        {nome:'Visita / Sinpefrs', qtd:1, cor:'#f2b705'},
+        {nome:'WhatsApp', qtd:1, cor:'#06b6d4'},
+        {nome:'WhatsApp + Tour Guiado', qtd:1, cor:'#fb923c'},
+        {nome:'WhatsApp / Sauna', qtd:1, cor:'#e8192c'},
+        {nome:'WhatsApp / Visita', qtd:1, cor:'#b0b0d0'},
+      ],
+      alerta: 'Julho ainda está em andamento — 9 associações novas registradas até 15/07, já com quebra por campanha (canal de venda) disponível.',
     },
     locacoes: {
       periodoTag:'Julho/2026 (parcial, até 10/07)', meta:100000, realizado:13906.00,
@@ -1786,7 +1986,11 @@ const DADOS_MES = {
 };
 
 function renderRetencaoPeriodo(mesKey){
-  const m = DADOS_MES[mesKey]; if(!m) return;
+  const m = DADOS_MES[mesKey];
+  if(!m){
+    document.getElementById('retencaoConteudo').innerHTML = `<div class="alert-box"><span>🚫</span><div><b>Não há dados de Retenção para o período selecionado.</b> Temos fechamentos completos de Junho/2026 e Julho/2026 (parcial). Selecione um intervalo dentro de um desses meses.</div></div>`;
+    return;
+  }
   const r = m.retencao;
   document.getElementById('retencaoPeriodoTag').textContent = r.periodoTag;
   const kpisHtml = r.kpis.map(k=>`
@@ -1849,21 +2053,48 @@ function semanaDoMes(dataStr){
   return 'S5 (29-31)';
 }
 
-function renderLocacoesPeriodo(mesKey){
-  const m = DADOS_MES[mesKey]; if(!m) return;
-  const loc = m.locacoes;
-  document.getElementById('locacoesPeriodoTag').textContent = loc.periodoTag;
-  const el = document.getElementById('locacoesConteudo');
+function contratoDataISO(dataStr){
+  const [d,m,y] = dataStr.split('/');
+  return `${y}-${m}-${d}`;
+}
+function todosContratosLocacao(){
+  const todos = [];
+  Object.keys(DADOS_MES).forEach(k=>{
+    if(DADOS_MES[k].locacoes) todos.push(...DADOS_MES[k].locacoes.contratos);
+  });
+  return todos;
+}
+function fmtDataBR(iso){ const [y,m,d]=iso.split('-'); return `${d}/${m}/${y}`; }
 
-  const pct = (loc.realizado/loc.meta*100);
-  const qtdContratos = loc.contratos.length;
-  const ticketMedio = loc.realizado/qtdContratos;
+function renderLocacoesPeriodo(mesKey, de, ate){
+  const el = document.getElementById('locacoesConteudo');
+  const todos = todosContratosLocacao();
+  const contratos = (de && ate) ? todos.filter(c=>{
+    const iso = contratoDataISO(c.dataPgto);
+    return iso >= de && iso <= ate;
+  }) : todos;
+
+  if(!contratos.length){
+    document.getElementById('locacoesPeriodoTag').textContent = 'sem dados no período';
+    el.innerHTML = `<div class="alert-box"><span>🚫</span><div><b>Não há contratos de locação no período selecionado.</b> Temos registros de Junho/2026 e Julho/2026 (parcial).</div></div>`;
+    return;
+  }
+
+  document.getElementById('locacoesPeriodoTag').textContent = de && ate ? `${fmtDataBR(de)} → ${fmtDataBR(ate)}` : 'Todo o histórico';
+
+  // Meta só se aplica quando o intervalo selecionado cai inteiro dentro de um mês conhecido
+  const mesUnico = de && ate ? mesKeyParaIntervalo(de, ate) : null;
+  const meta = mesUnico && DADOS_MES[mesUnico].locacoes ? DADOS_MES[mesUnico].locacoes.meta : null;
+  const realizado = contratos.reduce((s,c)=>s+c.valorCaixa,0);
+  const pct = meta ? (realizado/meta*100) : null;
+  const qtdContratos = contratos.length;
+  const ticketMedio = realizado/qtdContratos;
 
   // agrupamento por semana (com base na Data de Pagamento)
   const semanasOrdem = ['S1 (01-07)','S2 (08-14)','S3 (15-21)','S4 (22-28)','S5 (29-31)'];
   const porSemana = {};
   semanasOrdem.forEach(s=>porSemana[s]={qtd:0, valor:0});
-  loc.contratos.forEach(c=>{
+  contratos.forEach(c=>{
     const s = semanaDoMes(c.dataPgto);
     porSemana[s].qtd++;
     porSemana[s].valor += c.valorCaixa;
@@ -1872,7 +2103,7 @@ function renderLocacoesPeriodo(mesKey){
 
   // agrupamento por salão
   const porSalao = {};
-  loc.contratos.forEach(c=>{
+  contratos.forEach(c=>{
     if(!porSalao[c.salao]) porSalao[c.salao] = {qtd:0, valor:0};
     porSalao[c.salao].qtd++;
     porSalao[c.salao].valor += c.valorCaixa;
@@ -1883,7 +2114,7 @@ function renderLocacoesPeriodo(mesKey){
 
   // agrupamento por categoria (Sócio x Não Sócio)
   const porCategoria = {};
-  loc.contratos.forEach(c=>{
+  contratos.forEach(c=>{
     if(!porCategoria[c.categoria]) porCategoria[c.categoria] = {qtd:0, valor:0};
     porCategoria[c.categoria].qtd++;
     porCategoria[c.categoria].valor += c.valorCaixa;
@@ -1894,11 +2125,11 @@ function renderLocacoesPeriodo(mesKey){
     <div class="kpi-row-icons cols-4">
       <div class="kpi-icon-card">
         <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(242,183,5,.18); color:var(--gold);">🎯</div><div class="label">Meta do Mês</div></div>
-        <div class="kpi-icon-info"><div class="value">${fmtMilReais(loc.meta)}</div><div class="delta muted">orçado</div></div>
+        <div class="kpi-icon-info"><div class="value">${meta ? fmtMilReais(meta) : '<span class="muted" style="font-size:20px;">não aplicável ao recorte</span>'}</div><div class="delta muted">orçado</div></div>
       </div>
       <div class="kpi-icon-card" style="${pct>=100?'border-color:var(--green); background:rgba(0,229,160,.06);':''}">
         <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(0,229,160,.15); color:var(--green); font-weight:800;">R$</div><div class="label">Realizado</div></div>
-        <div class="kpi-icon-info"><div class="value" style="color:${pct>=100?'var(--green)':'var(--text)'};">${fmtMilReais(loc.realizado)}</div><div class="delta" style="color:${pct>=100?'var(--green)':'var(--gold)'}; font-weight:700;">${pct.toFixed(1).replace('.',',')}% da meta</div></div>
+        <div class="kpi-icon-info"><div class="value" style="color:${pct>=100?'var(--green)':'var(--text)'};">${fmtMilReais(realizado)}</div><div class="delta" style="${pct!=null?`color:${pct>=100?'var(--green)':'var(--gold)'}; font-weight:700;`:'color:var(--muted);'}">${pct!=null ? pct.toFixed(1).replace('.',',')+'% da meta' : 'meta não definida p/ este recorte'}</div></div>
       </div>
       <div class="kpi-icon-card">
         <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(61,123,255,.15); color:var(--blue);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" style="vertical-align:-3px;"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div><div class="label">Contratos Fechados</div></div>
@@ -1910,7 +2141,7 @@ function renderLocacoesPeriodo(mesKey){
       </div>
     </div>
 
-    <div class="section-title" style="margin-top:26px;">Recebido por Semana — ${loc.periodoTag}<div class="line"></div></div>
+    <div class="section-title" style="margin-top:26px;">Recebido por Semana — ${(de && ate) ? `${fmtDataBR(de)} → ${fmtDataBR(ate)}` : 'Todo o histórico'}<div class="line"></div></div>
     <div class="card full">
       <div class="card-label">Valor que Entrou no Caixa, por Semana (data de pagamento)</div>
       <div id="locacoesChartSemanal"></div>
@@ -1944,12 +2175,12 @@ function renderLocacoesPeriodo(mesKey){
 
     <div class="section-title" style="margin-top:26px;">Contratos do Período<div class="line"></div></div>
     <div class="card full">
-      <div class="card-label">Detalhamento — ${loc.periodoTag}</div>
+      <div class="card-label">Detalhamento — ${(de && ate) ? `${fmtDataBR(de)} → ${fmtDataBR(ate)}` : 'Todo o histórico'}</div>
       <div class="scrollx">
       <table>
         <thead><tr><th>Nº</th><th>Data Pgto</th><th>Data Evento</th><th>Categoria</th><th>Salão</th><th>Finalidade</th><th>Contratante</th><th class="num">Valor Contrato</th><th class="num">Valor no Caixa</th><th>Pagamento</th><th>Observação</th></tr></thead>
         <tbody>
-          ${loc.contratos.map(c=>`
+          ${contratos.map(c=>`
           <tr>
             <td class="muted">${c.contrato}</td>
             <td>${c.dataPgto}</td>
@@ -2004,12 +2235,12 @@ function renderLocacoesPeriodo(mesKey){
   // reflete também na Visão Geral
   const vgLocPeriodo = document.getElementById('vgLocPeriodo');
   if(vgLocPeriodo){
-    vgLocPeriodo.textContent = loc.periodoTag;
-    document.getElementById('vgLocMeta').textContent = fmtMilReais(loc.meta);
-    document.getElementById('vgLocRealizado').textContent = fmtMilReais(loc.realizado);
+    vgLocPeriodo.textContent = de && ate ? `${fmtDataBR(de)} → ${fmtDataBR(ate)}` : 'Todo o histórico';
+    document.getElementById('vgLocMeta').textContent = meta ? fmtMilReais(meta) : 'não aplicável';
+    document.getElementById('vgLocRealizado').textContent = fmtMilReais(realizado);
     const pctEl = document.getElementById('vgLocPct');
-    pctEl.textContent = pct.toFixed(1).replace('.',',')+'%';
-    pctEl.style.color = pct>=100 ? 'var(--green)' : 'var(--gold)';
+    pctEl.textContent = pct!=null ? pct.toFixed(1).replace('.',',')+'%' : '—';
+    pctEl.style.color = pct!=null ? (pct>=100 ? 'var(--green)' : 'var(--gold)') : 'var(--muted)';
   }
 }
 
@@ -2088,7 +2319,7 @@ function renderRH(mesKey){
   const avisoSemDados = HE_MES_SEM_DADOS ? `
     <div class="alert-box">
       <span>🆕</span>
-      <div>Ainda não recebemos a planilha de Horas Extras de <b>${DADOS_MES[HE_MES_SEM_DADOS] ? DADOS_MES[HE_MES_SEM_DADOS].label : HE_MES_SEM_DADOS}</b>. Mostrando o último período disponível (<b>${HE_RESUMO.dataReferencia}</b>) como referência.</div>
+      <div>${HE_MES_SEM_DADOS==='periodo-fora-do-alcance' ? 'Não há dados de Horas Extras para o período selecionado.' : `Ainda não recebemos a planilha de Horas Extras de <b>${DADOS_MES[HE_MES_SEM_DADOS].label}</b>.`} Mostrando o último período disponível (<b>${HE_RESUMO.dataReferencia}</b>) como referência.</div>
     </div>` : '';
   el.innerHTML = `
     ${avisoSemDados}
@@ -2209,9 +2440,12 @@ function renderRHRankingCC(selectedIdx){
 }
 
 function renderVendasPeriodo(mesKey){
-  const m = DADOS_MES[mesKey]; if(!m) return;
+  const m = DADOS_MES[mesKey];
+  if(!m){
+    document.getElementById('vendasConteudo').innerHTML = `<div class="alert-box"><span>🚫</span><div><b>Não há dados de Vendas para o período selecionado.</b> Temos fechamentos completos de Junho/2026 e Julho/2026 (parcial). Selecione um intervalo dentro de um desses meses.</div></div>`;
+    return;
+  }
   const v = m.vendas;
-  document.getElementById('vendasPeriodoTag').textContent = v.periodoTag;
   const el = document.getElementById('vendasConteudo');
   let html = '';
   if(v.alerta) html += `<div class="alert-box"><span>🆕</span><div>${v.alerta}</div></div>`;
@@ -2237,6 +2471,188 @@ function renderVendasPeriodo(mesKey){
   }
 }
 
+function renderFunilVendas(de, ate){
+  const el = document.getElementById('funilVendasConteudo');
+  if(!el) return;
+  const dias = (de && ate)
+    ? VENDAS_FUNIL_DIARIO.filter(d => d.data >= de && d.data <= ate)
+    : VENDAS_FUNIL_DIARIO;
+
+  if(!dias.length){
+    el.innerHTML = `<div class="alert-box"><span>🚫</span><div><b>Não há dados do funil de vendas para o período selecionado.</b> Temos registros diários de 06 a 10/07/2026.</div></div>`;
+    return;
+  }
+
+  const soma = (k) => dias.reduce((s,d)=>s+(d[k]||0),0);
+  const leads=soma('leads'), contatos=soma('contatos'), visitas=soma('visitas'),
+        vendas=soma('vendas'), retNeg=soma('retNeg'), acomp=soma('acomp');
+  const convLead = leads>0 ? (vendas/leads*100) : 0;
+  const taxaContato = leads>0 ? (contatos/leads*100) : 0;
+  const diasComReg = dias.filter(d=>d.leads||d.contatos||d.vendas).length;
+  const mediaVendasDia = diasComReg ? vendas/diasComReg : 0;
+
+  el.innerHTML = `
+    <div class="kpi-row-icons cols-4">
+      <div class="kpi-icon-card">
+        <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(61,123,255,.15); color:var(--blue);">📥</div><div class="label">Leads Recebidos</div></div>
+        <div class="kpi-icon-info"><div class="value">${leads}</div><div class="delta muted">no período</div></div>
+      </div>
+      <div class="kpi-icon-card">
+        <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(6,182,212,.15); color:var(--cyan);">📞</div><div class="label">Contatos Realizados</div></div>
+        <div class="kpi-icon-info"><div class="value">${contatos}</div><div class="delta muted">${taxaContato.toFixed(1).replace('.',',')}% vs. leads</div></div>
+      </div>
+      <div class="kpi-icon-card">
+        <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(168,85,247,.15); color:var(--purple);">🚪</div><div class="label">Visitas</div></div>
+        <div class="kpi-icon-info"><div class="value">${visitas}</div><div class="delta muted">presenciais</div></div>
+      </div>
+      <div class="kpi-icon-card" style="border-color:var(--green); background:rgba(0,229,160,.06);">
+        <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(0,229,160,.15); color:var(--green);">✅</div><div class="label">Vendas Realizadas</div></div>
+        <div class="kpi-icon-info"><div class="value" style="color:var(--green);">${vendas}</div><div class="delta muted">associações novas</div></div>
+      </div>
+    </div>
+    <div class="kpi-row-icons cols-4" style="margin-top:16px;">
+      <div class="kpi-icon-card">
+        <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(242,183,5,.15); color:var(--gold);">🔄</div><div class="label">Em Acompanhamento</div></div>
+        <div class="kpi-icon-info"><div class="value">${acomp}</div><div class="delta muted">pipeline ativo</div></div>
+      </div>
+      <div class="kpi-icon-card">
+        <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(232,25,44,.15); color:var(--red);">❌</div><div class="label">Retornos Negativos</div></div>
+        <div class="kpi-icon-info"><div class="value" style="color:var(--red);">${retNeg}</div><div class="delta muted">leads perdidos</div></div>
+      </div>
+      <div class="kpi-icon-card">
+        <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(0,229,160,.15); color:var(--green);">🎯</div><div class="label">Taxa de Conversão</div></div>
+        <div class="kpi-icon-info"><div class="value" style="color:var(--green);">${convLead.toFixed(1).replace('.',',')}%</div><div class="delta muted">vendas ÷ leads</div></div>
+      </div>
+      <div class="kpi-icon-card">
+        <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(61,123,255,.15); color:var(--blue);">📈</div><div class="label">Média Vendas/Dia</div></div>
+        <div class="kpi-icon-info"><div class="value">${mediaVendasDia.toFixed(1).replace('.',',')}</div><div class="delta muted">dias com registro</div></div>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-top:20px;">
+      <div class="card">
+        <div class="card-label">Funil de Conversão de Leads</div>
+        <div id="funilVendasBarras" style="margin-top:14px;"></div>
+        <div class="card-meta" style="margin-top:12px;">Do total de leads recebidos até a venda concretizada no período.</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Status das Negociações</div>
+        <div id="funilVendasDonut" class="donut-wrap"></div>
+      </div>
+    </div>
+
+    <div class="card full" style="margin-top:20px;">
+      <div class="card-label">Leads · Contatos · Vendas por Dia</div>
+      <div id="funilVendasChartDiario"></div>
+    </div>
+
+    <div class="section-title" style="margin-top:26px;">Detalhamento Diário<div class="line"></div></div>
+    <div class="card full">
+      <table>
+        <thead><tr><th>Data</th><th class="num">Leads</th><th class="num">Contatos</th><th class="num">Visitas</th><th class="num">Vendas</th><th class="num">Ret. Negativos</th><th class="num">Em Acomp.</th><th class="num">Conv. dia</th></tr></thead>
+        <tbody>
+          ${dias.map(d=>{
+            const cv = d.leads>0 ? (d.vendas/d.leads*100).toFixed(1).replace('.',',')+'%' : '—';
+            const [y,m,dd] = d.data.split('-');
+            return `<tr>
+              <td>${dd}/${m}/${y}</td>
+              <td class="num">${d.leads}</td><td class="num">${d.contatos}</td><td class="num">${d.visitas}</td>
+              <td class="num" style="color:var(--green); font-weight:700;">${d.vendas}</td>
+              <td class="num">${d.retNeg}</td><td class="num">${d.acomp}</td><td class="num">${cv}</td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+        <tfoot><tr style="font-weight:800; border-top:2px solid var(--border);">
+          <td>TOTAL</td>
+          <td class="num">${leads}</td><td class="num">${contatos}</td><td class="num">${visitas}</td>
+          <td class="num" style="color:var(--green);">${vendas}</td>
+          <td class="num">${retNeg}</td><td class="num">${acomp}</td><td class="num">${convLead.toFixed(1).replace('.',',')}%</td>
+        </tr></tfoot>
+      </table>
+    </div>
+
+    <div class="section-title" style="margin-top:26px;">Oportunidades — Dados a Capturar<div class="line"></div></div>
+    <div class="alert-box" style="align-items:flex-start;">
+      <span>💡</span>
+      <div><b>O painel evolui conforme a planilha ganha colunas.</b> Hoje a planilha traz o funil de atividade (leads, contatos, visitas, vendas, retornos e acompanhamento). Adicionando os campos abaixo, novos indicadores executivos são liberados:
+        <ul style="margin:10px 0 0; padding-left:20px; line-height:1.9;">
+          <li><b>Vendedor</b> → ranking de produtividade e conversão por vendedor.</li>
+          <li><b>Origem do lead</b> (Instagram, indicação, portaria…) → conversão por canal.</li>
+          <li><b>Valor / plano da venda</b> → Receita gerada e Ticket médio reais.</li>
+          <li><b>Meta do mês</b> → gauge Meta × Realizado e % atingido.</li>
+          <li><b>Data de entrada do lead</b> → tempo médio até a conversão.</li>
+          <li><b>Motivo da perda</b> → gráfico de motivos para reduzir perda de leads.</li>
+        </ul>
+      </div>
+    </div>
+  `;
+
+  // Funil (barras)
+  const etapas = [
+    {nome:'Leads Recebidos', valor:leads, cor:'#3d7bff'},
+    {nome:'Em Acompanhamento', valor:acomp, cor:'#f2b705'},
+    {nome:'Vendas Concretizadas', valor:vendas, cor:'#00e5a0'},
+  ];
+  renderSimpleBars('funilVendasBarras', etapas.map(e=>({nome:e.nome, valor:e.valor, display:String(e.valor), cor:e.cor})));
+
+  // Donut status
+  const totalStatus = vendas + acomp + retNeg;
+  drawDonut('funilVendasDonut', [
+    {nome:'Convertidas (vendas)', valor:vendas, cor:'#00e5a0'},
+    {nome:'Em acompanhamento', valor:acomp, cor:'#f2b705'},
+    {nome:'Perdidas (ret. negativos)', valor:retNeg, cor:'#e8192c'},
+  ], String(totalStatus), 'negociações');
+
+  // Gráfico diário (leads/contatos/vendas)
+  drawFunilVendasDiario('funilVendasChartDiario', dias);
+}
+
+function drawFunilVendasDiario(elId, dias){
+  const el = document.getElementById(elId);
+  const W = Math.max(700, dias.length*70), H = 280, padL=60, padR=20, padT=24, padB=40;
+  const max = Math.max(...dias.map(d=>Math.max(d.leads,d.contatos,d.vendas))) * 1.2 || 1;
+  const bw = (W-padL-padR)/dias.length;
+  const y = v => padT + (1-v/max)*(H-padT-padB);
+  let gridLines = '';
+  for(let s=0; s<=3; s++){
+    const v = max*s/3, yy = y(v);
+    gridLines += `<line x1="${padL}" y1="${yy}" x2="${W-padR}" y2="${yy}" stroke="#40415a" stroke-width="1"/>`;
+    gridLines += `<text x="${padL-8}" y="${yy+4}" text-anchor="end" fill="#b0b0d0" font-size="12">${Math.round(v)}</text>`;
+  }
+  const series = [
+    {key:'leads', cor:'#3d7bff', label:'Leads'},
+    {key:'contatos', cor:'#06b6d4', label:'Contatos'},
+    {key:'vendas', cor:'#00e5a0', label:'Vendas'},
+  ];
+  let linhas = '', labels = '';
+  series.forEach(s=>{
+    let path = '';
+    dias.forEach((d,i)=>{
+      const cx = padL + i*bw + bw/2, cy = y(d[s.key]);
+      path += (path===''?'M':'L') + ` ${cx.toFixed(1)} ${cy.toFixed(1)}`;
+    });
+    linhas += `<path d="${path}" fill="none" stroke="${s.cor}" stroke-width="2.4"/>`;
+    dias.forEach((d,i)=>{
+      const cx = padL + i*bw + bw/2, cy = y(d[s.key]);
+      linhas += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="4" fill="${s.cor}" stroke="#13151d" stroke-width="1.2"><title>${s.label} ${d.data.split('-').reverse().join('/')}: ${d[s.key]}</title></circle>`;
+    });
+  });
+  dias.forEach((d,i)=>{
+    const cx = padL + i*bw + bw/2;
+    const [y2,m,dd] = d.data.split('-');
+    labels += `<text x="${cx}" y="${H-padB+20}" text-anchor="middle" fill="#b0b0d0" font-size="12">${dd}/${m}</text>`;
+  });
+  el.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="width:100%; max-width:100%; height:auto; display:block;">
+    <line x1="${padL}" y1="${H-padB}" x2="${W-padR}" y2="${H-padB}" stroke="#40415a"/>
+    ${gridLines}${linhas}${labels}
+  </svg>
+  <div style="margin-top:10px; font-size:12px; color:var(--muted); display:flex; gap:14px;">
+    <span><span style="color:#3d7bff;">●</span> Leads</span>
+    <span><span style="color:#06b6d4;">●</span> Contatos</span>
+    <span><span style="color:#00e5a0;">●</span> Vendas</span>
+  </div>`;
+}
+
 function renderHistoricoFechamentos(){
   const el = document.getElementById('tabelaHistoricoFechamentos');
   if(!el) return;
@@ -2260,9 +2676,15 @@ function renderHistoricoFechamentos(){
   }).join('');
 }
 
-function renderFluxoCaixaPeriodo(mesKey){
-  const m = DADOS_MES[mesKey]; if(!m) return;
+function renderFluxoCaixaPeriodo(mesKey, de, ate){
+  const m = DADOS_MES[mesKey];
+  if(!m){
+    document.getElementById('alertaFechamentoFC').innerHTML = `<b>Não há dados de Fluxo de Caixa para o período selecionado.</b> Temos fechamentos completos de Junho/2026 e Julho/2026 (parcial). Selecione um intervalo dentro de um desses meses.`;
+    document.getElementById('alertaPontoAtencaoFC').innerHTML = 'Sem informações para este recorte.';
+    return;
+  }
   CURRENT_MES_KEY = mesKey;
+  filtrarProjecaoPorIntervalo(de, ate);
 
   DESPESAS_CATS = m.despesas;
   RECEITAS_CATS = m.receitas;
@@ -2314,31 +2736,13 @@ function renderFluxoCaixaPeriodo(mesKey){
   document.getElementById('fcCompLabel').textContent = `Composição do Saldo em Banco — ${m.label}`;
 }
 
-function aplicarMes(mesKey){
-  if(!DADOS_MES[mesKey]) return;
-  renderFluxoCaixaPeriodo(mesKey);
-  renderRetencaoPeriodo(mesKey);
-  renderVendasPeriodo(mesKey);
-  renderReingresso(mesKey);
-  renderRH(mesKey);
-  renderLocacoesPeriodo(mesKey);
-  renderNegociacaoResumo(mesKey);
-}
-
-
-
-function aplicarFiltro(){
-  const sel = document.getElementById('filtroSemana');
-  const key = sel.value;
-  const d = PAGAMENTOS_POR_PERIODO[key];
-  if(!d) return;
-  document.getElementById('periodoRangeBig').textContent = d.label.replace(' a ', ' → ');
-  renderPagamentosPeriodo(key);
-  const mesKey = MES_DA_SEMANA[key];
-  if(mesKey) aplicarMes(mesKey);
-}
-
-function renderPagamentosPeriodo(key){
+function renderPagamentosPeriodo(key, de, ate){
+  const aviso = document.getElementById('pagAvisoSemDados');
+  if(!key || !PAGAMENTOS_POR_PERIODO[key]){
+    aviso.innerHTML = `<div class="alert-box"><span>🚫</span><div><b>Não há dados de pagamentos para o período selecionado</b>${de&&ate?` (${de.split('-').reverse().join('/')} a ${ate.split('-').reverse().join('/')})`:''}. Os últimos cortes recebidos da Controladoria vão de 01/06/2026 a 10/07/2026.</div></div>`;
+    return;
+  }
+  aviso.innerHTML = '';
   const d = PAGAMENTOS_POR_PERIODO[key];
   if(!d) return;
   const pctMaior = (d.maiorTotal/d.total*100).toFixed(1).replace('.',',');
