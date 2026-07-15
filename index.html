@@ -135,9 +135,9 @@
   .card-meta{font-size:13px; color:var(--muted);}
 
   .cat-row{ margin-bottom:14px; }
-  .cat-row-head{ display:flex; justify-content:space-between; font-size:14px; margin-bottom:6px; }
-  .cat-row-head .nome{ color:var(--text); font-weight:600; }
-  .cat-row-head .val{ color:var(--text); font-weight:800; font-variant-numeric:tabular-nums; }
+  .cat-row-head{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:2px 10px; font-size:14px; margin-bottom:6px; }
+  .cat-row-head .nome{ color:var(--text); font-weight:600; min-width:0; }
+  .cat-row-head .val{ color:var(--text); font-weight:800; font-variant-numeric:tabular-nums; white-space:nowrap; }
   .bar-track{ height:12px; background:#13151d; border-radius:7px; overflow:hidden; border:1px solid var(--border); }
   .bar-fill{ height:100%; border-radius:7px; }
   .status-box{
@@ -275,9 +275,11 @@
     .periodo-range{ font-size:18px; }
     .status-pill{ font-size:11px; padding:5px 10px; }
 
-    .filterbar{ padding:12px 16px; gap:10px; }
-    .filter-field input, .filter-field select{ font-size:14px; padding:9px 12px; }
-    .btn-apply{ padding:10px 18px; font-size:13px; }
+    .filterbar{ padding:12px 16px; gap:10px; flex-direction:column; align-items:stretch; }
+    .filterbar-label{ margin-right:0; }
+    .filter-field{ width:100%; }
+    .filter-field input, .filter-field select{ font-size:14px; padding:9px 12px; width:100%; box-sizing:border-box; }
+    .btn-apply{ padding:12px 18px; font-size:14px; width:100%; text-align:center; box-sizing:border-box; }
 
     .content{ padding:20px 16px 50px; }
     .section-title{ font-size:17px; margin:24px 0 12px; }
