@@ -383,11 +383,11 @@
         </div>
         <div class="kpi-icon-card">
           <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(0,229,160,.15); color:var(--green);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" style="vertical-align:-3px;"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div><div class="label">Recuperado (Neg.)</div></div>
-          <div class="kpi-icon-info"><div class="value">R$ 16,4 mil</div><div class="delta" style="color:var(--green)">▲ mar-jun/26</div></div>
+          <div class="kpi-icon-info"><div class="value" id="vgRecuperadoNeg">R$ 16,4 mil</div><div class="delta" style="color:var(--green)" id="vgRecuperadoNegPeriodo">▲ mar-jun/26</div></div>
         </div>
         <div class="kpi-icon-card">
           <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(242,183,5,.18); color:var(--gold);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" style="vertical-align:-3px;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div class="label">Associados (mov.)</div></div>
-          <div class="kpi-icon-info"><div class="value">48</div><div class="delta muted">26 reingr. + 22 vendas</div></div>
+          <div class="kpi-icon-info"><div class="value" id="vgAssociadosMov">48</div><div class="delta muted" id="vgAssociadosMovSub">26 reingr. + 22 vendas</div></div>
         </div>
       </div>
 
@@ -667,6 +667,9 @@
       <div class="section-title">Vendas — Associações Novas<div class="line"></div></div>
       <div id="vendasConteudo"></div>
 
+      <div class="section-title" style="margin-top:26px;">Metas do Setor<div class="line"></div></div>
+      <div id="vendasMetasConteudo"></div>
+
       <div class="section-title" style="margin-top:26px;">Central de Vendas — Funil de Conversão<div class="line"></div></div>
       <div id="funilVendasConteudo"></div>
     </div>
@@ -812,7 +815,7 @@ const NEGOCIACOES = [
   {mes:'Mar/26', valor:59492,  contatos:37},
   {mes:'Abr/26', valor:23650,  contatos:335},
   {mes:'Mai/26', valor:36371,  contatos:512},
-  {mes:'Jun/26', valor:148938, contatos:null},
+  {mes:'Jun/26', valor:148938, contatos:614},
 ];
 const INADIMPLENCIA = [
   {mes:'Mar/26', real:12.5, meta:12.5},
@@ -1316,6 +1319,13 @@ function renderNegociacaoResumo(mesKey, de, ate){
     document.getElementById('negAlertaTopo').innerHTML = 'Selecione um intervalo entre Março e Junho/2026 para ver a análise de inadimplência.';
     document.getElementById('negResumoCards').innerHTML = '';
     document.getElementById('negAlertaRodape').innerHTML = '';
+    const vgRecEl = document.getElementById('vgRecuperadoNeg');
+    if(vgRecEl){
+      vgRecEl.textContent = '—';
+      const subEl = document.getElementById('vgRecuperadoNegPeriodo');
+      subEl.textContent = 'ainda não há inadimplência a apurar neste mês';
+      subEl.title = 'O associado só passa a ser considerado inadimplente depois de deixar de pagar a mensalidade — por isso esse número ainda não existe para o mês corrente.';
+    }
     return;
   }
   const comInad = INADIMPLENCIA.filter(d=>d.real!=null);
@@ -1328,6 +1338,12 @@ function renderNegociacaoResumo(mesKey, de, ate){
   const ultimoValor = NEGOCIACOES[NEGOCIACOES.length-1];
   const mesInicio = NEGOCIACOES[0].mes.split('/')[0].toLowerCase();
   const mesFim = NEGOCIACOES[NEGOCIACOES.length-1].mes.split('/')[0].toLowerCase();
+
+  const vgRecEl = document.getElementById('vgRecuperadoNeg');
+  if(vgRecEl){
+    vgRecEl.textContent = fmtMilReais(totalValor);
+    document.getElementById('vgRecuperadoNegPeriodo').innerHTML = `▲ ${mesInicio}-${mesFim}/26`;
+  }
 
   // o mês selecionado no filtro tem dado próprio de inadimplência/negociação?
   const prefixoMes = mesKey==='jul2026' ? 'jul' : (mesKey==='jun2026' ? 'jun' : null);
@@ -1487,6 +1503,28 @@ drawDonut('pagDonutFaixa', [
 let CURRENT_MES_KEY = 'jul2026';
 const DISPONIVEL_MINIMO = 8586121.21; // menor "Disponível ou Necessidade" observado no período (10/jul) — fonte: Resumo de Necessidades da Controladoria, atualização 14/07/26
 
+let PROJECAO_FILTRO_MODO = 'global';
+const PROJECAO_FILTRO_OPCOES = {
+  global:  {label:'Seguir filtro do painel (cabeçalho)', ini:null, fim:null},
+  jul1_15: {label:'Julho — 01 a 15', ini:'2026-07-01', fim:'2026-07-15'},
+  jul16_31:{label:'Julho — 16 a 31', ini:'2026-07-16', fim:'2026-07-31'},
+  ago1_15: {label:'Agosto — 01 a 15', ini:'2026-08-01', fim:'2026-08-15'},
+  ago16_31:{label:'Agosto — 16 a 31', ini:'2026-08-16', fim:'2026-08-31'},
+  mesJul:  {label:'Mês: Julho/2026 (completo)', ini:'2026-07-01', fim:'2026-07-31'},
+  mesAgo:  {label:'Mês: Agosto/2026 (completo)', ini:'2026-08-01', fim:'2026-08-31'},
+  ano:     {label:'Tudo (09/jul a 27/ago)', ini:'2026-07-09', fim:'2026-08-27'},
+};
+function projecaoParaExibir(){
+  if(PROJECAO_FILTRO_MODO === 'global') return PROJECAO_ATUAL;
+  const opt = PROJECAO_FILTRO_OPCOES[PROJECAO_FILTRO_MODO];
+  const filtrado = PROJECAO.filter(p=>{ const iso = projecaoDataISO(p.d); return iso >= opt.ini && iso <= opt.fim; });
+  return filtrado.length ? filtrado : PROJECAO_ATUAL;
+}
+function aplicarFiltroProjecaoLocal(valor){
+  PROJECAO_FILTRO_MODO = valor;
+  drawProjecaoTendencia('stageProjecaoChart');
+}
+
 const VIEWS = {
   operacional: {
     icon:'💧', title:'Caixa Operacional Livre', badge:'BLOCO 1 · OPERACIONAL', accent:'#3d7bff',
@@ -1552,7 +1590,15 @@ const VIEWS = {
     icon:'🔮', title:'Tendência do Resultado Operacional — 09/jul a 27/ago/2026', badge:'BASE: SISTEMA KAYSER', accent:'#f2b705',
     desc:'Resultado operacional (tendência) dia a dia, conforme lançado no sistema KAYSER. Mostra só o período que a Controladoria já projetou — os próximos meses entram assim que forem importados.',
     render(container){
-      container.innerHTML = `<div id="stageProjecaoChart"></div>`;
+      container.innerHTML = `
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:16px; flex-wrap:wrap;">
+          <label style="font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.4px;">Ver por</label>
+          <select id="filtroProjecaoLocal" onchange="aplicarFiltroProjecaoLocal(this.value)" style="background:#13151d; border:1px solid var(--border); color:var(--text); border-radius:8px; padding:8px 12px; font-size:14px; font-family:inherit; color-scheme:dark;">
+            ${Object.keys(PROJECAO_FILTRO_OPCOES).map(k=>`<option value="${k}" ${PROJECAO_FILTRO_MODO===k?'selected':''}>${PROJECAO_FILTRO_OPCOES[k].label}</option>`).join('')}
+          </select>
+          <span style="font-size:12px; color:var(--muted);">— quando não é "Seguir filtro do painel", este gráfico passa a ignorar o filtro de data lá de cima.</span>
+        </div>
+        <div id="stageProjecaoChart"></div>`;
       drawProjecaoTendencia('stageProjecaoChart');
     },
     alerts:`
@@ -1575,11 +1621,14 @@ function classificaDiaRegra(dataStr){
 
 function drawProjecaoTendencia(elId){
   const el = document.getElementById(elId);
-  const dados = PROJECAO; // dado real da Controladoria/KAYSER, 09/jul a 27/ago
-  const W = Math.max(760, dados.length*32), H = 320, padL=80, padR=20, padT=28, padB=64;
+  const dados = projecaoParaExibir(); // respeita o filtro local (1-15/16-fim/mês) ou o filtro global do painel
+  const positivo = dados.filter(d=>d.mov>0).reduce((s,d)=>s+d.mov,0);
+  const negativo = dados.filter(d=>d.mov<0).reduce((s,d)=>s+d.mov,0);
+  const totalSlots = dados.length + 2; // +2 = barras de acumulado positivo/negativo no final
+  const W = Math.max(760, totalSlots*32), H = 320, padL=80, padR=20, padT=28, padB=64;
   const vals = dados.map(d=>d.mov);
-  const maxAbs = Math.max(...vals.map(v=>Math.abs(v))) * 1.2;
-  const bw = (W-padL-padR)/dados.length;
+  const maxAbs = Math.max(...vals.map(v=>Math.abs(v)), Math.abs(positivo), Math.abs(negativo)) * 1.2;
+  const bw = (W-padL-padR)/totalSlots;
   const y0 = padT + (H-padT-padB)/2;
   const y = v => y0 - (v/maxAbs)*((H-padT-padB)/2);
   let gridLine = `<line x1="${padL}" y1="${y0}" x2="${W-padR}" y2="${y0}" stroke="#40415a" stroke-width="1.4"/>`;
@@ -1598,15 +1647,102 @@ function drawProjecaoTendencia(elId){
     }
     labels += `<text x="${cx}" y="${H-padB+20}" text-anchor="middle" fill="#b0b0d0" font-size="12" transform="rotate(-40 ${cx} ${H-padB+20})">${d.d}</text>`;
   });
+
+  // linha de tendência (regressão linear simples sobre os pontos diários exibidos, sem contar as barras de acumulado)
+  const n = dados.length;
+  const somaX = dados.reduce((s,_,i)=>s+i,0);
+  const somaY = vals.reduce((s,v)=>s+v,0);
+  const somaXY = dados.reduce((s,d,i)=>s+i*d.mov,0);
+  const somaX2 = dados.reduce((s,_,i)=>s+i*i,0);
+  const denom = (n*somaX2 - somaX*somaX);
+  const slope = denom!==0 ? (n*somaXY - somaX*somaY)/denom : 0;
+  const intercept = (somaY - slope*somaX)/n;
+  let trendPath = '';
+  dados.forEach((d,i)=>{
+    const cx = padL + i*bw + bw/2;
+    const yTrend = y(intercept + slope*i);
+    trendPath += (i===0?'M':'L') + ` ${cx.toFixed(1)} ${yTrend.toFixed(1)}`;
+  });
+  const trendCor = slope>=0 ? '#00e5a0' : '#e8192c';
+  const trendLine = `<path d="${trendPath}" fill="none" stroke="${trendCor}" stroke-width="2.2" stroke-dasharray="6,4" opacity="0.85"/>`;
+
+  // separador + barras de Acumulado Positivo / Acumulado Negativo, ao final do gráfico
+  const xSep = padL + dados.length*bw;
+  const separador = `<line x1="${xSep.toFixed(1)}" y1="${padT-6}" x2="${xSep.toFixed(1)}" y2="${H-padB+6}" stroke="#5c6370" stroke-width="1.4" stroke-dasharray="3,3"/>`;
+  let barrasAcum = '';
+  [{valor:positivo, cor:'#00e5a0', nome:'Acum. (+)'}, {valor:negativo, cor:'#e8192c', nome:'Acum. (−)'}].forEach((a,idx)=>{
+    const i = dados.length + idx;
+    const cx = padL + i*bw + bw/2, barW = bw*0.62;
+    const yTop = y(Math.max(a.valor,0)), yBot = y(Math.min(a.valor,0));
+    const barH = Math.max(yBot-yTop, 2);
+    barrasAcum += `<rect x="${(cx-barW/2).toFixed(1)}" y="${yTop.toFixed(1)}" width="${barW.toFixed(1)}" height="${barH.toFixed(1)}" fill="${a.cor}" stroke="#fff" stroke-width="1" stroke-opacity="0.4" rx="3"><title>${a.nome}: ${fmtMilReais(a.valor)}</title></rect>`;
+    barrasAcum += `<text x="${cx}" y="${(a.valor>=0?yTop-8:yBot+18)}" text-anchor="middle" fill="${a.cor}" font-size="12" font-weight="800">${fmtMilReais(a.valor)}</text>`;
+    labels += `<text x="${cx}" y="${H-padB+20}" text-anchor="middle" fill="${a.cor}" font-size="12" font-weight="700" transform="rotate(-40 ${cx} ${H-padB+20})">${a.nome}</text>`;
+  });
+
   el.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="width:100%; max-width:100%; height:auto; display:block;">
-    ${gridLine}${bars}${marcadores}${labels}
+    ${gridLine}${bars}${marcadores}${trendLine}${separador}${barrasAcum}${labels}
   </svg>
   <div style="margin-top:10px; font-size:12px; color:var(--muted); display:flex; flex-wrap:wrap; gap:14px;">
     <span><span style="color:#00e5a0;">●</span> Dia 10 — recebimento</span>
     <span><span style="color:#3d7bff;">●</span> 14-19 — bom p/ pagar fornecedores</span>
     <span><span style="color:#fb923c;">●</span> 21-25 — alto fluxo de saída</span>
     <span><span style="color:#e8192c;">●</span> Dia 20 — folha + impostos</span>
+    <span><span style="color:${trendCor};">┅</span> Linha de tendência (${slope>=0?'melhorando':'piorando'})</span>
+    <span style="border-left:1px dashed #5c6370; padding-left:14px;"><span style="color:#00e5a0;">■</span>/<span style="color:#e8192c;">■</span> Acumulado do recorte (barras ao final, após a linha tracejada)</span>
   </div>`;
+
+  renderProjecaoAcumulado(dados);
+}
+
+function renderProjecaoAcumulado(dados){
+  let elAcum = document.getElementById('stageProjecaoAcumulado');
+  if(!elAcum){
+    elAcum = document.createElement('div');
+    elAcum.id = 'stageProjecaoAcumulado';
+    elAcum.style.marginTop = '20px';
+    document.getElementById('stageProjecaoChart').insertAdjacentElement('afterend', elAcum);
+  }
+
+  const positivo = dados.filter(d=>d.mov>0).reduce((s,d)=>s+d.mov,0);
+  const negativo = dados.filter(d=>d.mov<0).reduce((s,d)=>s+d.mov,0);
+  const liquido = positivo + negativo;
+
+  // totais dos meses tocados pelo recorte em exibição (sobre a base completa da Controladoria)
+  const mesesTocados = [...new Set(dados.map(d=>d.d.split('/')[1]))]; // ex: ['jul','ago']
+  const nomesMes = {jul:'Julho', ago:'Agosto'};
+  const totaisMes = mesesTocados.map(mes=>{
+    const diasDoMes = PROJECAO.filter(d=>d.d.split('/')[1]===mes);
+    const total = diasDoMes.reduce((s,d)=>s+d.mov,0);
+    return {mes: nomesMes[mes]||mes, total, qtdDias: diasDoMes.length};
+  });
+
+  elAcum.innerHTML = `
+    <div class="card full" style="background:#13151d;">
+      <div class="card-label">Acumulado do Recorte em Exibição (${dados.length} dias)</div>
+      <div style="display:flex; flex-wrap:wrap; gap:14px; margin-top:12px;">
+        <div style="flex:1; min-width:150px; padding:14px 16px; background:rgba(0,229,160,.08); border:1px solid rgba(0,229,160,.3); border-radius:10px;">
+          <div style="font-size:11px; color:var(--muted); text-transform:uppercase;">Acumulado Positivo</div>
+          <div style="font-size:20px; font-weight:800; color:var(--green); margin-top:2px;">${fmtMilReais(positivo)}</div>
+        </div>
+        <div style="flex:1; min-width:150px; padding:14px 16px; background:rgba(232,25,44,.08); border:1px solid rgba(232,25,44,.3); border-radius:10px;">
+          <div style="font-size:11px; color:var(--muted); text-transform:uppercase;">Acumulado Negativo</div>
+          <div style="font-size:20px; font-weight:800; color:var(--red); margin-top:2px;">${fmtMilReais(negativo)}</div>
+        </div>
+        <div style="flex:1; min-width:150px; padding:14px 16px; background:${liquido>=0?'rgba(0,229,160,.08)':'rgba(255,211,42,.08)'}; border:1px solid ${liquido>=0?'rgba(0,229,160,.3)':'rgba(255,211,42,.3)'}; border-radius:10px;">
+          <div style="font-size:11px; color:var(--muted); text-transform:uppercase;">Saldo Líquido do Recorte</div>
+          <div style="font-size:20px; font-weight:800; color:${liquido>=0?'var(--green)':'var(--gold)'}; margin-top:2px;">${fmtMilReais(liquido)}</div>
+        </div>
+      </div>
+      <div class="card-meta" style="margin-top:16px; margin-bottom:6px;">Totalizador do(s) mês(es) abrangido(s) — base completa da Controladoria, não só os dias exibidos acima:</div>
+      <div style="display:flex; flex-wrap:wrap; gap:14px;">
+        ${totaisMes.map(m=>`
+          <div style="flex:1; min-width:150px; padding:14px 16px; background:#191b26; border:1px solid var(--border); border-radius:10px;">
+            <div style="font-size:11px; color:var(--muted); text-transform:uppercase;">${m.mes}/26 — total (${m.qtdDias} dias)</div>
+            <div style="font-size:19px; font-weight:800; color:${m.total>=0?'var(--green)':'var(--red)'}; margin-top:2px;">${fmtMilReais(m.total)}</div>
+          </div>`).join('')}
+      </div>
+    </div>`;
 }
 
 function selectView(key){
@@ -1762,6 +1898,21 @@ function aplicarFiltroData(){
 
   // Negociação: cobertura própria (Mar-Jun/26), independente do resto
   renderNegociacaoResumo(faixaContidaEm(de, ate, COBERTURA_NEGOCIACAO.ini, COBERTURA_NEGOCIACAO.fim) ? mesKey : 'sem-dado', de, ate);
+
+  // Associados (mov.) na Visão Geral: reingressos + vendas novas do período resolvido
+  const vgAssocEl = document.getElementById('vgAssociadosMov');
+  if(vgAssocEl){
+    const reingressoDoMes = REINGRESSO_HISTORICO.filter(h=>h.mesKey===mesKey);
+    const reingressoQtd = reingressoDoMes.length ? reingressoDoMes[reingressoDoMes.length-1].total : 0;
+    const vendasQtd = mesKey && DADOS_MES[mesKey] ? parseInt(DADOS_MES[mesKey].vendas.associacoesNovas, 10) : 0;
+    if(mesKey && DADOS_MES[mesKey]){
+      vgAssocEl.textContent = reingressoQtd + vendasQtd;
+      document.getElementById('vgAssociadosMovSub').textContent = `${reingressoQtd} reingr. + ${vendasQtd} vendas`;
+    } else {
+      vgAssocEl.textContent = '—';
+      document.getElementById('vgAssociadosMovSub').textContent = 'sem dado no período';
+    }
+  }
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -1861,6 +2012,12 @@ const DADOS_MES = {
         {nome:'WhatsApp / Visita', qtd:1, cor:'#00e5a0'},
       ],
       alerta: null,
+      metas:{
+        vendas:{orcado:22, real:23}, reingressos:{orcado:31, real:28},
+        totalVR:{orcado:53, real:51}, desafioVenda:26, desafioReingresso:38,
+        total:{orcado:64, real:51, gap:-13},
+        taxaAdesao:17973.00, taxaReingresso:11530.50, taxaTotal:29503.50,
+      },
     },
     locacoes: {
       periodoTag:'Junho/2026', meta:100000, realizado:100706.25,
@@ -1971,6 +2128,12 @@ const DADOS_MES = {
         {nome:'WhatsApp / Visita', qtd:1, cor:'#b0b0d0'},
       ],
       alerta: 'Julho ainda está em andamento — 9 associações novas registradas até 15/07, já com quebra por campanha (canal de venda) disponível.',
+      metas:{
+        vendas:{orcado:23, real:9}, reingressos:{orcado:32, real:null},
+        totalVR:{orcado:55, real:9}, desafioVenda:26, desafioReingresso:40,
+        total:{orcado:66, real:9, gap:-57},
+        taxaAdesao:7774.25, taxaReingresso:0.00, taxaTotal:7774.25,
+      },
     },
     locacoes: {
       periodoTag:'Julho/2026 (parcial, até 10/07)', meta:100000, realizado:13906.00,
@@ -2443,6 +2606,8 @@ function renderVendasPeriodo(mesKey){
   const m = DADOS_MES[mesKey];
   if(!m){
     document.getElementById('vendasConteudo').innerHTML = `<div class="alert-box"><span>🚫</span><div><b>Não há dados de Vendas para o período selecionado.</b> Temos fechamentos completos de Junho/2026 e Julho/2026 (parcial). Selecione um intervalo dentro de um desses meses.</div></div>`;
+    const metasEl = document.getElementById('vendasMetasConteudo');
+    if(metasEl) metasEl.innerHTML = '';
     return;
   }
   const v = m.vendas;
@@ -2469,6 +2634,50 @@ function renderVendasPeriodo(mesKey){
     drawDonut('vendasDonut', v.campanhas.map(c=>({nome:c.nome, valor:c.qtd, cor:c.cor})), String(totalCamp), 'com campanha');
     drawDonut('vgDistribuicaoVendas', v.campanhas.map(c=>({nome:c.nome, valor:c.qtd, cor:c.cor})), String(totalCamp), 'com campanha');
   }
+  if(v.metas){
+    document.getElementById('vendasMetasConteudo').innerHTML = renderMetasSetorHTML(v.metas);
+  }
+}
+
+function renderMetasSetorHTML(mt){
+  const pct = (real, orcado) => (real!=null && orcado) ? (real/orcado*100).toFixed(1).replace('.',',')+'%' : '—';
+  const linha = (label, orcado, real) => `<tr>
+    <td>${label}</td>
+    <td class="num">${orcado}</td>
+    <td class="num">${real!=null ? real : '<span class="muted">—</span>'}</td>
+    <td class="num">${pct(real, orcado)}</td>
+  </tr>`;
+  return `
+    <div class="grid-2 reverse">
+      <div class="card">
+        <div class="card-label">Metas do Setor (Vendas + Reingresso)</div>
+        <table style="margin-top:10px;">
+          <thead><tr><th>Meta</th><th class="num">Orçado</th><th class="num">Real</th><th class="num">%</th></tr></thead>
+          <tbody>
+            ${linha('Meta Vendas', mt.vendas.orcado, mt.vendas.real)}
+            ${linha('Meta Reingressos', mt.reingressos.orcado, mt.reingressos.real)}
+            <tr style="font-weight:700; border-top:1px solid var(--border);">${linha('Total Vendas/Reingressos', mt.totalVR.orcado, mt.totalVR.real).replace('<tr>','').replace('</tr>','')}</tr>
+            ${linha('Meta Desafio Venda Nova', mt.desafioVenda, null)}
+            ${linha('Meta Desafio Reingressos', mt.desafioReingresso, null)}
+          </tbody>
+          <tfoot><tr style="font-weight:800; border-top:2px solid var(--border);">
+            <td>TOTAL</td>
+            <td class="num">${mt.total.orcado}</td>
+            <td class="num">${mt.total.real}</td>
+            <td class="num" style="color:${mt.total.gap>=0?'var(--green)':'var(--red)'};">${mt.total.gap>=0?'+':''}${mt.total.gap}</td>
+          </tr></tfoot>
+        </table>
+        <div class="card-meta" style="margin-top:10px;">💡 Última coluna do total mostra o gap absoluto (real − orçado), não %, igual na planilha de origem.</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Taxas (Adesão + Reingresso)</div>
+        <div class="kpi-grid" style="grid-template-columns:1fr; gap:12px; margin-top:10px; margin-bottom:0;">
+          <div class="card" style="background:#13151d;"><div class="card-label">💳 Taxa de Adesão</div><div class="card-value">${fmtBRL(mt.taxaAdesao)}</div></div>
+          <div class="card" style="background:#13151d;"><div class="card-label">🔁 Taxa de Reingresso</div><div class="card-value">${fmtBRL(mt.taxaReingresso)}</div></div>
+          <div class="card" style="background:#13151d; border-color:var(--gold);"><div class="card-label">Σ Total</div><div class="card-value" style="color:var(--gold);">${fmtBRL(mt.taxaTotal)}</div></div>
+        </div>
+      </div>
+    </div>`;
 }
 
 function renderFunilVendas(de, ate){
