@@ -2559,6 +2559,17 @@ function renderObras(){
   const o = OBRAS_FUNDO;
   const pctInvestido = (o.totalInvestido/o.totalRecebido*100);
 
+  // Compromissos: quanto já venceu (executado) x quanto ainda está por vir, com base na data de hoje
+  const agora = new Date();
+  agora.setHours(0,0,0,0);
+  const compromissos = DADOS_MES.jul2026.obras;
+  let compJaExecutado = 0, compAindaPendente = 0;
+  compromissos.forEach(c=>{
+    const [dd,mm,yy] = c.data.split('/');
+    const dataItem = new Date(`${yy}-${mm}-${dd}T00:00:00`);
+    if(dataItem <= agora) compJaExecutado += c.valor; else compAindaPendente += c.valor;
+  });
+
   el.innerHTML = `
     <div class="alert-box"><span>🔗</span><div>Este é o mesmo Fundo Índices Construtivos mostrado na aba <b>Fluxo de Caixa</b> (cards "② Fundo Índices Construtivos" e "Compromissos Futuros"). Aqui você vê a origem completa dos recursos, a composição por projeto e a evolução mês a mês — uma visão de apresentação, não filtrada por período, já que é um fundo acumulado desde fevereiro/2026.</div></div>
 
@@ -2578,6 +2589,23 @@ function renderObras(){
       <div class="kpi-icon-card">
         <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(242,183,5,.18); color:var(--gold);">📋</div><div class="label">Compromissos já Contratados</div></div>
         <div class="kpi-icon-info"><div class="value">${fmtBRL0(931266)}</div><div class="delta muted">ver detalhe em Fluxo de Caixa</div></div>
+      </div>
+    </div>
+
+    <div class="card full" style="margin-top:16px; border-left:4px solid var(--gold);">
+      <div class="card-label">📌 Nota Estratégica — Compromissos já Contratados</div>
+      <div style="font-size:13.5px; line-height:1.8; color:var(--text); margin-top:8px;">
+        Os <b>${fmtBRL0(931266)}</b> em "Compromissos já Contratados" são o valor total <b>já contratado com fornecedores</b> para a realização das obras — compromissos firmados na conta Índices Construtivos (tabela completa na aba Fluxo de Caixa), parte já paga e parte com pagamento programado para os próximos meses:
+        <div style="display:flex; flex-wrap:wrap; gap:12px; margin-top:12px;">
+          <div style="flex:1; min-width:180px; padding:12px 16px; background:#13151d; border:1px solid var(--border); border-radius:10px;">
+            <div style="font-size:11px; color:var(--muted); text-transform:uppercase;">Já pago (parcelas vencidas)</div>
+            <div style="font-size:19px; font-weight:800; color:var(--muted); margin-top:2px;">${fmtBRL0(compJaExecutado)}</div>
+          </div>
+          <div style="flex:1; min-width:180px; padding:12px 16px; background:rgba(255,211,42,.08); border:1px solid rgba(255,211,42,.3); border-radius:10px;">
+            <div style="font-size:11px; color:var(--muted); text-transform:uppercase;">Programado para os próximos meses</div>
+            <div style="font-size:19px; font-weight:800; color:var(--gold); margin-top:2px;">${fmtBRL0(compAindaPendente)}</div>
+          </div>
+        </div>
       </div>
     </div>
 
