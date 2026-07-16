@@ -325,6 +325,7 @@
     <div class="nav-item" data-page="retencao"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" style="vertical-align:-3px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span> <span class="nav-text">Retenção</span></div>
     <div class="nav-item" data-page="rh"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" style="vertical-align:-3px;"><path d="M12 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10z"/><path d="M4 22c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg></span> <span class="nav-text">RH</span></div>
     <div class="nav-item" data-page="locacoes"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" style="vertical-align:-3px;"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/><path d="M9 9v.01M9 12v.01M9 15v.01M9 18v.01"/></svg></span> <span class="nav-text">Locações</span></div>
+    <div class="nav-item" data-page="obras"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" style="vertical-align:-3px;"><path d="M2 20h20"/><path d="M4 20V10l4-3 4 3v10"/><path d="M12 20V6l4-3 4 3v14"/><path d="M8 20v-4h2v4"/></svg></span> <span class="nav-text">Obras</span></div>
   </div>
   <div class="sidebar-foot">
     Diretoria Executiva SOGIPA
@@ -698,6 +699,12 @@
       <div id="locacoesConteudo"></div>
     </div>
 
+    <!-- ══════════════════ OBRAS ══════════════════ -->
+    <div class="page-section" id="page-obras">
+      <div class="section-title">Obras — Fundo Índices Construtivos <span class="tag" style="background:rgba(136,136,170,.15); color:var(--muted);">Atualizado até 16/07/2026</span><div class="line"></div></div>
+      <div id="obrasConteudo"></div>
+    </div>
+
     <div class="footer-note">
       SOGIPA · Diretoria Executiva · Julho de 2026<br>
       Documento confidencial — uso interno da diretoria.
@@ -731,44 +738,102 @@ let RECEITAS_CATS = [
   {nome:'Patrocínios',        prev:0,      tend:0,      real:0},
 ];
 const PROJECAO = [
-  {d:'09/jul', mov:52006,    banco:-155512, indices:2442296},
-  {d:'10/jul', mov:-51441,   banco:-206953, indices:2393075},
-  {d:'13/jul', mov:1159388,  banco:952434,  indices:2393075},
-  {d:'14/jul', mov:168000,   banco:1120434, indices:2386009},
-  {d:'15/jul', mov:12000,    banco:1132434, indices:2386009},
-  {d:'16/jul', mov:-25000,   banco:1107434, indices:2386009},
-  {d:'17/jul', mov:-136000,  banco:971434,  indices:2386009},
-  {d:'20/jul', mov:-966100,  banco:5334,    indices:2386009},
-  {d:'21/jul', mov:10000,    banco:15334,   indices:2386009},
-  {d:'22/jul', mov:-5000,    banco:10334,   indices:2386009},
-  {d:'23/jul', mov:-39100,   banco:-28766,  indices:2386009},
-  {d:'24/jul', mov:-89000,   banco:-117766, indices:2386009},
-  {d:'27/jul', mov:15300,    banco:-102466, indices:2386009},
-  {d:'28/jul', mov:10000,    banco:-92466,  indices:2386009},
-  {d:'29/jul', mov:10000,    banco:-82466,  indices:2386009},
-  {d:'30/jul', mov:9500,     banco:-72966,  indices:2386009},
-  {d:'31/jul', mov:-53000,   banco:-125966, indices:2386009},
-  {d:'03/ago', mov:31400,    banco:-94566,  indices:2386009},
-  {d:'04/ago', mov:70000,    banco:-24566,  indices:2386009},
-  {d:'05/ago', mov:50000,    banco:25434,   indices:2386009},
-  {d:'06/ago', mov:-424500,  banco:-399066, indices:3216009},
-  {d:'07/ago', mov:-159200,  banco:-558266, indices:3216009},
-  {d:'10/ago', mov:48500,    banco:-509766, indices:3167009},
-  {d:'11/ago', mov:1395000,  banco:885234,  indices:3167009},
-  {d:'12/ago', mov:162000,   banco:1047234, indices:3167009},
-  {d:'13/ago', mov:-186200,  banco:861034,  indices:3167009},
-  {d:'14/ago', mov:10645,    banco:871680,  indices:3159943},
-  {d:'17/ago', mov:-71000,   banco:800680,  indices:3159943},
-  {d:'18/ago', mov:10000,    banco:810680,  indices:3159943},
-  {d:'19/ago', mov:10000,    banco:820680,  indices:3159943},
-  {d:'20/ago', mov:-997600,  banco:-176920, indices:2977943},
-  {d:'21/ago', mov:-68000,   banco:-244920, indices:2977943},
-  {d:'24/ago', mov:-34000,   banco:-278920, indices:2977943},
-  {d:'25/ago', mov:10000,    banco:-268920, indices:2977943},
-  {d:'26/ago', mov:-15000,   banco:-283920, indices:2977943},
-  {d:'27/ago', mov:-24200,   banco:-308120, indices:2977943},
+  {d:'13/jul', mov:1106975,  banco:899897,   indices:2393075},
+  {d:'14/jul', mov:152957,   banco:1052853,  indices:2379379},
+  {d:'15/jul', mov:-52100,   banco:1000753,  indices:2379379},
+  {d:'16/jul', mov:-41100,   banco:959653,   indices:2379379},
+  {d:'17/jul', mov:-119100,  banco:840553,   indices:2379379},
+  {d:'20/jul', mov:-927100,  banco:-86547,   indices:2379379},
+  {d:'21/jul', mov:24900,    banco:-61647,   indices:2379379},
+  {d:'22/jul', mov:-33100,   banco:-94747,   indices:2379379},
+  {d:'23/jul', mov:-24100,   banco:-118847,  indices:2379379},
+  {d:'24/jul', mov:-79000,   banco:-197847,  indices:2379379},
+  {d:'27/jul', mov:20300,    banco:-177547,  indices:2379379},
+  {d:'28/jul', mov:20000,    banco:-157547,  indices:2379379},
+  {d:'29/jul', mov:10000,    banco:-147547,  indices:2379379},
+  {d:'30/jul', mov:9500,     banco:-138047,  indices:2379379},
+  {d:'31/jul', mov:-53000,   banco:-191047,  indices:2379379},
+  {d:'03/ago', mov:31400,    banco:-159647,  indices:2379379},
+  {d:'04/ago', mov:70000,    banco:-89647,   indices:2379379},
+  {d:'05/ago', mov:50000,    banco:-39647,   indices:2379379},
+  {d:'06/ago', mov:-424500,  banco:-464147,  indices:3209379},
+  {d:'07/ago', mov:-159200,  banco:-623347,  indices:3209379},
+  {d:'10/ago', mov:48500,    banco:-574847,  indices:3160379},
+  {d:'11/ago', mov:1395000,  banco:820153,   indices:3160379},
+  {d:'12/ago', mov:162000,   banco:982153,   indices:3160379},
+  {d:'13/ago', mov:-187450,  banco:794703,   indices:3160379},
+  {d:'14/ago', mov:10645,    banco:805349,   indices:3153313},
+  {d:'17/ago', mov:-71000,   banco:734349,   indices:3153313},
+  {d:'18/ago', mov:10000,    banco:744349,   indices:3153313},
+  {d:'19/ago', mov:10000,    banco:754349,   indices:3153313},
+  {d:'20/ago', mov:-997600,  banco:-243251,  indices:2971313},
+  {d:'21/ago', mov:-68000,   banco:-311251,  indices:2971313},
+  {d:'24/ago', mov:-34000,   banco:-345251,  indices:2971313},
+  {d:'25/ago', mov:10000,    banco:-335251,  indices:2971313},
+  {d:'26/ago', mov:-15000,   banco:-350251,  indices:2971313},
+  {d:'27/ago', mov:-24200,   banco:-374451,  indices:2971313},
+  {d:'28/ago', mov:-25000,   banco:-399451,  indices:2971313},
+  {d:'31/ago', mov:14000,    banco:-385451,  indices:2971313},
+  {d:'01/set', mov:36900,    banco:-348551,  indices:2971313},
+  {d:'02/set', mov:-2500,    banco:-351051,  indices:2971313},
+  {d:'03/set', mov:-25700,   banco:-376751,  indices:2971313},
+  {d:'04/set', mov:-365500,  banco:-742251,  indices:2971313},
+  {d:'08/set', mov:110000,   banco:-632251,  indices:3801313},
+  {d:'09/set', mov:70700,    banco:-561551,  indices:3801313},
+  {d:'10/set', mov:36500,    banco:-525051,  indices:3752313},
+  {d:'11/set', mov:1089800,  banco:564749,   indices:3752313},
+  {d:'14/set', mov:218750,   banco:783499,   indices:3752313},
+  {d:'15/set', mov:30645,    banco:814144,   indices:3752313},
+  {d:'16/set', mov:-10000,   banco:804144,   indices:3752313},
+  {d:'17/set', mov:10000,    banco:814144,   indices:3752313},
+  {d:'18/set', mov:-1012600, banco:-198456,  indices:3752313},
+  {d:'21/set', mov:20000,    banco:-178456,  indices:3752313},
+  {d:'22/set', mov:-10000,   banco:-188456,  indices:3752313},
+  {d:'23/set', mov:-55100,   banco:-243556,  indices:3752313},
+  {d:'24/set', mov:-24000,   banco:-267556,  indices:3752313},
+  {d:'25/set', mov:-75300,   banco:-342856,  indices:3752313},
+  {d:'28/set', mov:15000,    banco:-327856,  indices:3752313},
+  {d:'29/set', mov:0,        banco:-327856,  indices:3752313},
+  {d:'30/set', mov:14000,    banco:-313856,  indices:3752313},
 ];
 const LIMITE_CREDITO_TOTAL = 6400000;
+
+// ═══════════════════════════════════════════════════════════
+// DADOS — FUNDO ÍNDICES CONSTRUTIVOS (aba OBRAS)
+// Fonte: Relatório de Acompanhamento, base 16/07/2026
+// Conecta com "Fundo Índices Construtivos" e "Compromissos Futuros" já mostrados em Fluxo de Caixa
+// ═══════════════════════════════════════════════════════════
+const OBRAS_FUNDO = {
+  dataReferencia: '16/07/2026',
+  totalRecebido: 3049994.17,
+  totalInvestido: 790553.80,
+  saldoDisponivel: 2259440.37,
+  origens: [
+    {nome:'Saldo Inicial (pós quitação de dívida)', valor:453789.70, cor:'#3d7bff'},
+    {nome:'Fibra', valor:137373.72, cor:'#00e5a0'},
+    {nome:'Marcelo Gama — Maio', valor:806361.82, cor:'#a855f7'},
+    {nome:'Marcelo Gama — Junho', valor:819676.95, cor:'#f2b705'},
+    {nome:'Marcelo Gama — Julho', valor:832791.98, cor:'#06b6d4'},
+  ],
+  evolucaoMensal: [
+    {mes:'Fev/26', saldoIni:0,         entradas:453789.70, investimentos:0,        saldoFim:453789.70},
+    {mes:'Mar/26', saldoIni:453789.70, entradas:137373.72, investimentos:-294000,  saldoFim:297163.42},
+    {mes:'Abr/26', saldoIni:297163.42, entradas:0,         investimentos:-68444.42,saldoFim:228719.00},
+    {mes:'Mai/26', saldoIni:228719.00, entradas:806361.82, investimentos:-85707.08,saldoFim:949373.74},
+    {mes:'Jun/26', saldoIni:949373.74, entradas:819676.95, investimentos:-102463.32,saldoFim:1666587.37},
+    {mes:'16/Jul/26', saldoIni:1666587.37, entradas:832791.98, investimentos:-239938.98, saldoFim:2259440.37},
+  ],
+  projetos: [
+    {nome:'Reforma Aquecedor das Piscinas', valor:341665.52, cor:'#e8192c'},
+    {nome:'Reforma Salão Panorâmico', valor:163600.08, cor:'#3d7bff'},
+    {nome:'Reforma Sanitários', valor:89999.70, cor:'#00e5a0'},
+    {nome:'Reforma Quadras Recreativas', valor:84447.00, cor:'#a855f7'},
+    {nome:'Reforma Telhado', valor:78000.00, cor:'#f2b705'},
+    {nome:'Reforma Academia dos Atletas', valor:20204.00, cor:'#06b6d4'},
+    {nome:'Projeto Área de Convivência', valor:9000.00, cor:'#fb923c'},
+    {nome:'Reforma Tubulações das Piscinas', valor:3637.50, cor:'#b0b0d0'},
+  ],
+};
 let PROJECAO_ATUAL = PROJECAO; // filtrado dinamicamente pelo período selecionado no filtro de data
 function projecaoDataISO(d){
   const meses = {jan:'01',fev:'02',mar:'03',abr:'04',mai:'05',jun:'06',jul:'07',ago:'08',set:'09',out:'10',nov:'11',dez:'12'};
@@ -1508,7 +1573,7 @@ drawDonut('pagDonutFaixa', [
 // PALCO INTERATIVO — Fluxo de Caixa
 // ═══════════════════════════════════════════════════════════
 let CURRENT_MES_KEY = 'jul2026';
-const DISPONIVEL_MINIMO = 8586121.21; // menor "Disponível ou Necessidade" observado no período (10/jul) — fonte: Resumo de Necessidades da Controladoria, atualização 14/07/26
+const DISPONIVEL_MINIMO = 8581532.13; // menor "Disponível ou Necessidade" observado no período (24/jul) — fonte: Resumo de Necessidades da Controladoria, atualização 16/07/26
 
 let PROJECAO_FILTRO_MODO = 'global';
 const PROJECAO_FILTRO_OPCOES = {
@@ -1517,9 +1582,12 @@ const PROJECAO_FILTRO_OPCOES = {
   jul16_31:{label:'Julho — 16 a 31', ini:'2026-07-16', fim:'2026-07-31'},
   ago1_15: {label:'Agosto — 01 a 15', ini:'2026-08-01', fim:'2026-08-15'},
   ago16_31:{label:'Agosto — 16 a 31', ini:'2026-08-16', fim:'2026-08-31'},
+  set1_15: {label:'Setembro — 01 a 15', ini:'2026-09-01', fim:'2026-09-15'},
+  set16_30:{label:'Setembro — 16 a 30', ini:'2026-09-16', fim:'2026-09-30'},
   mesJul:  {label:'Mês: Julho/2026 (completo)', ini:'2026-07-01', fim:'2026-07-31'},
   mesAgo:  {label:'Mês: Agosto/2026 (completo)', ini:'2026-08-01', fim:'2026-08-31'},
-  ano:     {label:'Tudo (09/jul a 27/ago)', ini:'2026-07-09', fim:'2026-08-27'},
+  mesSet:  {label:'Mês: Setembro/2026 (completo)', ini:'2026-09-01', fim:'2026-09-30'},
+  ano:     {label:'Tudo (13/jul a 30/set)', ini:'2026-07-13', fim:'2026-09-30'},
 };
 function projecaoParaExibir(){
   if(PROJECAO_FILTRO_MODO === 'global') return PROJECAO_ATUAL;
@@ -1782,6 +1850,7 @@ const PAGE_TITLES = {
   retencao:    {t:'Retenção', s:'Desligamentos, retenção e permanência · Junho/2026'},
   rh:          {t:'RH', s:'Horas Extras · Junho/2026'},
   locacoes:    {t:'Locações', s:'Locação de espaços · Junho/2026'},
+  obras:       {t:'Obras', s:'Aguardando dados'},
 };
 
 const navItems = document.querySelectorAll('.nav-item');
@@ -2057,29 +2126,29 @@ const DADOS_MES = {
   jul2026: {
     label: 'Julho/2026',
     despesas: [
-      {nome:'Pessoal de Apoio', prev:1469.0, tend:1479.2, real:628.3},
-      {nome:'Despesas de Funcionamento', prev:1347.5, tend:1334.1, real:461.6},
-      {nome:'Despesas Fixas', prev:284.3, tend:266.3, real:93.5},
-      {nome:'Esporte', prev:182.4, tend:188.4, real:123.4},
-      {nome:'Eventos', prev:163.9, tend:163.0, real:61.0},
-      {nome:'Imobilizado', prev:79.0, tend:78.3, real:68.3},
-      {nome:'Contingências (Indenizações)', prev:26.9, tend:27.2, real:17.3},
-      {nome:'Tarifas e Desp. Bancárias', prev:9.1, tend:9.4, real:4.5},
+      {nome:'Pessoal de Apoio', prev:1469.0, tend:1472.0, real:680.0},
+      {nome:'Despesas de Funcionamento', prev:1342.5, tend:1381.0, real:567.5},
+      {nome:'Despesas Fixas', prev:284.3, tend:257.0, real:184.2},
+      {nome:'Esporte', prev:182.4, tend:191.4, real:146.4},
+      {nome:'Eventos', prev:163.9, tend:163.0, real:87.0},
+      {nome:'Imobilizado', prev:79.0, tend:78.7, real:78.7},
+      {nome:'Contingências (Indenizações)', prev:26.9, tend:27.2, real:22.3},
+      {nome:'Tarifas e Desp. Bancárias', prev:9.1, tend:9.3, real:7.6},
       {nome:'Taxas e Impostos', prev:118.0, tend:118.1, real:1.1},
     ],
     receitas: [
-      {nome:'Boletos', prev:1480.0, tend:1474.8, real:591.8},
-      {nome:'Débito em Conta', prev:690.0, tend:690.0, real:0},
-      {nome:'Receitas Diversas', prev:550.0, tend:540.2, real:188.2},
-      {nome:'Cartões Crédito', prev:490.0, tend:490.5, real:228.5},
-      {nome:'Cartões Débito', prev:170.0, tend:156.0, real:57.0},
+      {nome:'Boletos', prev:1480.0, tend:1456.9, real:1286.9},
+      {nome:'Débito em Conta', prev:690.0, tend:687.5, real:687.5},
+      {nome:'Receitas Diversas', prev:550.0, tend:535.2, real:258.2},
+      {nome:'Cartões Crédito', prev:490.0, tend:490.5, real:327.5},
+      {nome:'Cartões Débito', prev:170.0, tend:150.0, real:81.0},
       {nome:'Rendimento Aplicação', prev:0, tend:0.1, real:0.1},
       {nome:'Patrocínios', prev:0, tend:0, real:0},
     ],
     totaisReceitaDespesa: {
-      previsto:  {receita:3380.0, despesa:3680.0},
-      tendencia: {receita:3351.7, despesa:3664.0},
-      realizado: {receita:1065.7, despesa:1459.0},
+      previsto:  {receita:3380.0, despesa:3675.0},
+      tendencia: {receita:3320.2, despesa:3697.6},
+      realizado: {receita:2641.2, despesa:1774.7},
     },
     obras: [
       {data:'09/07/2026', fornecedor:'CL Soluções em Engenharia Ltda', projeto:'Telhado Rest. Tênis', valor:78000.00},
@@ -2091,11 +2160,11 @@ const DADOS_MES = {
       {data:'30/09/2026', fornecedor:'CL Soluções em Engenharia Ltda', projeto:'Telhado Dn. Leopoldina', valor:421000.00},
     ],
     obrasTotal: 931266.00,
-    caixaLivre: -206.95, fundoObras: 2393.08, resultadoOper: -393.3, saldoTotal: 2186.1,
-    caixaLivrePct: null, fundoObrasPct: null, negativo: true,
-    receitaReal: 1065.7, despesaReal: 1459.0,
-    dataReferencia: '10/07/2026',
-    ptoAtencao: '<b>PONTO DE ATENÇÃO:</b> o caixa operacional está <b>NEGATIVO em R$ 206,95 mil (10/jul)</b> — e segue negativo na maior parte dos dias projetados até final de agosto, com recomposições pontuais nos vencimentos de mensalidade (meados de cada mês). O saldo de R$ 2.186,1 mil em banco é majoritariamente (R$ 2.393,1 mil) do fundo Índices Construtivos, restrito a obras.',
+    caixaLivre: 1052.85, fundoObras: 2379.38, resultadoOper: 866.5, saldoTotal: 3432.2,
+    caixaLivrePct: 30.7, fundoObrasPct: 69.3, negativo: false,
+    receitaReal: 2641.2, despesaReal: 1774.7,
+    dataReferencia: '14/07/2026',
+    ptoAtencao: '<b>Caixa positivo agora, mas atenção ao dia 20/jul:</b> o caixa operacional está em <b>+R$ 1.052,85 mil (14/jul)</b> porque estamos na janela de recebimento das mensalidades (dias 10-14) — não é uma melhora estrutural, é o ciclo normal do mês. O saldo total em banco é de R$ 3.432,2 mil, sendo R$ 1.052,85 mil de caixa livre (30,7%) e R$ 2.379,4 mil do fundo Índices Construtivos (69,3%), restrito a obras. Com os compromissos previstos, o caixa livre tende a <b>ficar negativo novamente</b>: a projeção da Controladoria mostra <b style="color:var(--red);">-R$ 86.547 já no dia 20/jul</b> — o limite do banco será utilizado nesse dia. É quando caem juntos o adiantamento da folha de pagamento e os impostos, o maior ponto de saída de caixa do mês.',
     retencao: {
       periodoTag:'01 a 15/07/2026',
       kpis:[
@@ -2480,6 +2549,122 @@ function drawLocacoesAcumulado(elId){
     <path d="${path}" fill="none" stroke="#00e5a0" stroke-width="2.4"/>
     ${dots}${valueLabels}${labels}
   </svg>`;
+}
+
+// ═══════════════════════════════════════════════════════════
+// RENDERIZAÇÃO — OBRAS (Fundo Índices Construtivos)
+// ═══════════════════════════════════════════════════════════
+function renderObras(){
+  const el = document.getElementById('obrasConteudo');
+  const o = OBRAS_FUNDO;
+  const pctInvestido = (o.totalInvestido/o.totalRecebido*100);
+
+  el.innerHTML = `
+    <div class="alert-box"><span>🔗</span><div>Este é o mesmo Fundo Índices Construtivos mostrado na aba <b>Fluxo de Caixa</b> (cards "② Fundo Índices Construtivos" e "Compromissos Futuros"). Aqui você vê a origem completa dos recursos, a composição por projeto e a evolução mês a mês — uma visão de apresentação, não filtrada por período, já que é um fundo acumulado desde fevereiro/2026.</div></div>
+
+    <div class="kpi-row-icons cols-4" style="margin-top:16px;">
+      <div class="kpi-icon-card">
+        <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(61,123,255,.15); color:var(--blue);">💰</div><div class="label">Total de Recursos Recebidos</div></div>
+        <div class="kpi-icon-info"><div class="value">${fmtMilReais(o.totalRecebido)}</div><div class="delta muted">desde fev/2026</div></div>
+      </div>
+      <div class="kpi-icon-card" style="border-color:var(--red); background:rgba(232,25,44,.06);">
+        <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(232,25,44,.15); color:var(--red);">🏗️</div><div class="label">Total Investido em Obras</div></div>
+        <div class="kpi-icon-info"><div class="value" style="color:var(--red);">-${fmtMilReais(o.totalInvestido)}</div><div class="delta" style="color:var(--red); font-weight:700;">🔴 SAÍDA DE CAIXA · ${pctInvestido.toFixed(1).replace('.',',')}% do recebido</div></div>
+      </div>
+      <div class="kpi-icon-card" style="border-color:var(--green); background:rgba(0,229,160,.06);">
+        <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(0,229,160,.15); color:var(--green);">🔒</div><div class="label">Saldo Financeiro Disponível</div></div>
+        <div class="kpi-icon-info"><div class="value" style="color:var(--green);">${fmtMilReais(o.saldoDisponivel)}</div><div class="delta muted">restrito a obras futuras</div></div>
+      </div>
+      <div class="kpi-icon-card">
+        <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(242,183,5,.18); color:var(--gold);">📋</div><div class="label">Compromissos já Contratados</div></div>
+        <div class="kpi-icon-info"><div class="value">${fmtBRL0(931266)}</div><div class="delta muted">ver detalhe em Fluxo de Caixa</div></div>
+      </div>
+    </div>
+
+    <div class="section-title" style="margin-top:26px;">Evolução do Fundo — Fevereiro a Julho/2026<div class="line"></div></div>
+    <div class="card full">
+      <div class="card-label">Saldo Final Acumulado, com Entradas e Investimentos do Mês</div>
+      <div style="display:flex; flex-wrap:wrap; gap:10px; margin:12px 0 4px;">
+        <span class="tag" style="background:rgba(0,229,160,.15); color:var(--green); font-weight:700;">🟢 ENTRADAS — recurso captado (bom)</span>
+        <span class="tag" style="background:rgba(232,25,44,.15); color:var(--red); font-weight:700;">🔴 INVESTIMENTOS — saída de caixa (dinheiro gasto)</span>
+      </div>
+      <div id="obrasChartEvolucao" class="scrollx"></div>
+      <div class="scrollx" style="margin-top:16px;">
+      <table>
+        <thead><tr><th>Competência</th><th class="num">Saldo Inicial</th><th class="num">Entradas 🟢</th><th class="num">Investimentos 🔴</th><th class="num">Saldo Final</th></tr></thead>
+        <tbody>
+          ${o.evolucaoMensal.map(m=>`
+          <tr>
+            <td>${m.mes}</td>
+            <td class="num muted">${fmtBRL(m.saldoIni)}</td>
+            <td class="num" style="color:var(--green);">${m.entradas>0?fmtBRL(m.entradas):'—'}</td>
+            <td class="num" style="color:var(--red);">${m.investimentos<0?fmtBRL(m.investimentos):'—'}</td>
+            <td class="num" style="font-weight:700;">${fmtBRL(m.saldoFim)}</td>
+          </tr>`).join('')}
+        </tbody>
+        <tfoot><tr style="font-weight:800; border-top:2px solid var(--border);">
+          <td colspan="2">TOTAL</td>
+          <td class="num" style="color:var(--green);">${fmtBRL(o.totalRecebido)}</td>
+          <td class="num" style="color:var(--red);">${fmtBRL(-o.totalInvestido)}</td>
+          <td class="num">${fmtBRL(o.saldoDisponivel)}</td>
+        </tr></tfoot>
+      </table>
+      </div>
+      <div class="card-meta" style="margin-top:12px;">💡 O total de Investimentos aparece negativo (-${fmtBRL0(o.totalInvestido)}) porque é dinheiro que <b style="color:var(--text);">saiu</b> do fundo para pagar obras — isso reduz o saldo disponível, por isso está marcado em vermelho. O saldo final de cada mês já considera esse efeito.</div>
+    </div>
+
+    <div class="grid-2 reverse" style="margin-top:20px;">
+      <div class="card">
+        <div class="card-label">Origem dos Recursos</div>
+        <div id="obrasDonutOrigem" class="donut-wrap"></div>
+      </div>
+      <div class="card">
+        <div class="card-label">Composição dos Investimentos por Projeto</div>
+        <div id="obrasDonutProjetos" class="donut-wrap"></div>
+      </div>
+    </div>
+
+    <div class="section-title" style="margin-top:26px;">Ranking de Investimentos por Projeto<div class="line"></div></div>
+    <div class="card full">
+      <div class="card-label">Total Aplicado até ${o.dataReferencia} — ${fmtBRL(o.totalInvestido)}</div>
+      <div id="obrasRankingProjetos" style="margin-top:14px;"></div>
+    </div>
+  `;
+
+  drawObrasEvolucao('obrasChartEvolucao');
+  const totalOrigens = o.origens.reduce((s,x)=>s+x.valor,0);
+  drawDonut('obrasDonutOrigem', o.origens, fmtMilReais(totalOrigens), 'recebidos');
+  const totalProjetos = o.projetos.reduce((s,x)=>s+x.valor,0);
+  drawDonut('obrasDonutProjetos', o.projetos, fmtMilReais(totalProjetos), 'investidos');
+  renderSimpleBars('obrasRankingProjetos', o.projetos.map(p=>({nome:p.nome, valor:p.valor, display:fmtBRL0(p.valor), cor:p.cor})));
+}
+
+function drawObrasEvolucao(elId){
+  const el = document.getElementById(elId);
+  const dados = OBRAS_FUNDO.evolucaoMensal;
+  const W = Math.max(700, dados.length*110), H = 300, padL=90, padR=20, padT=28, padB=44;
+  const max = Math.max(...dados.map(d=>d.saldoFim)) * 1.15;
+  const bw = (W-padL-padR)/dados.length;
+  const y = v => padT + (1-v/max)*(H-padT-padB);
+  let gridLines = '';
+  for(let s=0; s<=3; s++){
+    const v = max*s/3, yy = y(v);
+    gridLines += `<line x1="${padL}" y1="${yy}" x2="${W-padR}" y2="${yy}" stroke="#40415a" stroke-width="1"/>`;
+    gridLines += `<text x="${padL-8}" y="${yy+4}" text-anchor="end" fill="#b0b0d0" font-size="12">${fmtMilReais(v)}</text>`;
+  }
+  let bars = '', labels = '', linha = '';
+  dados.forEach((d,i)=>{
+    const cx = padL + i*bw + bw/2, barW = bw*0.5;
+    const barH = (H-padB) - y(d.saldoFim);
+    bars += `<rect x="${(cx-barW/2).toFixed(1)}" y="${y(d.saldoFim).toFixed(1)}" width="${barW.toFixed(1)}" height="${barH.toFixed(1)}" fill="#a855f7" rx="3"><title>${d.mes}: Saldo Final ${fmtMilReais(d.saldoFim)} (Entradas ${fmtMilReais(d.entradas)}, Investimentos ${fmtMilReais(d.investimentos)})</title></rect>`;
+    bars += `<text x="${cx}" y="${y(d.saldoFim)-8}" text-anchor="middle" fill="#a855f7" font-size="12" font-weight="800">${fmtMilReais(d.saldoFim)}</text>`;
+    labels += `<text x="${cx}" y="${H-padB+20}" text-anchor="middle" fill="#b0b0d0" font-size="12">${d.mes}</text>`;
+  });
+  el.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="display:block; width:${W}px; height:auto;">
+    <line x1="${padL}" y1="${H-padB}" x2="${W-padR}" y2="${H-padB}" stroke="#40415a"/>
+    ${gridLines}${bars}${labels}
+  </svg>
+  <div style="margin-top:10px; font-size:12px; color:var(--muted);">Barras roxas = saldo final acumulado do fundo em cada competência (passe o mouse para ver entradas e investimentos do mês)</div>`;
 }
 
 function renderRH(mesKey){
@@ -3052,6 +3237,7 @@ function atualizarDataAtual(){
 }
 atualizarDataAtual();
 drawPagamentosSemanal('pagChartSemanal');
+renderObras();
 popularFiltroSemanas();
 </script>
 </body>
