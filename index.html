@@ -467,6 +467,12 @@
         </div>
       </div>
 
+      <div class="card full" style="margin-top:16px;">
+        <div class="card-label">Composição do Fundo de Obras (Índices Construtivos) — Acumulado</div>
+        <div id="vgObrasCompBar" style="display:flex; height:34px; border-radius:8px; overflow:hidden; border:1px solid var(--border); margin:10px 0 8px;"></div>
+        <div id="vgObrasCompLegend"></div>
+      </div>
+
     </div>
 
     <!-- ══════════════════ FLUXO DE CAIXA ══════════════════ -->
@@ -1575,31 +1581,6 @@ drawDonut('pagDonutFaixa', [
 let CURRENT_MES_KEY = 'jul2026';
 const DISPONIVEL_MINIMO = 8581532.13; // menor "Disponível ou Necessidade" observado no período (24/jul) — fonte: Resumo de Necessidades da Controladoria, atualização 16/07/26
 
-let PROJECAO_FILTRO_MODO = 'global';
-const PROJECAO_FILTRO_OPCOES = {
-  global:  {label:'Seguir filtro do painel (cabeçalho)', ini:null, fim:null},
-  jul1_15: {label:'Julho — 01 a 15', ini:'2026-07-01', fim:'2026-07-15'},
-  jul16_31:{label:'Julho — 16 a 31', ini:'2026-07-16', fim:'2026-07-31'},
-  ago1_15: {label:'Agosto — 01 a 15', ini:'2026-08-01', fim:'2026-08-15'},
-  ago16_31:{label:'Agosto — 16 a 31', ini:'2026-08-16', fim:'2026-08-31'},
-  set1_15: {label:'Setembro — 01 a 15', ini:'2026-09-01', fim:'2026-09-15'},
-  set16_30:{label:'Setembro — 16 a 30', ini:'2026-09-16', fim:'2026-09-30'},
-  mesJul:  {label:'Mês: Julho/2026 (completo)', ini:'2026-07-01', fim:'2026-07-31'},
-  mesAgo:  {label:'Mês: Agosto/2026 (completo)', ini:'2026-08-01', fim:'2026-08-31'},
-  mesSet:  {label:'Mês: Setembro/2026 (completo)', ini:'2026-09-01', fim:'2026-09-30'},
-  ano:     {label:'Tudo (13/jul a 30/set)', ini:'2026-07-13', fim:'2026-09-30'},
-};
-function projecaoParaExibir(){
-  if(PROJECAO_FILTRO_MODO === 'global') return PROJECAO_ATUAL;
-  const opt = PROJECAO_FILTRO_OPCOES[PROJECAO_FILTRO_MODO];
-  const filtrado = PROJECAO.filter(p=>{ const iso = projecaoDataISO(p.d); return iso >= opt.ini && iso <= opt.fim; });
-  return filtrado.length ? filtrado : PROJECAO_ATUAL;
-}
-function aplicarFiltroProjecaoLocal(valor){
-  PROJECAO_FILTRO_MODO = valor;
-  drawProjecaoTendencia('stageProjecaoChart');
-}
-
 const VIEWS = {
   operacional: {
     icon:'💧', title:'Caixa Operacional Livre', badge:'BLOCO 1 · OPERACIONAL', accent:'#3d7bff',
@@ -1662,163 +1643,72 @@ const VIEWS = {
     }
   },
   projecao: {
-    icon:'🔮', title:'Tendência do Resultado Operacional — 09/jul a 27/ago/2026', badge:'BASE: SISTEMA KAYSER', accent:'#f2b705',
-    desc:'Resultado operacional (tendência) dia a dia, conforme lançado no sistema KAYSER. Mostra só o período que a Controladoria já projetou — os próximos meses entram assim que forem importados.',
+    icon:'🔮',
+    get title(){ return `Consolidado do Resultado Operacional — ${projecaoMesesLabel()}`; },
+    badge:'BASE: SISTEMA KAYSER', accent:'#f2b705',
+    desc:'Resultado operacional (tendência) consolidado por mês, conforme lançado no sistema KAYSER. Mostra só os meses que a Controladoria já projetou — os próximos entram assim que forem importados.',
     render(container){
-      container.innerHTML = `
-        <div style="display:flex; align-items:center; gap:10px; margin-bottom:16px; flex-wrap:wrap;">
-          <label style="font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.4px;">Ver por</label>
-          <select id="filtroProjecaoLocal" onchange="aplicarFiltroProjecaoLocal(this.value)" style="background:#13151d; border:1px solid var(--border); color:var(--text); border-radius:8px; padding:8px 12px; font-size:14px; font-family:inherit; color-scheme:dark;">
-            ${Object.keys(PROJECAO_FILTRO_OPCOES).map(k=>`<option value="${k}" ${PROJECAO_FILTRO_MODO===k?'selected':''}>${PROJECAO_FILTRO_OPCOES[k].label}</option>`).join('')}
-          </select>
-          <span style="font-size:12px; color:var(--muted);">— quando não é "Seguir filtro do painel", este gráfico passa a ignorar o filtro de data lá de cima.</span>
-        </div>
-        <div id="stageProjecaoChart" class="scrollx"></div>`;
-      drawProjecaoTendencia('stageProjecaoChart');
+      container.innerHTML = `<div id="stageProjecaoChart" class="scrollx"></div>`;
+      drawProjecaoConsolidado('stageProjecaoChart');
     },
     alerts:`
       <div class="alert-box red">
         <span>⚠️</span>
-        <div><b>Dado incompleto no sistema:</b> até 09/07/2026, havia <b>R$ 442.526,94</b> em despesas já previstas pelos setores que ainda não tinham sido lançadas no KAYSER. Ou seja, o resultado real tende a ser <u>pior</u> do que a linha de tendência abaixo mostra, em até esse valor — o painel só reflete o que está lançado no sistema. Setores lançarem despesas em dia é o que garante uma tendência confiável aqui.</div>
+        <div><b>Dado incompleto no sistema:</b> até 09/07/2026, havia <b>R$ 442.526,94</b> em despesas já previstas pelos setores que ainda não tinham sido lançadas no KAYSER. Ou seja, o resultado real tende a ser <u>pior</u> do que os valores abaixo mostram, em até esse valor — o painel só reflete o que está lançado no sistema. Setores lançarem despesas em dia é o que garante uma tendência confiável aqui.</div>
       </div>
-      <div class="alert-box"><span>ℹ️</span><div>Padrão observado nos dias já projetados: <b style="color:var(--green);">dia 10</b> costuma ser o de maior recebimento (recebimentos com liquidação D+3, resultado tende a positivo); <b style="color:#3d7bff;">14 a 19</b> costuma ser boa janela para pagar fornecedores; <b style="color:var(--orange);">21 a 25</b> concentra maior saída de caixa; <b style="color:var(--red);">dia 20</b> se destaca por juntar adiantamento de folha de pagamento + impostos, sendo o dia de maior saída do mês.</div></div>`
+      <div class="alert-box"><span>ℹ️</span><div>Padrão observado nos dias já projetados, mês a mês: o <b>dia 10</b> costuma concentrar o maior recebimento (mensalidades, liquidação D+3); entre <b>14 e 19</b> costuma ser a melhor janela para pagar fornecedores; de <b>21 a 25</b> concentra-se a maior saída de caixa; e o <b>dia 20</b> se destaca por juntar o adiantamento da folha de pagamento com os impostos, o maior ponto de saída do mês. Esse detalhamento dia a dia fica disponível sob consulta com a Controladoria, caso necessário.</div></div>`
   }
 };
 
-function classificaDiaRegra(dataStr){
-  const dia = parseInt(dataStr.split('/')[0], 10);
-  if(dia===20) return {cor:'#e8192c', label:'Folha + Impostos'};
-  if(dia===10) return {cor:'#00e5a0', label:'Recebimento (D+3)'};
-  if(dia>=21 && dia<=25) return {cor:'#fb923c', label:'Alto fluxo de saída'};
-  if(dia>=14 && dia<=19) return {cor:'#3d7bff', label:'Bom p/ pagar fornecedores'};
-  return null;
+function projecaoMesesLabel(){
+  const nomesMes = {jul:'Julho', ago:'Agosto', set:'Setembro', out:'Outubro', nov:'Novembro', dez:'Dezembro'};
+  const meses = [...new Set(PROJECAO.map(p=>p.d.split('/')[1]))];
+  if(meses.length===1) return `${nomesMes[meses[0]]}/2026`;
+  return `${nomesMes[meses[0]]} a ${nomesMes[meses[meses.length-1]]}/2026`;
 }
 
-function drawProjecaoTendencia(elId){
+function drawProjecaoConsolidado(elId){
   const el = document.getElementById(elId);
-  const dados = projecaoParaExibir(); // respeita o filtro local (1-15/16-fim/mês) ou o filtro global do painel
-  const positivo = dados.filter(d=>d.mov>0).reduce((s,d)=>s+d.mov,0);
-  const negativo = dados.filter(d=>d.mov<0).reduce((s,d)=>s+d.mov,0);
-  const totalSlots = dados.length + 2; // +2 = barras de acumulado positivo/negativo no final
-  const W = Math.max(760, totalSlots*32), H = 320, padL=80, padR=20, padT=28, padB=64;
-  const vals = dados.map(d=>d.mov);
-  const maxAbs = Math.max(...vals.map(v=>Math.abs(v)), Math.abs(positivo), Math.abs(negativo)) * 1.2;
-  const bw = (W-padL-padR)/totalSlots;
+  const nomesMes = {jul:'Julho', ago:'Agosto', set:'Setembro', out:'Outubro', nov:'Novembro', dez:'Dezembro'};
+  const porMes = {};
+  const ordemMeses = [];
+  PROJECAO.forEach(p=>{
+    const mes = p.d.split('/')[1];
+    if(!porMes[mes]){ porMes[mes] = 0; ordemMeses.push(mes); }
+    porMes[mes] += p.mov;
+  });
+  const dados = ordemMeses.map(m=>({mes:nomesMes[m]+'/26', valor:porMes[m]}));
+  const totalConsolidado = dados.reduce((s,d)=>s+d.valor,0);
+
+  const W = Math.max(500, dados.length*220), H = 300, padL=90, padR=30, padT=30, padB=50;
+  const maxAbs = Math.max(...dados.map(d=>Math.abs(d.valor))) * 1.3 || 1;
+  const bw = (W-padL-padR)/dados.length;
   const y0 = padT + (H-padT-padB)/2;
   const y = v => y0 - (v/maxAbs)*((H-padT-padB)/2);
   let gridLine = `<line x1="${padL}" y1="${y0}" x2="${W-padR}" y2="${y0}" stroke="#40415a" stroke-width="1.4"/>`;
-  let bars = '', labels = '', marcadores = '';
+  let bars = '', labels = '', trendPath = '';
   dados.forEach((d,i)=>{
-    const cx = padL + i*bw + bw/2, barW = bw*0.55;
-    const regra = classificaDiaRegra(d.d);
-    const corPadrao = d.mov>=0 ? '#00e5a0' : '#e8192c';
-    const cor = regra ? regra.cor : corPadrao;
-    const yTop = y(Math.max(d.mov,0)), yBot = y(Math.min(d.mov,0));
+    const cx = padL + i*bw + bw/2, barW = bw*0.42;
+    const cor = d.valor>=0 ? '#00e5a0' : '#e8192c';
+    const yTop = y(Math.max(d.valor,0)), yBot = y(Math.min(d.valor,0));
     const barH = Math.max(yBot-yTop, 2);
-    bars += `<rect x="${(cx-barW/2).toFixed(1)}" y="${yTop.toFixed(1)}" width="${barW.toFixed(1)}" height="${barH.toFixed(1)}" fill="${cor}" rx="2"><title>${d.d}${regra?' — '+regra.label:''}: ${fmtMilReais(d.mov)}</title></rect>`;
-    if(regra){
-      const yMark = d.mov>=0 ? yTop-14 : yBot+14;
-      marcadores += `<circle cx="${cx.toFixed(1)}" cy="${yMark.toFixed(1)}" r="3.5" fill="${cor}"><title>${regra.label}</title></circle>`;
-    }
-    labels += `<text x="${cx}" y="${H-padB+20}" text-anchor="middle" fill="#b0b0d0" font-size="12" transform="rotate(-40 ${cx} ${H-padB+20})">${d.d}</text>`;
-  });
-
-  // linha de tendência (regressão linear simples sobre os pontos diários exibidos, sem contar as barras de acumulado)
-  const n = dados.length;
-  const somaX = dados.reduce((s,_,i)=>s+i,0);
-  const somaY = vals.reduce((s,v)=>s+v,0);
-  const somaXY = dados.reduce((s,d,i)=>s+i*d.mov,0);
-  const somaX2 = dados.reduce((s,_,i)=>s+i*i,0);
-  const denom = (n*somaX2 - somaX*somaX);
-  const slope = denom!==0 ? (n*somaXY - somaX*somaY)/denom : 0;
-  const intercept = (somaY - slope*somaX)/n;
-  let trendPath = '';
-  dados.forEach((d,i)=>{
-    const cx = padL + i*bw + bw/2;
-    const yTrend = y(intercept + slope*i);
+    bars += `<rect x="${(cx-barW/2).toFixed(1)}" y="${yTop.toFixed(1)}" width="${barW.toFixed(1)}" height="${barH.toFixed(1)}" fill="${cor}" rx="4"><title>${d.mes}: ${fmtMilReais(d.valor)}</title></rect>`;
+    bars += `<text x="${cx}" y="${(d.valor>=0?yTop-12:yBot+22)}" text-anchor="middle" fill="${cor}" font-size="15" font-weight="800">${fmtMilReais(d.valor)}</text>`;
+    labels += `<text x="${cx}" y="${H-padB+26}" text-anchor="middle" fill="#e8e8f0" font-size="14" font-weight="700">${d.mes}</text>`;
+    const yTrend = y(d.valor);
     trendPath += (i===0?'M':'L') + ` ${cx.toFixed(1)} ${yTrend.toFixed(1)}`;
   });
-  const trendCor = slope>=0 ? '#00e5a0' : '#e8192c';
-  const trendLine = `<path d="${trendPath}" fill="none" stroke="${trendCor}" stroke-width="2.2" stroke-dasharray="6,4" opacity="0.85"/>`;
-
-  // separador + barras de Acumulado Positivo / Acumulado Negativo, ao final do gráfico
-  const xSep = padL + dados.length*bw;
-  const separador = `<line x1="${xSep.toFixed(1)}" y1="${padT-6}" x2="${xSep.toFixed(1)}" y2="${H-padB+6}" stroke="#5c6370" stroke-width="1.4" stroke-dasharray="3,3"/>`;
-  let barrasAcum = '';
-  [{valor:positivo, cor:'#00e5a0', nome:'Acum. (+)'}, {valor:negativo, cor:'#e8192c', nome:'Acum. (−)'}].forEach((a,idx)=>{
-    const i = dados.length + idx;
-    const cx = padL + i*bw + bw/2, barW = bw*0.62;
-    const yTop = y(Math.max(a.valor,0)), yBot = y(Math.min(a.valor,0));
-    const barH = Math.max(yBot-yTop, 2);
-    barrasAcum += `<rect x="${(cx-barW/2).toFixed(1)}" y="${yTop.toFixed(1)}" width="${barW.toFixed(1)}" height="${barH.toFixed(1)}" fill="${a.cor}" stroke="#fff" stroke-width="1" stroke-opacity="0.4" rx="3"><title>${a.nome}: ${fmtMilReais(a.valor)}</title></rect>`;
-    barrasAcum += `<text x="${cx}" y="${(a.valor>=0?yTop-8:yBot+18)}" text-anchor="middle" fill="${a.cor}" font-size="12" font-weight="800">${fmtMilReais(a.valor)}</text>`;
-    labels += `<text x="${cx}" y="${H-padB+20}" text-anchor="middle" fill="${a.cor}" font-size="12" font-weight="700" transform="rotate(-40 ${cx} ${H-padB+20})">${a.nome}</text>`;
-  });
-
   el.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="display:block; width:${W}px; height:auto;">
-    ${gridLine}${bars}${marcadores}${trendLine}${separador}${barrasAcum}${labels}
+    ${gridLine}${bars}
+    <path d="${trendPath}" fill="none" stroke="#b0b0d0" stroke-width="1.6" stroke-dasharray="5,4" opacity="0.6"/>
+    ${labels}
   </svg>
-  <div style="margin-top:10px; font-size:12px; color:var(--muted); display:flex; flex-wrap:wrap; gap:14px;">
-    <span><span style="color:#00e5a0;">●</span> Dia 10 — recebimento</span>
-    <span><span style="color:#3d7bff;">●</span> 14-19 — bom p/ pagar fornecedores</span>
-    <span><span style="color:#fb923c;">●</span> 21-25 — alto fluxo de saída</span>
-    <span><span style="color:#e8192c;">●</span> Dia 20 — folha + impostos</span>
-    <span><span style="color:${trendCor};">┅</span> Linha de tendência (${slope>=0?'melhorando':'piorando'})</span>
-    <span style="border-left:1px dashed #5c6370; padding-left:14px;"><span style="color:#00e5a0;">■</span>/<span style="color:#e8192c;">■</span> Acumulado do recorte (barras ao final, após a linha tracejada)</span>
+  <div style="margin-top:18px; padding:16px 20px; background:${totalConsolidado>=0?'rgba(0,229,160,.08)':'rgba(232,25,44,.08)'}; border:1px solid ${totalConsolidado>=0?'rgba(0,229,160,.3)':'rgba(232,25,44,.3)'}; border-radius:10px; display:inline-block;">
+    <div style="font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.5px;">Total Consolidado — ${projecaoMesesLabel()}</div>
+    <div style="font-size:24px; font-weight:900; color:${totalConsolidado>=0?'var(--green)':'var(--red)'}; margin-top:2px;">${fmtMilReais(totalConsolidado)}</div>
   </div>`;
-
-  renderProjecaoAcumulado(dados);
 }
 
-function renderProjecaoAcumulado(dados){
-  let elAcum = document.getElementById('stageProjecaoAcumulado');
-  if(!elAcum){
-    elAcum = document.createElement('div');
-    elAcum.id = 'stageProjecaoAcumulado';
-    elAcum.style.marginTop = '20px';
-    document.getElementById('stageProjecaoChart').insertAdjacentElement('afterend', elAcum);
-  }
-
-  const positivo = dados.filter(d=>d.mov>0).reduce((s,d)=>s+d.mov,0);
-  const negativo = dados.filter(d=>d.mov<0).reduce((s,d)=>s+d.mov,0);
-  const liquido = positivo + negativo;
-
-  // totais dos meses tocados pelo recorte em exibição (sobre a base completa da Controladoria)
-  const mesesTocados = [...new Set(dados.map(d=>d.d.split('/')[1]))]; // ex: ['jul','ago']
-  const nomesMes = {jul:'Julho', ago:'Agosto'};
-  const totaisMes = mesesTocados.map(mes=>{
-    const diasDoMes = PROJECAO.filter(d=>d.d.split('/')[1]===mes);
-    const total = diasDoMes.reduce((s,d)=>s+d.mov,0);
-    return {mes: nomesMes[mes]||mes, total, qtdDias: diasDoMes.length};
-  });
-
-  elAcum.innerHTML = `
-    <div class="card full" style="background:#13151d;">
-      <div class="card-label">Acumulado do Recorte em Exibição (${dados.length} dias)</div>
-      <div style="display:flex; flex-wrap:wrap; gap:14px; margin-top:12px;">
-        <div style="flex:1; min-width:150px; padding:14px 16px; background:rgba(0,229,160,.08); border:1px solid rgba(0,229,160,.3); border-radius:10px;">
-          <div style="font-size:11px; color:var(--muted); text-transform:uppercase;">Acumulado Positivo</div>
-          <div style="font-size:20px; font-weight:800; color:var(--green); margin-top:2px;">${fmtMilReais(positivo)}</div>
-        </div>
-        <div style="flex:1; min-width:150px; padding:14px 16px; background:rgba(232,25,44,.08); border:1px solid rgba(232,25,44,.3); border-radius:10px;">
-          <div style="font-size:11px; color:var(--muted); text-transform:uppercase;">Acumulado Negativo</div>
-          <div style="font-size:20px; font-weight:800; color:var(--red); margin-top:2px;">${fmtMilReais(negativo)}</div>
-        </div>
-        <div style="flex:1; min-width:150px; padding:14px 16px; background:${liquido>=0?'rgba(0,229,160,.08)':'rgba(255,211,42,.08)'}; border:1px solid ${liquido>=0?'rgba(0,229,160,.3)':'rgba(255,211,42,.3)'}; border-radius:10px;">
-          <div style="font-size:11px; color:var(--muted); text-transform:uppercase;">Saldo Líquido do Recorte</div>
-          <div style="font-size:20px; font-weight:800; color:${liquido>=0?'var(--green)':'var(--gold)'}; margin-top:2px;">${fmtMilReais(liquido)}</div>
-        </div>
-      </div>
-      <div class="card-meta" style="margin-top:16px; margin-bottom:6px;">Totalizador do(s) mês(es) abrangido(s) — base completa da Controladoria, não só os dias exibidos acima:</div>
-      <div style="display:flex; flex-wrap:wrap; gap:14px;">
-        ${totaisMes.map(m=>`
-          <div style="flex:1; min-width:150px; padding:14px 16px; background:#191b26; border:1px solid var(--border); border-radius:10px;">
-            <div style="font-size:11px; color:var(--muted); text-transform:uppercase;">${m.mes}/26 — total (${m.qtdDias} dias)</div>
-            <div style="font-size:19px; font-weight:800; color:${m.total>=0?'var(--green)':'var(--red)'}; margin-top:2px;">${fmtMilReais(m.total)}</div>
-          </div>`).join('')}
-      </div>
-    </div>`;
-}
 
 function selectView(key){
   const v = VIEWS[key];
@@ -1888,6 +1778,9 @@ const PAGAMENTOS_POR_PERIODO = {
   '06-10jul': {label:'06 a 10/07/2026', qtd:205, total:1352202.48, maiorQtd:29, maiorTotal:1146313.66, menorQtd:176, menorTotal:205888.82,
     top:[{nome:'Folha Pagamento',qtd:23,valor:605920.63,pct:44.9},{nome:'Cl Solucoes Em Engenharia Ltda',qtd:2,valor:223200.0,pct:16.54},{nome:'Unimed Porto Alegre Soc. Coop. De Trabalho M',qtd:6,valor:93797.38,pct:6.95},{nome:'Center Broilo Com De Sistemas De Aquecim Ltd',qtd:1,valor:49000.0,pct:3.63},{nome:'Merithu Consultoria Em Gestao Empresarial',qtd:1,valor:32534.68,pct:2.41},{nome:'Capitale Energia Comercializadora Ltda.',qtd:1,valor:30807.16,pct:2.28},{nome:'Mercadopago.Com Representacoes Ltda.',qtd:17,valor:21489.99,pct:1.59},{nome:'3S Solucoes Em Servicos E Seguranca Ltda',qtd:1,valor:20286.23,pct:1.5},{nome:'Comite Brasileiro De Clubes',qtd:2,valor:19528.57,pct:1.45},{nome:'Cesar V Da Luz & Melero Cia Ltda',qtd:1,valor:14573.82,pct:1.08},{nome:'Jb Esporte E Marketing Ltda',qtd:1,valor:13471.79,pct:1.0},{nome:'Alexandro Yuler Flores',qtd:1,valor:11662.8,pct:0.86},{nome:'Galbo Engenharia Ltda - Epp',qtd:1,valor:9611.4,pct:0.71},{nome:'Hub Instituicao De Pagamento S.A.',qtd:1,valor:9449.42,pct:0.7},{nome:'Federação Gaucha De Basketball',qtd:1,valor:9000.0,pct:0.67},{nome:'Thomson Reuters Brasil Conteudo E Tecnol Ltda',qtd:2,valor:2743.89,pct:0.20}],
     bancos:[{nome:'Banrisul',qtd:188,total:941607.06},{nome:'Índices Cons',qtd:6,total:296606.92},{nome:'Projeto Olim',qtd:1,total:58660.81},{nome:'Cbc Edit 11 R',qtd:1,total:50355.0},{nome:'Caixa Sogipa',qtd:6,total:2505.07},{nome:'Patrocínio A',qtd:1,total:1511.62}]},
+  '13-17jul': {label:'13 a 17/07/2026', qtd:250, total:859888.46, maiorQtd:47, maiorTotal:561191.86, menorQtd:203, menorTotal:298696.60,
+    top:[{nome:'Departamento Municipal De Agua E Esgotos',qtd:6,valor:90650.04,pct:10.64},{nome:'Vitale Restaurantes Empresariais Ltda',qtd:2,valor:52240.70,pct:6.13},{nome:'Mercadopago.Com Representacoes Ltda.',qtd:29,valor:35558.80,pct:4.17},{nome:'Ponto Do Turismo Ag De Viagens Ltda',qtd:2,valor:33492.95,pct:3.93},{nome:'Folha Pagamento',qtd:7,valor:30852.91,pct:3.62},{nome:'Sara Francisca Floriano Ribas',qtd:1,valor:26000.00,pct:3.05},{nome:'5 Continentes Viagens E Assessoria Ltda',qtd:2,valor:21539.36,pct:2.53},{nome:'Ambientallize Locadora De Materiais Para Even',qtd:1,valor:20691.44,pct:2.43},{nome:'Daniel Borges Cargnin',qtd:2,valor:19000.00,pct:2.23},{nome:'Hotel Dall Onder Ltda',qtd:1,valor:16435.50,pct:1.93},{nome:'Drogaria Benjamin',qtd:1,valor:16413.95,pct:1.93},{nome:'Postura Fitness Ltda',qtd:1,valor:15300.00,pct:1.80},{nome:'Soji Centro De Capacitação De Idiomas Ltda',qtd:1,valor:14918.24,pct:1.75},{nome:'Minuzzi Faccin E Simon Sociedade De Advogados',qtd:2,valor:14331.75,pct:1.68},{nome:'3S Solucoes Em Servicos E Seguranca Ltda',qtd:1,valor:13688.34,pct:1.61}],
+    bancos:[{nome:'Banrisul',qtd:182,total:618385.35},{nome:'Projeto Olim',qtd:52,total:165022.24},{nome:'Proj Sogipa',qtd:1,total:29304.76},{nome:'Patrocínio A',qtd:5,total:24688.19},{nome:'Índices Cons',qtd:2,total:13844.98},{nome:'Caixa Sogipa',qtd:2,total:580.00}]},
 };
 const PERIODOS = [
   {key:'01-05jun',     temDados:{pagamentos:true}, ini:'2026-06-01', fim:'2026-06-05'},
@@ -1895,7 +1788,8 @@ const PERIODOS = [
   {key:'15-26jun',     temDados:{pagamentos:true}, ini:'2026-06-15', fim:'2026-06-26'},
   {key:'29-30jun',     temDados:{pagamentos:true}, ini:'2026-06-29', fim:'2026-06-30'},
   {key:'28jun-05jul',  temDados:{pagamentos:true}, ini:'2026-06-28', fim:'2026-07-05'},
-  {key:'06-10jul',     temDados:{pagamentos:true}, ini:'2026-07-06', fim:'2026-07-10', atual:true},
+  {key:'06-10jul',     temDados:{pagamentos:true}, ini:'2026-07-06', fim:'2026-07-10'},
+  {key:'13-17jul',     temDados:{pagamentos:true}, ini:'2026-07-13', fim:'2026-07-17', atual:true},
 ];
 // Janelas de cobertura para as abas que só têm fechamento mensal (Retenção, Vendas, RH, Reingresso)
 const COBERTURA_MES = {
@@ -2045,24 +1939,26 @@ const DADOS_MES = {
     retencao: {
       periodoTag:'01 a 30/jun/2026',
       kpis:[
-        {icone:'📊', cor:'#00e5a0', bg:'rgba(0,229,160,.15)', label:'Fechamento Junho', valor:'56', sub:'base ao final do mês'},
-        {icone:'❌', cor:'#e8192c', bg:'rgba(232,25,44,.15)', label:'Desligamentos Junho', valor:'19', sub:'no período', valorCor:'#e8192c'},
-        {icone:'✅', cor:'#00e5a0', bg:'rgba(0,229,160,.15)', label:'Retenção', valor:'6', sub:'associados retidos', valorCor:'#00e5a0'},
-        {icone:'♻️', cor:'#3d7bff', bg:'rgba(61,123,255,.15)', label:'Retorno de Licença', valor:'1', sub:'no período'},
-        {icone:'🚫', cor:'#ffd32a', bg:'rgba(255,211,42,.15)', label:'Programados Julho', valor:'18', sub:'a desligar', valorCor:'#ffd32a'},
+        {icone:'📋', cor:'#3d7bff', bg:'rgba(61,123,255,.15)', label:'Solicitações Totais', valor:'62', sub:'no período'},
+        {icone:'📁', cor:'#ffd32a', bg:'rgba(255,211,42,.15)', label:'Residuais', valor:'18', sub:'de períodos anteriores', valorCor:'#ffd32a'},
+        {icone:'🆕', cor:'#3d7bff', bg:'rgba(61,123,255,.15)', label:'Deste Mês', valor:'34', sub:'novas solicitações'},
+        {icone:'❌', cor:'#e8192c', bg:'rgba(232,25,44,.15)', label:'Desligados', valor:'52', sub:'do total de solicitações', valorCor:'#e8192c'},
+        {icone:'✅', cor:'#00e5a0', bg:'rgba(0,229,160,.15)', label:'Retidos', valor:'10', sub:'associados retidos', valorCor:'#00e5a0'},
       ],
       categorias:[
-        {nome:'Patrimonial', qtd:6, cor:'#00e5a0'},{nome:'Contribuinte', qtd:5, cor:'#3d7bff'},
-        {nome:'Contribuinte Individual', qtd:5, cor:'#a855f7'},{nome:'Veterano Contribuinte', qtd:3, cor:'#f2b705'},
+        {nome:'Contribuinte', qtd:26, cor:'#3d7bff'},{nome:'Patrimonial', qtd:12, cor:'#00e5a0'},
+        {nome:'Contribuinte Individual', qtd:12, cor:'#a855f7'},{nome:'Veterano (Isento)', qtd:2, cor:'#f2b705'},
       ],
       motivos:[
-        {motivo:'Não utilização', qtd:9, pct:47.37, cor:'#3d7bff'},{motivo:'Financeiro', qtd:4, pct:21.05, cor:'#00e5a0'},
-        {motivo:'Mudança', qtd:3, pct:15.79, cor:'#f2b705'},{motivo:'Saúde', qtd:1, pct:5.26, cor:'#a855f7'},
-        {motivo:'Insatisfação', qtd:1, pct:5.26, cor:'#06b6d4'},{motivo:'Localização', qtd:1, pct:5.26, cor:'#e8192c'},
+        {motivo:'Não utilização', qtd:26, pct:50.0, cor:'#3d7bff'},{motivo:'Financeiro', qtd:13, pct:25.0, cor:'#00e5a0'},
+        {motivo:'Mudança', qtd:8, pct:15.38, cor:'#f2b705'},{motivo:'Viagem', qtd:2, pct:3.85, cor:'#fb923c'},
+        {motivo:'Localização', qtd:1, pct:1.92, cor:'#06b6d4'},{motivo:'Saúde', qtd:1, pct:1.92, cor:'#a855f7'},
+        {motivo:'Insatisfação', qtd:1, pct:1.92, cor:'#e8192c'},
       ],
-      totalDesligamentos:19,
-      ticketMedio:'R$ 536,85', dependentes:'2,3', residual:'36', residualLabel:'Desligamentos Residual',
-      analise:'A categoria <b style="color:var(--text)">Patrimonial</b> concentrou o maior volume (31,6%), seguida por <b style="color:var(--text)">Contribuinte</b> e <b style="color:var(--text)">Contribuinte Individual</b> (26,3% cada). Motivos: <b style="color:var(--text)">Não utilização</b> foi o principal (47,4%), seguido de Financeiro (21,1%) e Mudança (15,8%).',
+      totalDesligamentos:52,
+      ticketMedio:'R$ 567,92', dependentes:'2,0', residual:'18', residualLabel:'Residual Acumulado', desligadosComTaxa:'R$ 0,00',
+      modalidadeTaxa:{sim:15, nao:37}, quadroSocial:55,
+      analise:'Fechamento de Junho — fonte: Plano de Trabalho de Retenção 2026. Das <b style="color:var(--text)">62 solicitações totais</b>, 18 eram residuais e 34 novas do mês; 52 resultaram em desligamento e 10 foram retidos. Contribuinte concentrou a maioria dos desligamentos (26 de 52), seguido por Patrimonial e Contribuinte Individual (12 cada). Não utilização (50%) e Financeiro (25%) foram os principais motivos. Ticket médio de R$567,92, nenhum desligado pagou taxa neste mês. Quadro social ao final de junho: 55.',
     },
     vendas: {
       periodoTag:'01 a 30/jun/2026',
@@ -2160,35 +2056,37 @@ const DADOS_MES = {
       {data:'30/09/2026', fornecedor:'CL Soluções em Engenharia Ltda', projeto:'Telhado Dn. Leopoldina', valor:421000.00},
     ],
     obrasTotal: 931266.00,
-    caixaLivre: 1052.85, fundoObras: 2379.38, resultadoOper: 866.5, saldoTotal: 3432.2,
-    caixaLivrePct: 30.7, fundoObrasPct: 69.3, negativo: false,
+    caixaLivre: 840.55, fundoObras: 2379.38, resultadoOper: 654.2, saldoTotal: 3219.93,
+    caixaLivrePct: 26.1, fundoObrasPct: 73.9, negativo: false,
     receitaReal: 2641.2, despesaReal: 1774.7,
-    dataReferencia: '14/07/2026',
-    ptoAtencao: '<b>Caixa positivo agora, mas atenção ao dia 20/jul:</b> o caixa operacional está em <b>+R$ 1.052,85 mil (14/jul)</b> porque estamos na janela de recebimento das mensalidades (dias 10-14) — não é uma melhora estrutural, é o ciclo normal do mês. O saldo total em banco é de R$ 3.432,2 mil, sendo R$ 1.052,85 mil de caixa livre (30,7%) e R$ 2.379,4 mil do fundo Índices Construtivos (69,3%), restrito a obras. Com os compromissos previstos, o caixa livre tende a <b>ficar negativo novamente</b>: a projeção da Controladoria mostra <b style="color:var(--red);">-R$ 86.547 já no dia 20/jul</b> — o limite do banco será utilizado nesse dia. É quando caem juntos o adiantamento da folha de pagamento e os impostos, o maior ponto de saída de caixa do mês.',
+    dataReferencia: '17/07/2026',
+    ptoAtencao: '<b>Caixa positivo, mas seguindo a tendência de queda:</b> o caixa operacional está em <b>+R$ 840,55 mil (17/jul)</b>, recuando desde o pico da virada de mensalidades (dias 10-14). O saldo total em banco é de R$ 3.219,93 mil, sendo R$ 840,55 mil de caixa livre (26,1%) e R$ 2.379,4 mil do fundo Índices Construtivos (73,9%), restrito a obras. Com os compromissos previstos, o caixa livre tende a <b>ficar negativo</b>: a projeção da Controladoria mostra <b style="color:var(--red);">-R$ 86.547 já no dia 20/jul</b> — o limite do banco será utilizado nesse dia. É quando caem juntos o adiantamento da folha de pagamento e os impostos, o maior ponto de saída de caixa do mês.',
     retencao: {
-      periodoTag:'01 a 15/07/2026',
+      periodoTag:'Julho/2026 — atualizado (Plano de Trabalho V3)',
       kpis:[
-        {icone:'📋', cor:'#3d7bff', bg:'rgba(61,123,255,.15)', label:'Solicitações Totais', valor:'62', sub:'no período'},
+        {icone:'📋', cor:'#3d7bff', bg:'rgba(61,123,255,.15)', label:'Solicitações Totais', valor:'48', sub:'no período'},
         {icone:'📁', cor:'#ffd32a', bg:'rgba(255,211,42,.15)', label:'Residuais', valor:'18', sub:'de períodos anteriores', valorCor:'#ffd32a'},
-        {icone:'🆕', cor:'#3d7bff', bg:'rgba(61,123,255,.15)', label:'Deste Mês', valor:'34', sub:'novas solicitações'},
-        {icone:'❌', cor:'#e8192c', bg:'rgba(232,25,44,.15)', label:'Desligados', valor:'52', sub:'do total de solicitações', valorCor:'#e8192c'},
+        {icone:'🆕', cor:'#3d7bff', bg:'rgba(61,123,255,.15)', label:'Deste Mês', valor:'16', sub:'novas solicitações'},
+        {icone:'❌', cor:'#e8192c', bg:'rgba(232,25,44,.15)', label:'Desligados', valor:'34', sub:'do total de solicitações', valorCor:'#e8192c'},
         {icone:'✅', cor:'#00e5a0', bg:'rgba(0,229,160,.15)', label:'Retidos', valor:'10', sub:'associados retidos', valorCor:'#00e5a0'},
+        {icone:'🚫', cor:'#fb923c', bg:'rgba(251,146,60,.15)', label:'Programados', valor:'4', sub:'ainda a processar', valorCor:'#fb923c'},
       ],
       categorias:[
-        {nome:'Contribuinte', qtd:26, cor:'#3d7bff'},{nome:'Patrimonial', qtd:12, cor:'#00e5a0'},
-        {nome:'Contribuinte Individual', qtd:12, cor:'#a855f7'},{nome:'Veterano (Isento)', qtd:2, cor:'#f2b705'},
+        {nome:'Contribuinte', qtd:19, cor:'#3d7bff'},{nome:'Patrimonial', qtd:9, cor:'#00e5a0'},
+        {nome:'Contribuinte Individual', qtd:6, cor:'#a855f7'},{nome:'Contribuinte Derivado', qtd:3, cor:'#06b6d4'},
+        {nome:'Veterano Contribuinte', qtd:3, cor:'#f2b705'},{nome:'Patrimonial Individual', qtd:1, cor:'#fb923c'},
       ],
       motivos:[
-        {motivo:'Não utilização', qtd:26, pct:50.0, cor:'#3d7bff'},{motivo:'Financeiro', qtd:13, pct:25.0, cor:'#00e5a0'},
-        {motivo:'Mudança', qtd:8, pct:15.38, cor:'#f2b705'},{motivo:'Viagem', qtd:2, pct:3.85, cor:'#fb923c'},
-        {motivo:'Localização', qtd:1, pct:1.92, cor:'#06b6d4'},{motivo:'Saúde', qtd:1, pct:1.92, cor:'#a855f7'},
-        {motivo:'Insatisfação', qtd:1, pct:1.92, cor:'#e8192c'},
+        {motivo:'Financeiro', qtd:15, pct:38.46, cor:'#00e5a0'},{motivo:'Não utilização', qtd:11, pct:28.21, cor:'#3d7bff'},
+        {motivo:'Mudança', qtd:6, pct:15.38, cor:'#f2b705'},{motivo:'Desemprego', qtd:3, pct:7.69, cor:'#e8192c'},
+        {motivo:'Saúde', qtd:2, pct:5.13, cor:'#a855f7'},{motivo:'Viagem', qtd:1, pct:2.56, cor:'#fb923c'},
+        {motivo:'Insatisfação', qtd:1, pct:2.56, cor:'#06b6d4'},
       ],
-      totalDesligamentos:52,
-      ticketMedio:'R$ 567,90', dependentes:'2,0', residual:'18', residualLabel:'Residual Acumulado', desligadosComTaxa:'R$ 0,00',
-      modalidadeTaxa:{sim:15, nao:37},
-      negociacoesDesligados:'R$ 0,00',
-      analise:'Atualização de 01 a 15/07: das <b style="color:var(--text)">62 solicitações totais</b>, 18 são residuais (de períodos anteriores) e 34 são novas deste mês. Do total, <b style="color:var(--text)">52 resultaram em desligamento</b> e 10 foram retidos (mais 5 licenças). Por categoria, Contribuinte concentra a maioria (26 de 52), seguido por Patrimonial e Contribuinte Individual (12 cada). Por motivo, Não utilização (50%) e Financeiro (25%) seguem como principais causas. Nenhum desligado pagou taxa neste corte. Ticket médio caiu para R$ 567,90 e a média de dependentes ficou em 2,0. Quadro social atual: 55.',
+      totalDesligamentos:34,
+      ticketMedio:'R$ 623,97', dependentes:'2,3', residual:'18', residualLabel:'Residual Acumulado', desligadosComTaxa:'R$ 1.002,00',
+      modalidadeTaxa:{sim:14, nao:26}, quadroSocial:46,
+      negociacoesDesligados:'R$ 1.210,08',
+      analise:'Fonte: Plano de Trabalho de Retenção 2026 (V3). Das <b style="color:var(--text)">48 solicitações totais</b> de julho, 18 são residuais e 16 novas do mês; 34 resultaram em desligamento, 10 foram retidos e 4 ainda estão em processamento. Contribuinte concentra a maioria dos desligamentos (19 de 34), seguido por Patrimonial (9) e Contribuinte Individual (6). Financeiro (38,5%) supera Não utilização (28,2%) como principal motivo neste mês. Dos desligados, 14 pagaram taxa de desligamento (R$1.002,00 em média) e 26 não pagaram. Ticket médio de R$623,97, média de 2,3 dependentes. Quadro social atual: 46.',
     },
     vendas: {
       periodoTag:'Julho/2026 (parcial, até 15/07)',
@@ -2239,7 +2137,7 @@ function renderRetencaoPeriodo(mesKey){
     </div>`).join('');
   const el = document.getElementById('retencaoConteudo');
   el.innerHTML = `
-    <div class="kpi-row-icons cols-5">${kpisHtml}</div>
+    <div class="kpi-row-icons cols-${r.kpis.length}">${kpisHtml}</div>
     <div class="section-title">Relatório de Desempenho — Central de Relacionamento (${r.periodoTag})<div class="line"></div></div>
     <div class="grid-2 reverse">
       <div class="card"><div class="card-label">Distribuição por Categoria (Desligamentos)</div><div id="retencaoDonutCategoria" class="donut-wrap"></div></div>
@@ -2249,11 +2147,12 @@ function renderRetencaoPeriodo(mesKey){
         <tfoot><tr><td style="font-weight:700;">Total</td><td class="num" style="font-weight:700;">${r.motivos.reduce((s,m)=>s+m.qtd,0)}</td><td class="num" style="font-weight:700;">100%</td></tr></tfoot></table>
       </div>
     </div>
-    <div class="kpi-grid">
+    <div class="kpi-grid" style="grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));">
       <div class="card"><div class="card-label">🎫 Ticket Médio</div><div class="card-value">${r.ticketMedio}</div><div class="card-meta">das solicitações de desligamento</div></div>
       <div class="card"><div class="card-label">👨‍👩‍👧 Média de Dependentes</div><div class="card-value">${r.dependentes}</div><div class="card-meta">por solicitação</div></div>
       <div class="card"><div class="card-label">🔁 ${r.residualLabel}</div><div class="card-value">${r.residual}</div><div class="card-meta">pendentes de períodos anteriores</div></div>
       ${r.desligadosComTaxa ? `<div class="card"><div class="card-label">💲 Desligados com Taxa</div><div class="card-value">${r.desligadosComTaxa}</div><div class="card-meta">valor médio de taxa cobrada${r.modalidadeTaxa ? ` · ${r.modalidadeTaxa.sim} pagaram, ${r.modalidadeTaxa.nao} não` : ''}</div></div>` : ''}
+      ${r.quadroSocial ? `<div class="card"><div class="card-label">👥 Quadro Social</div><div class="card-value">${r.quadroSocial}</div><div class="card-meta">associados ativos ao final do período</div></div>` : ''}
     </div>
     <div class="card full"><div class="card-label">Análise</div><div class="card-meta" style="font-size:13px; line-height:1.7;">${r.analise}</div></div>
 
@@ -2267,10 +2166,11 @@ function renderRetencaoPeriodo(mesKey){
       <div class="card-meta" style="margin-top:10px;">💡 Guarda o resumo de cada período importado, sem apagar o histórico anterior.</div>
     </div>
   `;
-  drawDonut('retencaoDonutCategoria', r.categorias.map(c=>({nome:c.nome, valor:c.qtd, cor:c.cor})), String(r.totalDesligamentos), 'desligamentos');
+  const somaCategorias = r.categorias.reduce((s,c)=>s+c.qtd,0);
+  drawDonut('retencaoDonutCategoria', r.categorias.map(c=>({nome:c.nome, valor:c.qtd, cor:c.cor})), String(somaCategorias), 'desligamentos');
   document.getElementById('tabelaMotivos').innerHTML = r.motivos.map(mo=>`
     <tr><td><span class="dot" style="background:${mo.cor}; margin-right:6px;"></span>${mo.motivo}</td><td class="num">${mo.qtd}</td><td class="num">${mo.pct.toFixed(2).replace('.',',')}%</td></tr>`).join('');
-  drawDonut('vgRetencaoDonut', r.categorias.map(c=>({nome:c.nome, valor:c.qtd, cor:c.cor})), String(r.totalDesligamentos), 'desligamentos');
+  drawDonut('vgRetencaoDonut', r.categorias.map(c=>({nome:c.nome, valor:c.qtd, cor:c.cor})), String(somaCategorias), 'desligamentos');
 
   const keys = Object.keys(DADOS_MES);
   document.getElementById('tabelaHistoricoRetencao').innerHTML = keys.map(k=>{
@@ -3163,6 +3063,23 @@ function renderFluxoCaixaPeriodo(mesKey, de, ate){
       <div class="legend-row"><span class="dot" style="background:var(--purple)"></span> Fundo Índices Construtivos (restrito a obras) — ${fmtMil(m.fundoObras)}</div>`;
   }
   document.getElementById('fcCompLabel').textContent = `Composição do Saldo em Banco — ${m.label}`;
+  renderVisaoGeralObrasComp();
+}
+
+function renderVisaoGeralObrasComp(){
+  const bar = document.getElementById('vgObrasCompBar');
+  const legend = document.getElementById('vgObrasCompLegend');
+  if(!bar) return;
+  const o = OBRAS_FUNDO;
+  const pctInvestido = (o.totalInvestido/o.totalRecebido*100);
+  const pctDisponivel = 100 - pctInvestido;
+  bar.innerHTML = `
+    <div style="width:${pctInvestido.toFixed(1)}%; background:var(--blue); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700;">${pctInvestido.toFixed(1).replace('.',',')}%</div>
+    <div style="width:${pctDisponivel.toFixed(1)}%; background:var(--purple); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700;">${pctDisponivel.toFixed(1).replace('.',',')}%</div>`;
+  legend.innerHTML = `
+    <div class="legend-row"><span class="dot" style="background:var(--blue)"></span> Já Investido em Obras — ${fmtMilReais(o.totalInvestido)}</div>
+    <div class="legend-row"><span class="dot" style="background:var(--purple)"></span> Saldo Disponível (restrito a obras) — ${fmtMilReais(o.saldoDisponivel)}</div>
+    <div class="card-meta" style="margin-top:8px;">Sobre o total já recebido no fundo (${fmtMilReais(o.totalRecebido)}, acumulado desde fev/2026). Ver detalhes na aba <b>Obras</b>.</div>`;
 }
 
 function renderPagamentosPeriodo(key, de, ate){
