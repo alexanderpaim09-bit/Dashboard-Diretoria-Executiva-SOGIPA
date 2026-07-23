@@ -120,10 +120,12 @@
   .filter-field label{ font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.3px; }
   .filter-field input, .filter-field select{
     background:#13151d; border:1px solid var(--border); color:var(--text); border-radius:8px;
-    padding:10px 14px; font-size:15px; font-family:inherit; color-scheme:dark;
+    padding:0 14px; height:42px; box-sizing:border-box; font-size:15px; font-family:inherit; color-scheme:dark;
+    min-width:104px;
   }
   .btn-apply{
-    background:var(--red); color:#fff; border:none; border-radius:8px; padding:11px 24px;
+    background:var(--red); color:#fff; border:none; border-radius:8px;
+    height:42px; box-sizing:border-box; padding:0 24px; display:inline-flex; align-items:center;
     font-size:14px; font-weight:700; letter-spacing:.3px; cursor:pointer;
   }
   .btn-apply:hover{ opacity:.85; }
@@ -150,6 +152,22 @@
   .kpi-icon-info .value{ font-size:32px; font-weight:900; margin-top:0; line-height:1.15; }
   .kpi-icon-info .delta{ font-size:12px; margin-top:8px; }
   .mini-stat-row{ display:flex; gap:10px; margin-top:14px; border-top:1px solid var(--border); padding-top:14px; }
+
+  /* ── RH / DP sub-abas ── */
+  .rh-subtabs{ display:flex; gap:10px; margin:16px 0 20px; }
+  .rh-subtab-btn{
+    background:var(--card); border:1px solid var(--border); color:var(--muted); font-size:14px; font-weight:700;
+    padding:10px 22px; border-radius:9px; cursor:pointer; transition:all .15s ease;
+  }
+  .rh-subtab-btn.active{ background:rgba(61,123,255,.15); border-color:var(--blue); color:var(--text); }
+  .rh-subtab-btn:hover{ border-color:var(--blue); }
+
+  .kpi-spark-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(210px,1fr)); gap:14px; margin-bottom:20px; }
+  .kpi-spark-card{ background:var(--card); border:1px solid var(--border); border-radius:12px; padding:14px 16px; }
+  .kpi-spark-label{ font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.4px; margin-bottom:6px; }
+  .kpi-spark-value{ font-size:21px; font-weight:900; line-height:1.1; }
+  .kpi-spark-delta{ font-size:11.5px; font-weight:700; margin-top:2px; }
+  .kpi-spark-svg{ margin-top:8px; display:block; }
 
   /* ── DIAGNÓSTICO GERENCIAL ── */
   .status-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(200px,1fr)); gap:16px; margin-bottom:28px; }
@@ -434,15 +452,38 @@
   <div class="filterbar">
     <span class="filterbar-label">PERÍODO</span>
     <div class="filter-field">
-      <label>De</label>
-      <input type="date" id="filtroDe">
+      <label>Mês início</label>
+      <select id="mesIni">
+        <option value="1">Janeiro</option><option value="2">Fevereiro</option>
+        <option value="3">Março</option><option value="4">Abril</option>
+        <option value="5">Maio</option><option value="6">Junho</option>
+        <option value="7">Julho</option><option value="8">Agosto</option>
+        <option value="9">Setembro</option><option value="10">Outubro</option>
+        <option value="11">Novembro</option><option value="12">Dezembro</option>
+      </select>
     </div>
     <div class="filter-field">
-      <label>Até</label>
-      <input type="date" id="filtroAte">
+      <label>Ano início</label>
+      <select id="anoIni"><option value="2025">2025</option><option value="2026">2026</option></select>
     </div>
-    <button class="btn-apply" onclick="aplicarFiltroData()">APLICAR</button>
-    <button class="btn-apply" style="background:transparent; border:1px solid var(--border); color:var(--muted);" onclick="limparFiltroData()">LIMPAR</button>
+    <div class="filter-field">
+      <label>Mês fim</label>
+      <select id="mesFim">
+        <option value="1">Janeiro</option><option value="2">Fevereiro</option>
+        <option value="3">Março</option><option value="4">Abril</option>
+        <option value="5">Maio</option><option value="6">Junho</option>
+        <option value="7">Julho</option><option value="8">Agosto</option>
+        <option value="9">Setembro</option><option value="10">Outubro</option>
+        <option value="11">Novembro</option><option value="12">Dezembro</option>
+      </select>
+    </div>
+    <div class="filter-field">
+      <label>Ano fim</label>
+      <select id="anoFim"><option value="2025">2025</option><option value="2026">2026</option></select>
+    </div>
+    <button class="btn-apply" onclick="aplicarFiltroMes()">APLICAR</button>
+    <button class="btn-apply" style="background:transparent; border:1px solid var(--border); color:var(--muted);" onclick="filtroUltimoMes()">ÚLTIMO MÊS</button>
+    <span class="filter-badge" id="filtroBadge"></span>
   </div>
 
   <div class="content">
@@ -752,7 +793,7 @@
 
     <!-- ══════════════════ REINGRESSO ══════════════════ -->
     <div class="page-section" id="page-reingresso">
-      <div class="section-title">Reingresso de Associados <span class="tag" id="reingressoPeriodoTag" style="background:rgba(136,136,170,.15); color:var(--muted);">01 a 26/jun/2026</span><div class="line"></div></div>
+      <div class="section-title">Reingresso de Associados <span class="tag" id="reingressoPeriodoTag" style="background:rgba(136,136,170,.15); color:var(--muted);">—</span><div class="line"></div></div>
       <div id="reingressoConteudo"></div>
 
       <div class="section-title" style="margin-top:26px;">Histórico de Reingressos<div class="line"></div></div>
@@ -785,8 +826,19 @@
     </div>
 
     <div class="page-section" id="page-rh">
-      <div class="section-title">Recursos Humanos <span class="tag" style="background:rgba(136,136,170,.15); color:var(--muted);">Horas Extras · Junho/2026</span><div class="line"></div></div>
-      <div id="rhConteudo"></div>
+      <div class="section-title">Recursos Humanos <span class="tag" style="background:rgba(136,136,170,.15); color:var(--muted);">Jan/26 a Jun/26</span><div class="line"></div></div>
+      <div class="rh-subtabs">
+        <button class="rh-subtab-btn active" id="subtabBtnRH" onclick="mudarSubAbaRH('rh')">👥 RH</button>
+        <button class="rh-subtab-btn" id="subtabBtnDP" onclick="mudarSubAbaRH('dp')">📋 DP</button>
+      </div>
+      <div id="rhSubRH">
+        <div id="rhIndicadoresConteudo"></div>
+      </div>
+      <div id="rhSubDP" style="display:none;">
+        <div id="dpIndicadoresConteudo"></div>
+        <div class="section-title" style="margin-top:24px;">Horas Extras <span class="tag" style="background:rgba(136,136,170,.15); color:var(--muted);">Junho/2026</span><div class="line"></div></div>
+        <div id="rhConteudo"></div>
+      </div>
     </div>
 
     <!-- ══════════════════ LOCAÇÕES ══════════════════ -->
@@ -1087,12 +1139,122 @@ const REINGRESSO_CAMPANHAS = [
   {nome:'Plano Senior', qtd:6, cor:'#00e5a0'},
   {nome:'Promo 24h',    qtd:4, cor:'#06b6d4'},
 ];
+// ═══════════════════════════════════════════════════════════
+// DADOS — RETENÇÃO (meses extras: Jan, Fev, Mar, Mai/26)
+// Fonte: Plano de Trabalho de Retenção 2026 V3 — Abril não foi preenchido na planilha
+// ═══════════════════════════════════════════════════════════
+const RETENCAO_EXTRA_MESES = {
+  jan2026: {
+    periodoTag:'Janeiro/2026',
+    kpis:[
+      {icone:'📋', cor:'#3d7bff', bg:'rgba(61,123,255,.15)', label:'Solicitações Totais', valor:'36', sub:'no período'},
+      {icone:'📁', cor:'#ffd32a', bg:'rgba(255,211,42,.15)', label:'Residuais', valor:'23', sub:'de períodos anteriores', valorCor:'#ffd32a'},
+      {icone:'🆕', cor:'#3d7bff', bg:'rgba(61,123,255,.15)', label:'Deste Mês', valor:'13', sub:'novas solicitações'},
+      {icone:'❌', cor:'#e8192c', bg:'rgba(232,25,44,.15)', label:'Desligados', valor:'36', sub:'do total de solicitações', valorCor:'#e8192c'},
+      {icone:'✅', cor:'#00e5a0', bg:'rgba(0,229,160,.15)', label:'Retidos', valor:'0', sub:'associados retidos', valorCor:'#00e5a0'},
+    ],
+    categorias:[
+      {nome:'Contribuinte', qtd:20, cor:'#3d7bff'},{nome:'Patrimonial', qtd:9, cor:'#00e5a0'},
+      {nome:'Veterano Contribuinte', qtd:6, cor:'#f2b705'},{nome:'Contribuinte Individual', qtd:5, cor:'#a855f7'},
+      {nome:'Contribuinte Universitário', qtd:3, cor:'#06b6d4'},{nome:'Patrimonial Individual', qtd:2, cor:'#fb923c'},
+      {nome:'Veterano (Isento)', qtd:2, cor:'#b0b0d0'},{nome:'Contribuinte Derivado', qtd:1, cor:'#e8192c'},
+    ],
+    motivos:[
+      {motivo:'Não utilização', qtd:11, pct:32.35, cor:'#3d7bff'},{motivo:'Viagem', qtd:9, pct:26.47, cor:'#fb923c'},
+      {motivo:'Mudança', qtd:5, pct:14.71, cor:'#f2b705'},{motivo:'Não informado', qtd:6, pct:17.65, cor:'#b0b0d0'},
+      {motivo:'Financeiro', qtd:2, pct:5.88, cor:'#00e5a0'},{motivo:'Insatisfação', qtd:1, pct:2.94, cor:'#e8192c'},
+    ],
+    totalDesligamentos:36, ticketMedio:'—', dependentes:'—', residual:'23', residualLabel:'Residual Acumulado', desligadosComTaxa:'R$ 0,00',
+    modalidadeTaxa:{sim:0, nao:0}, quadroSocial:46,
+    analise:'Fonte: Plano de Trabalho de Retenção 2026 (V3). Janeiro registrou 36 solicitações totais (23 residuais + 13 novas), com 36 desligamentos e nenhuma retenção no mês. Contribuinte lidera as categorias (20 de 48) e Não utilização é o motivo mais comum (32,4%), seguido de Viagem (26,5%) — um padrão sazonal típico do início do ano.',
+  },
+  fev2026: {
+    periodoTag:'Fevereiro/2026',
+    kpis:[
+      {icone:'📋', cor:'#3d7bff', bg:'rgba(61,123,255,.15)', label:'Solicitações Totais', valor:'47', sub:'no período'},
+      {icone:'📁', cor:'#ffd32a', bg:'rgba(255,211,42,.15)', label:'Residuais', valor:'34', sub:'de períodos anteriores', valorCor:'#ffd32a'},
+      {icone:'🆕', cor:'#3d7bff', bg:'rgba(61,123,255,.15)', label:'Deste Mês', valor:'13', sub:'novas solicitações'},
+      {icone:'❌', cor:'#e8192c', bg:'rgba(232,25,44,.15)', label:'Desligados', valor:'47', sub:'do total de solicitações', valorCor:'#e8192c'},
+      {icone:'✅', cor:'#00e5a0', bg:'rgba(0,229,160,.15)', label:'Retidos', valor:'0', sub:'associados retidos', valorCor:'#00e5a0'},
+    ],
+    categorias:[
+      {nome:'Contribuinte', qtd:36, cor:'#3d7bff'},{nome:'Contribuinte Individual', qtd:16, cor:'#a855f7'},
+      {nome:'Patrimonial', qtd:6, cor:'#00e5a0'},{nome:'Laureado (Isento)', qtd:2, cor:'#b0b0d0'},
+      {nome:'Patrimonial Individual', qtd:1, cor:'#fb923c'},{nome:'Contribuinte Universitário', qtd:1, cor:'#06b6d4'},
+    ],
+    motivos:[
+      {motivo:'Não utilização', qtd:20, pct:80.0, cor:'#3d7bff'},{motivo:'Viagem', qtd:2, pct:8.0, cor:'#fb923c'},
+      {motivo:'Financeiro', qtd:1, pct:4.0, cor:'#00e5a0'},{motivo:'Mudança', qtd:1, pct:4.0, cor:'#f2b705'},
+      {motivo:'Saúde', qtd:1, pct:4.0, cor:'#a855f7'},
+    ],
+    totalDesligamentos:47, ticketMedio:'—', dependentes:'—', residual:'34', residualLabel:'Residual Acumulado', desligadosComTaxa:'R$ 0,00',
+    modalidadeTaxa:{sim:0, nao:0}, quadroSocial:60,
+    analise:'Fonte: Plano de Trabalho de Retenção 2026 (V3). Fevereiro teve 47 solicitações totais (34 residuais acumuladas de meses anteriores + 13 novas), com 47 desligamentos e nenhuma retenção. Contribuinte concentra a maioria (36 de 62), e Não utilização domina os motivos (80%) — sinal de que a maior parte das saídas do mês vem de residual acumulado, não de novos pedidos.',
+  },
+  mar2026: {
+    periodoTag:'Março/2026',
+    kpis:[
+      {icone:'📋', cor:'#3d7bff', bg:'rgba(61,123,255,.15)', label:'Solicitações Totais', valor:'133', sub:'no período'},
+      {icone:'📁', cor:'#ffd32a', bg:'rgba(255,211,42,.15)', label:'Residuais', valor:'77', sub:'de períodos anteriores', valorCor:'#ffd32a'},
+      {icone:'🆕', cor:'#3d7bff', bg:'rgba(61,123,255,.15)', label:'Deste Mês', valor:'56', sub:'novas solicitações'},
+      {icone:'❌', cor:'#e8192c', bg:'rgba(232,25,44,.15)', label:'Desligados', valor:'122', sub:'do total de solicitações', valorCor:'#e8192c'},
+      {icone:'✅', cor:'#00e5a0', bg:'rgba(0,229,160,.15)', label:'Retidos', valor:'11', sub:'associados retidos', valorCor:'#00e5a0'},
+    ],
+    categorias:[
+      {nome:'Contribuinte', qtd:63, cor:'#3d7bff'},{nome:'Patrimonial', qtd:29, cor:'#00e5a0'},
+      {nome:'Contribuinte Individual', qtd:18, cor:'#a855f7'},{nome:'Patrimonial Individual', qtd:4, cor:'#fb923c'},
+      {nome:'Veterano Contribuinte', qtd:3, cor:'#f2b705'},{nome:'Contribuinte Universitário', qtd:2, cor:'#06b6d4'},
+      {nome:'Veterano (Isento)', qtd:2, cor:'#b0b0d0'},{nome:'Contribuinte Indiv Derivado', qtd:1, cor:'#e8192c'},
+    ],
+    motivos:[
+      {motivo:'Financeiro', qtd:20, pct:23.53, cor:'#00e5a0'},{motivo:'Não utilização', qtd:29, pct:34.12, cor:'#3d7bff'},
+      {motivo:'Mudança', qtd:12, pct:14.12, cor:'#f2b705'},{motivo:'Localização', qtd:9, pct:10.59, cor:'#06b6d4'},
+      {motivo:'Saúde', qtd:7, pct:8.24, cor:'#a855f7'},{motivo:'Desemprego', qtd:3, pct:3.53, cor:'#e8192c'},
+      {motivo:'Insatisfação', qtd:3, pct:3.53, cor:'#fb923c'},{motivo:'Separação', qtd:2, pct:2.35, cor:'#b0b0d0'},
+    ],
+    totalDesligamentos:122, ticketMedio:'R$ 577,67', dependentes:'3,0', residual:'77', residualLabel:'Residual Acumulado', desligadosComTaxa:'R$ 0,00',
+    modalidadeTaxa:{sim:2, nao:8}, quadroSocial:120,
+    analise:'Fonte: Plano de Trabalho de Retenção 2026 (V3). Março foi o mês de maior volume do primeiro trimestre: 133 solicitações totais, 122 desligamentos e 11 retenções — o maior número de retidos entre os meses já importados. Não utilização (34,1%) e Financeiro (23,5%) lideram os motivos. Ticket médio de R$577,67.',
+  },
+  mai2026: {
+    periodoTag:'Maio/2026',
+    kpis:[
+      {icone:'📋', cor:'#3d7bff', bg:'rgba(61,123,255,.15)', label:'Solicitações Totais', valor:'92', sub:'no período'},
+      {icone:'📁', cor:'#ffd32a', bg:'rgba(255,211,42,.15)', label:'Residuais', valor:'42', sub:'de períodos anteriores', valorCor:'#ffd32a'},
+      {icone:'🆕', cor:'#3d7bff', bg:'rgba(61,123,255,.15)', label:'Deste Mês', valor:'43', sub:'novas solicitações'},
+      {icone:'❌', cor:'#e8192c', bg:'rgba(232,25,44,.15)', label:'Desligados', valor:'85', sub:'do total de solicitações', valorCor:'#e8192c'},
+      {icone:'✅', cor:'#00e5a0', bg:'rgba(0,229,160,.15)', label:'Retidos', valor:'7', sub:'associados retidos', valorCor:'#00e5a0'},
+    ],
+    categorias:[
+      {nome:'Contribuinte', qtd:42, cor:'#3d7bff'},{nome:'Patrimonial', qtd:23, cor:'#00e5a0'},
+      {nome:'Contribuinte Individual', qtd:11, cor:'#a855f7'},{nome:'Contribuinte Derivado', qtd:3, cor:'#fb923c'},
+      {nome:'Veterano Contribuinte', qtd:2, cor:'#f2b705'},{nome:'Contribuinte Universitário', qtd:2, cor:'#06b6d4'},
+      {nome:'Patrimonial Individual', qtd:1, cor:'#e8192c'},{nome:'Contribuinte Indiv Derivado', qtd:1, cor:'#b0b0d0'},
+    ],
+    motivos:[
+      {motivo:'Não utilização', qtd:20, pct:40.0, cor:'#3d7bff'},{motivo:'Financeiro', qtd:15, pct:30.0, cor:'#00e5a0'},
+      {motivo:'Mudança', qtd:9, pct:18.0, cor:'#f2b705'},{motivo:'Licença', qtd:5, pct:10.0, cor:'#fb923c'},
+      {motivo:'Saúde', qtd:1, pct:2.0, cor:'#a855f7'},
+    ],
+    totalDesligamentos:85, ticketMedio:'R$ 557,03', dependentes:'2,0', residual:'42', residualLabel:'Residual Acumulado', desligadosComTaxa:'R$ 0,00',
+    modalidadeTaxa:{sim:6, nao:42}, quadroSocial:90,
+    analise:'Fonte: Plano de Trabalho de Retenção 2026 (V3). Maio teve 92 solicitações totais, 85 desligamentos e 7 retenções. Contribuinte segue concentrando a maioria (42 de 85). Não utilização (40%) e Financeiro (30%) são os principais motivos. Ticket médio de R$557,03, média de 2,0 dependentes.',
+  },
+};
+
+// Histórico de reingressos 2026 — Jan a Jul. Ticket médio é calculado (valor ÷ quantidade).
 const REINGRESSO_HISTORICO = [
-  {mesKey:'jun2026', periodoTag:'01 a 26/jun/2026', total:26, valor:14307.35, ticketMedio:550.28,
+  {mesKey:'jan2026', periodoTag:'Janeiro/2026',   total:75, valor:89169.42, campanhas:null, alerta:null},
+  {mesKey:'fev2026', periodoTag:'Fevereiro/2026', total:39, valor:30672.67, campanhas:null, alerta:null},
+  {mesKey:'mar2026', periodoTag:'Março/2026',     total:36, valor:34640.90, campanhas:null, alerta:null},
+  {mesKey:'abr2026', periodoTag:'Abril/2026',     total:21, valor:17203.41, campanhas:null, alerta:null},
+  {mesKey:'mai2026', periodoTag:'Maio/2026',      total:46, valor:33172.24, campanhas:null, alerta:null},
+  {mesKey:'jun2026', periodoTag:'Junho/2026',     total:28, valor:15167.35,
     campanhas: REINGRESSO_CAMPANHAS, alerta: null},
-  {mesKey:'jul2026', periodoTag:'01 a 11/07/2026', total:6, valor:4340.38, ticketMedio:4340.38/6,
+  {mesKey:'jul2026', periodoTag:'Julho/2026 (parcial, até 11/07)', total:6, valor:4340.38,
     campanhas: null, alerta: 'Período parcial de julho — ainda sem quebra por campanha específica. Assim que tivermos mais detalhamento, a distribuição por campanha volta a aparecer.'},
 ];
+REINGRESSO_HISTORICO.forEach(h=>{ h.ticketMedio = (h.total && h.total > 0) ? h.valor / h.total : null; });
 const VENDAS_CAMPANHAS = [
   {nome:'Promo Amigo Indica',       qtd:4, cor:'#3d7bff'},
   {nome:'Divulgação nas Redes',     qtd:2, cor:'#00e5a0'},
@@ -1157,6 +1319,48 @@ const HE_HISTORICO_MENSAL = [
   {mes:'Mai/26', horas:1488.88, valor:56288.44, colaboradores:123, totalColab:245, qtdCC:36},
   {mes:'Jun/26', horas:1087.76, valor:42038.99, colaboradores:110, totalColab:241, qtdCC:38},
 ];
+
+// ═══════════════════════════════════════════════════════════
+// DADOS — RH x DP (planilha "proposta Cíntia", Jan-Jun/2026)
+// Estrutura definida pela própria Gerente de RH: RH = pessoas/gestão, DP = operacional/custos
+// ═══════════════════════════════════════════════════════════
+const MESES_RH = ['Jan/26','Fev/26','Mar/26','Abr/26','Mai/26','Jun/26'];
+
+const RH_INDICADORES = {
+  ql:          {label:'Quadro de Lotação (QL)', unidade:'colab.', cor:'#3d7bff', valores:[217,214,222,233,239,241], meta:null, formato:'int'},
+  turnover:    {label:'Turnover', unidade:'%', cor:'#e8192c', valores:[2.53,4.67,5.18,4.72,5.02,3.53], meta:null, formato:'pct', invertido:true,
+                nota:'A elevação do turnover no período reflete a <b>adequação da força de trabalho</b> em curso, não uma perda espontânea de pessoal.'},
+  admitidos:   {label:'Admitidos', unidade:'pessoas', cor:'#00e5a0', valores:[5,9,16,16,15,9], meta:null, formato:'int'},
+  desligamentos:{label:'Desligamentos', unidade:'pessoas', cor:'#fb923c', valores:[6,11,7,6,9,8], meta:null, formato:'int', invertido:true},
+  absenteismo: {label:'Absenteísmo', unidade:'%', cor:'#f2b705', valores:[1.88,2.71,1.52,2.10,2.24,2.35], meta:null, formato:'pct', invertido:true},
+  hht:         {label:'HHT (Horas de Treinamento)', unidade:'h', cor:'#a855f7', valores:[30,41,107,240,104,189], meta:null, formato:'int',
+                nota:'Pela base estratégica do clube, é um indicador de <b>tendência sempre a melhorar</b>. Ainda não há meta definida.'},
+};
+const RH_PENDENTES = ['Aprovação Contrato de Experiência', 'Participação em Atividades de Endomarketing'];
+RH_INDICADORES.saldoLiquido = {
+  label:'Saldo Líquido (Contratações)', unidade:'pessoas', cor:'#00e5a0',
+  valores: RH_INDICADORES.admitidos.valores.map((a,i)=>{
+    const d = RH_INDICADORES.desligamentos.valores[i];
+    return (a==null || d==null) ? null : a - d;
+  }),
+  meta:null, formato:'saldo', derivado:true,
+};
+
+const DP_INDICADORES = {
+  infracoesPonto:   {label:'Infrações de Ponto', unidade:'ocorr.', cor:'#e8192c', valores:[91,105,111,78,73,null], meta:null, formato:'int', invertido:true, jornada:true,
+                     nota:'O indicador é impactado principalmente por <b>demandas não planejadas</b> — reuniões, serviços e atividades que surgem em cima da hora e acabam afetando a carga horária.'},
+  horasTrabalhadas: {label:'Horas Trabalhadas', unidade:'h', cor:'#3d7bff', valores:[32935.79,34517.48,38265.98,40388.40,41355.21,42222.26], meta:null, formato:'num', jornada:true},
+  horasFalta:       {label:'Horas Falta', unidade:'h', cor:'#fb923c', valores:[391.70,337.06,141.87,359.00,572.00,396.77], meta:null, formato:'num', invertido:true, jornada:true,
+                     nota:'Quanto menor, melhor.'},
+  atestados:        {label:'Atestados', unidade:'h', cor:'#06b6d4', valores:[227.04,597.01,438.23,487.68,356.21,594.05], meta:null, formato:'num', invertido:true},
+  custoTerceiros:   {label:'Custo Terceiros', unidade:'R$', cor:'#fb923c', valores:[191232.95,157011.13,180470.29,103701.14,98160.89,87734.63], meta:null, formato:'moeda', invertido:true},
+  custoFolhaBruto:  {label:'Custo Folha — Bruto', unidade:'R$', cor:'#3d7bff', valores:[1098330.57,1053585.41,1050373.01,1100209.29,1173367.33,1136222.27], meta:null, formato:'moeda', folha:true},
+  custoFolhaLiq:    {label:'Custo Folha — Líquido', unidade:'R$', cor:'#00e5a0', valores:[393679.89,422287.91,468012.16,533063.30,568958.27,534681.54], meta:null, formato:'moeda', folha:true},
+  custoFolhaDesenc: {label:'Custo Folha — Desencaixe (SOGIPA)', unidade:'R$', cor:'#f2b705', valores:[356125.74,379400.68,421914.29,473062.67,509849.44,476020.73], meta:null, formato:'moeda', folha:true},
+  custoProjOlimpico:{label:'Custo Projeto Olímpico', unidade:'R$', cor:'#a855f7', valores:[43808.77,48291.52,52841.18,60000.63,59108.83,58660.81], meta:null, formato:'moeda', folha:true},
+};
+const DP_PENDENTES = ['Reclamatórias Trabalhistas - Valor', 'Participação Plano de Saúde (custo/nº vidas)', 'Ocorrências'];
+
 const HE_POR_MES = {
   jun2026: {
     resumo: {
@@ -1746,24 +1950,56 @@ renderLegendaNegociacoes('tabelaLegendaNeg');
 // ═══════════════════════════════════════════════════════════
 // RENDERIZAÇÃO — REINGRESSO (aba dedicada, com histórico)
 // ═══════════════════════════════════════════════════════════
-function renderReingresso(mesKey){
-  const historico = REINGRESSO_HISTORICO;
-  const doMes = historico.filter(h=>h.mesKey===mesKey);
-  if(!mesKey || !doMes.length){
-    document.getElementById('reingressoConteudo').innerHTML = `<div class="alert-box"><span>🚫</span><div><b>Não há dados de Reingresso para o período selecionado.</b> Temos fechamentos completos de Junho/2026 e Julho/2026 (parcial). Selecione um intervalo dentro de um desses meses.</div></div>`;
-    document.getElementById('reingressoPeriodoTag').textContent = 'sem dados no período';
-    return;
+function agregarReingresso(meses){
+  const itens = meses.map(mk=> REINGRESSO_HISTORICO.find(h=> h.mesKey === mk.key)).filter(Boolean);
+  const valor = itens.reduce((s,h)=> s + h.valor, 0);
+  const semQtd = itens.filter(h=> h.total == null);
+  const total  = itens.reduce((s,h)=> s + (h.total || 0), 0);
+  const qtdCompleta = semQtd.length === 0;
+  const ticket = (qtdCompleta && total > 0) ? valor/total : null;
+  const cmap = {};
+  itens.forEach(h=> (h.campanhas||[]).forEach(c=>{
+    if(!cmap[c.nome]) cmap[c.nome] = {nome:c.nome, qtd:0, cor:c.cor};
+    cmap[c.nome].qtd += c.qtd;
+  }));
+  const campanhas = Object.values(cmap).sort((a,b)=> b.qtd - a.qtd);
+  const alertas = itens.map(h=> h.alerta).filter(Boolean);
+  if(!qtdCompleta && itens.length > 1){
+    alertas.push(`Total e ticket médio do período não incluem ${semQtd.map(h=>h.periodoTag).join(', ')}, pois a quantidade de reingressos desse(s) mês(es) ainda não foi informada — o valor arrecadado, sim, está somado.`);
   }
-  const r = doMes[doMes.length-1];
-  document.getElementById('reingressoPeriodoTag').textContent = r.periodoTag;
+  const tag = itens.length === 1
+    ? itens[0].periodoTag
+    : `${itens[0].periodoTag} a ${itens[itens.length-1].periodoTag}`;
+  return {periodoTag:tag, total, valor, ticketMedio:ticket, qtdCompleta,
+          campanhas: campanhas.length ? campanhas : null,
+          alerta: alertas.length ? alertas.join(' ') : null};
+}
+
+function renderReingressoMeses(meses){
   const el = document.getElementById('reingressoConteudo');
+  let lista = meses, aviso = null;
+  if(!lista.length){
+    const u = ultimoMesCobertura(COBERTURA_REINGRESSO);
+    if(!u){
+      el.innerHTML = `<div class="alert-box"><span>🚫</span><div><b>Sem dados de Reingresso.</b></div></div>`;
+      document.getElementById('reingressoPeriodoTag').textContent = 'sem dados';
+      return;
+    }
+    lista = [u];
+    aviso = `Sem dados de Reingresso no intervalo selecionado — exibindo o último fechamento disponível.`;
+  }
+  const r = agregarReingresso(lista);
+  document.getElementById('reingressoPeriodoTag').textContent = r.periodoTag;
+  const qtdTxt = r.qtdCompleta ? r.total : (r.total > 0 ? r.total + '*' : '—');
+  const tkTxt  = r.ticketMedio != null ? fmtBRL(r.ticketMedio) : '—';
   let html = '';
-  if(r.alerta) html += `<div class="alert-box"><span>🆕</span><div>${r.alerta}</div></div>`;
+  if(aviso)     html += `<div class="alert-box" style="border-color:var(--gold);"><span>ℹ️</span><div>${aviso}</div></div>`;
+  if(r.alerta)  html += `<div class="alert-box"><span>🆕</span><div>${r.alerta}</div></div>`;
   html += `
     <div class="grid-3">
-      <div class="card"><div class="card-label">↩️ Total de Reingressos</div><div class="card-value" style="color:var(--green)">${r.total}</div><div class="card-meta">no período</div></div>
+      <div class="card"><div class="card-label">↩️ Total de Reingressos</div><div class="card-value" style="color:var(--green)">${qtdTxt}</div><div class="card-meta">${r.qtdCompleta?'no período':'no período (parcial)'}</div></div>
       <div class="card"><div class="card-label">💰 Valor Arrecadado</div><div class="card-value">${fmtBRL(r.valor)}</div><div class="card-meta">total do período</div></div>
-      <div class="card"><div class="card-label">🎯 Ticket Médio</div><div class="card-value">${fmtBRL(r.ticketMedio)}</div><div class="card-meta">por reingresso</div></div>
+      <div class="card"><div class="card-label">🎯 Ticket Médio</div><div class="card-value">${tkTxt}</div><div class="card-meta">por reingresso</div></div>
     </div>`;
   if(r.campanhas){
     html += `
@@ -1779,8 +2015,8 @@ function renderReingresso(mesKey){
     drawDonut('reingressoDonut', r.campanhas.map(c=>({nome:c.nome, valor:c.qtd, cor:c.cor})), String(totalCamp), 'com campanha');
   }
 
-  document.getElementById('tabelaHistoricoReingresso').innerHTML = historico.map(h=>`
-    <tr><td>${h.periodoTag}</td><td class="num">${h.total}</td><td class="num">${fmtBRL(h.valor)}</td><td class="num">${fmtBRL(h.ticketMedio)}</td></tr>`).join('');
+  document.getElementById('tabelaHistoricoReingresso').innerHTML = REINGRESSO_HISTORICO.map(h=>`
+    <tr><td>${h.periodoTag}</td><td class="num">${h.total != null ? h.total : '—'}</td><td class="num">${fmtBRL(h.valor)}</td><td class="num">${h.ticketMedio != null ? fmtBRL(h.ticketMedio) : '—'}</td></tr>`).join('');
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -2022,6 +2258,198 @@ const COBERTURA_MES = {
 // Negociação/Inadimplência tem histórico próprio (Mar-Jun), independente do resto
 const COBERTURA_NEGOCIACAO = {ini:'2026-03-01', fim:'2026-06-30'};
 
+// Retenção tem histórico próprio mais longo (Jan, Fev, Mar, Mai, Jun, Jul — Abril não foi preenchido
+// na planilha da Cíntia), independente da cobertura de Fluxo de Caixa/Vendas (que só tem Jun/Jul)
+const COBERTURA_RETENCAO = {
+  jan2026: {ini:'2026-01-01', fim:'2026-01-31'},
+  fev2026: {ini:'2026-02-01', fim:'2026-02-28'},
+  mar2026: {ini:'2026-03-01', fim:'2026-03-31'},
+  mai2026: {ini:'2026-05-01', fim:'2026-05-31'},
+  jun2026: {ini:'2026-06-01', fim:'2026-06-30'},
+  jul2026: {ini:'2026-07-01', fim:'2026-07-31'},
+};
+function mesKeyParaRetencao(de, ate){
+  for(const mesKey in COBERTURA_RETENCAO){
+    const c = COBERTURA_RETENCAO[mesKey];
+    if(faixaContidaEm(de, ate, c.ini, c.fim)) return mesKey;
+  }
+  return null;
+}
+
+// ═══════════════════════════════════════════════════════════
+// DADOS — VENDAS (meses extras: Jan a Mai/26)
+// Fonte: planilha ENTRADAS REALIZADas V6, abas mensais. Cobertura própria (COBERTURA_VENDAS),
+// independente de COBERTURA_MES (Fluxo de Caixa só tem Jun/Jul).
+// ═══════════════════════════════════════════════════════════
+const VENDAS_EXTRA_MESES = {
+  jan2026: {
+    periodoTag:'Janeiro/2026',
+    associacoesNovas:'69', valorArrecadado:'R$ 55.653,75', ticketMedio:'R$ 806,58',
+    campanhas:[
+        {nome:'WhatsApp', qtd:29, cor:'#3d7bff'},
+        {nome:'Presencial', qtd:6, cor:'#00e5a0'},
+        {nome:'WhatsApp + Tour Guiado', qtd:6, cor:'#a855f7'},
+        {nome:'Promo Amigo Indica', qtd:5, cor:'#f2b705'},
+        {nome:'Visita', qtd:3, cor:'#06b6d4'},
+        {nome:'Ex Sócio Dependente', qtd:2, cor:'#fb923c'},
+        {nome:'Amigo Indica', qtd:1, cor:'#e8192c'},
+        {nome:'Atleta', qtd:1, cor:'#b0b0d0'},
+        {nome:'Migrou De Plano', qtd:1, cor:'#3d7bff'},
+        {nome:'Presencial + Tour Guiado', qtd:1, cor:'#00e5a0'},
+        {nome:'Presencial / Dohms', qtd:1, cor:'#a855f7'},
+        {nome:'Presencial / Amigo Indica', qtd:1, cor:'#f2b705'},
+        {nome:'Presencial / Indicação Presidente', qtd:1, cor:'#06b6d4'},
+        {nome:'Presencial / OAB', qtd:1, cor:'#fb923c'},
+        {nome:'Presencial / Visita', qtd:1, cor:'#e8192c'},
+        {nome:'Visita / Amigo Indica', qtd:1, cor:'#b0b0d0'},
+        {nome:'Visita / OAB', qtd:1, cor:'#3d7bff'},
+        {nome:'Visita / Presencial', qtd:1, cor:'#00e5a0'},
+        {nome:'Visita / WhatsApp', qtd:1, cor:'#a855f7'},
+        {nome:'WhatsApp / Visita', qtd:1, cor:'#f2b705'},
+        {nome:'WhatsApp Visita', qtd:1, cor:'#06b6d4'},
+        {nome:'WhatsApp / Dohms', qtd:1, cor:'#fb923c'},
+        {nome:'WhatsApp / La Salle', qtd:1, cor:'#e8192c'},
+        {nome:'WhatsApp / OAB', qtd:1, cor:'#b0b0d0'},
+    ],
+    alerta: null,
+    metas:{
+      vendas:{orcado:69, real:69}, reingressos:{orcado:95, real:75},
+      totalVR:{orcado:164, real:144}, desafioVenda:80, desafioReingresso:110,
+      total:{orcado:190, real:144, gap:-46},
+      taxaAdesao:55653.75, taxaReingresso:48687.15, taxaTotal:104340.9,
+    },
+  },
+  fev2026: {
+    periodoTag:'Fevereiro/2026',
+    associacoesNovas:'43', valorArrecadado:'R$ 32.455,75', ticketMedio:'R$ 754,78',
+    campanhas:[
+        {nome:'WhatsApp', qtd:14, cor:'#3d7bff'},
+        {nome:'Visita', qtd:4, cor:'#00e5a0'},
+        {nome:'Presencial', qtd:3, cor:'#a855f7'},
+        {nome:'WhatsApp + Tour Guiado', qtd:3, cor:'#f2b705'},
+        {nome:'Ex Sócio Dependente', qtd:2, cor:'#06b6d4'},
+        {nome:'WhatsApp / Dohms', qtd:2, cor:'#fb923c'},
+        {nome:'WhatsApp / La Salle', qtd:2, cor:'#e8192c'},
+        {nome:'WhatsApp / OAB', qtd:2, cor:'#b0b0d0'},
+        {nome:'WhatsApp / Visita', qtd:2, cor:'#3d7bff'},
+        {nome:'Presencial / Atleta', qtd:1, cor:'#00e5a0'},
+        {nome:'Presencial / La Salle', qtd:1, cor:'#a855f7'},
+        {nome:'Presencial / Atleta', qtd:1, cor:'#f2b705'},
+        {nome:'Presencial / OAB', qtd:1, cor:'#06b6d4'},
+        {nome:'Presencial / Visita', qtd:1, cor:'#fb923c'},
+        {nome:'Promo Amigo Indica', qtd:1, cor:'#e8192c'},
+        {nome:'Usuario Escola', qtd:1, cor:'#b0b0d0'},
+        {nome:'Visita Projeto Criança', qtd:1, cor:'#3d7bff'},
+        {nome:'Visita / Interesse Academia', qtd:1, cor:'#00e5a0'},
+    ],
+    alerta: null,
+    metas:{
+      vendas:{orcado:39, real:43}, reingressos:{orcado:54, real:39},
+      totalVR:{orcado:93, real:82}, desafioVenda:50, desafioReingresso:70,
+      total:{orcado:120, real:82, gap:-38},
+      taxaAdesao:32455.75, taxaReingresso:24552.86, taxaTotal:57008.61,
+    },
+  },
+  mar2026: {
+    periodoTag:'Março/2026',
+    associacoesNovas:'26', valorArrecadado:'R$ 22.164,50', ticketMedio:'R$ 852,48',
+    campanhas:[
+        {nome:'WhatsApp', qtd:8, cor:'#3d7bff'},
+        {nome:'Usuaria De Escola', qtd:3, cor:'#00e5a0'},
+        {nome:'Migrou De Matricula', qtd:2, cor:'#a855f7'},
+        {nome:'Presencial', qtd:2, cor:'#f2b705'},
+        {nome:'Presencial / Dohms', qtd:2, cor:'#06b6d4'},
+        {nome:'WhatsApp / Dohms', qtd:2, cor:'#fb923c'},
+        {nome:'Ex Sócio Dependente', qtd:1, cor:'#e8192c'},
+        {nome:'La Salle', qtd:1, cor:'#b0b0d0'},
+        {nome:'Presencial / Amigo Indica', qtd:1, cor:'#3d7bff'},
+        {nome:'Presencial / Tour', qtd:1, cor:'#00e5a0'},
+        {nome:'Presencial / Visita', qtd:1, cor:'#a855f7'},
+        {nome:'WhatsApp / Escoteiros', qtd:1, cor:'#f2b705'},
+        {nome:'WhatsApp / Visita', qtd:1, cor:'#06b6d4'},
+    ],
+    alerta: null,
+    metas:{
+      vendas:{orcado:33, real:26}, reingressos:{orcado:46, real:36},
+      totalVR:{orcado:79, real:62}, desafioVenda:80, desafioReingresso:110,
+      total:{orcado:190, real:62, gap:-128},
+      taxaAdesao:22164.5, taxaReingresso:25971.02, taxaTotal:48135.52,
+    },
+  },
+  abr2026: {
+    periodoTag:'Abril/2026',
+    associacoesNovas:'16', valorArrecadado:'R$ 14.503,50', ticketMedio:'R$ 906,47',
+    campanhas:[
+        {nome:'WhatsApp', qtd:5, cor:'#3d7bff'},
+        {nome:'Promo Amigo Indica', qtd:2, cor:'#00e5a0'},
+        {nome:'Usuario Escola', qtd:2, cor:'#a855f7'},
+        {nome:'Presencial', qtd:1, cor:'#f2b705'},
+        {nome:'Presencial / Dohms', qtd:1, cor:'#06b6d4'},
+        {nome:'Visita', qtd:1, cor:'#fb923c'},
+        {nome:'Visita / La Salle', qtd:1, cor:'#e8192c'},
+        {nome:'WhatsApp / La Salle', qtd:1, cor:'#b0b0d0'},
+        {nome:'WhatsApp + Tour Guiado', qtd:1, cor:'#3d7bff'},
+        {nome:'WhatsApp / La Salle', qtd:1, cor:'#00e5a0'},
+    ],
+    alerta: null,
+    metas:{
+      vendas:{orcado:20, real:16}, reingressos:{orcado:28, real:21},
+      totalVR:{orcado:48, real:37}, desafioVenda:25, desafioReingresso:35,
+      total:{orcado:60, real:37, gap:-23},
+      taxaAdesao:14503.5, taxaReingresso:14583, taxaTotal:29086.5,
+    },
+  },
+  mai2026: {
+    periodoTag:'Maio/2026',
+    associacoesNovas:'11', valorArrecadado:'R$ 11.165,00', ticketMedio:'R$ 1.015,00',
+    campanhas:[
+        {nome:'WhatsApp', qtd:3, cor:'#3d7bff'},
+        {nome:'WhatsApp + Tour Guiado', qtd:3, cor:'#00e5a0'},
+        {nome:'Presencial', qtd:1, cor:'#a855f7'},
+        {nome:'Promo Amigo Indica', qtd:1, cor:'#f2b705'},
+        {nome:'Usuario Escola', qtd:1, cor:'#06b6d4'},
+        {nome:'WhatsApp / OAB', qtd:1, cor:'#fb923c'},
+        {nome:'WhatsApp / Visita', qtd:1, cor:'#e8192c'},
+    ],
+    alerta: null,
+    metas:{
+      vendas:{orcado:15, real:11}, reingressos:{orcado:21, real:46},
+      totalVR:{orcado:36, real:57}, desafioVenda:20, desafioReingresso:26,
+      total:{orcado:46, real:57, gap:11},
+      taxaAdesao:11165, taxaReingresso:18973.5, taxaTotal:30138.5,
+    },
+  },
+};
+
+// Vendas tem cobertura própria (Jan a Jul/26) — a planilha de ENTRADAS tem os 6 meses,
+// enquanto o Fluxo de Caixa (COBERTURA_MES) só tem Jun/Jul. Nunca unificar as duas.
+const COBERTURA_VENDAS = {
+  jan2026: {ini:'2026-01-01', fim:'2026-01-31'},
+  fev2026: {ini:'2026-02-01', fim:'2026-02-28'},
+  mar2026: {ini:'2026-03-01', fim:'2026-03-31'},
+  abr2026: {ini:'2026-04-01', fim:'2026-04-30'},
+  mai2026: {ini:'2026-05-01', fim:'2026-05-31'},
+  jun2026: {ini:'2026-06-01', fim:'2026-06-30'},
+  jul2026: {ini:'2026-07-01', fim:'2026-07-31'},
+};
+// Jan-Mai vêm de VENDAS_EXTRA_MESES; Jun/Jul continuam dentro de DADOS_MES
+function getVendasMes(key){
+  if(VENDAS_EXTRA_MESES[key]) return VENDAS_EXTRA_MESES[key];
+  return (DADOS_MES[key] && DADOS_MES[key].vendas) ? DADOS_MES[key].vendas : null;
+}
+
+// Reingresso tem histórico próprio (Jan a Jul/26), independente da cobertura de
+// Fluxo de Caixa/Vendas (que só tem Jun/Jul). Fonte: planilha de reingressos 2026.
+const COBERTURA_REINGRESSO = {
+  jan2026: {ini:'2026-01-01', fim:'2026-01-31'},
+  fev2026: {ini:'2026-02-01', fim:'2026-02-28'},
+  mar2026: {ini:'2026-03-01', fim:'2026-03-31'},
+  abr2026: {ini:'2026-04-01', fim:'2026-04-30'},
+  mai2026: {ini:'2026-05-01', fim:'2026-05-31'},
+  jun2026: {ini:'2026-06-01', fim:'2026-06-30'},
+  jul2026: {ini:'2026-07-01', fim:'2026-07-31'},
+};
+
 function parseDataISO(str){ return new Date(str+'T00:00:00'); }
 function faixasSeSobrepoem(iniA, fimA, iniB, fimB){
   return parseDataISO(iniA) <= parseDataISO(fimB) && parseDataISO(fimA) >= parseDataISO(iniB);
@@ -2050,63 +2478,186 @@ function semanaPagamentosParaIntervalo(de, ate){
   return melhor;
 }
 
-function popularFiltroSemanas(){
-  // define o intervalo padrão = período mais recente conhecido (última semana de pagamentos)
-  const ultimo = PERIODOS[PERIODOS.length-1];
-  document.getElementById('filtroDe').value = ultimo.ini;
-  document.getElementById('filtroAte').value = ultimo.fim;
-  aplicarFiltroData();
+// ═══════════════════════════════════════════════════════════
+//  MOTOR DO FILTRO MENSAL (Mês + Período) — estilo Painel do Presidente
+//  Regra: resolve os meses COM DADO dentro do intervalo (pula buracos),
+//  agrega o período (soma), e quando o intervalo não tem dado cai pro
+//  ÚLTIMO mês disponível da própria aba. Cada aba mantém sua cobertura.
+// ═══════════════════════════════════════════════════════════
+const FMES_EXT = ['','Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const FMES_ABR = ['','Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+
+function ultimoDiaDoMes(ano, mes){ return new Date(ano, mes, 0).getDate(); }
+function ymd(ano, mes, dia){ return `${ano}-${String(mes).padStart(2,'0')}-${String(dia).padStart(2,'0')}`; }
+function parseBRLnum(s){
+  if(typeof s === 'number') return s;
+  if(!s) return 0;
+  return parseFloat(String(s).replace(/[^\d,-]/g,'').replace(',','.')) || 0;
+}
+function fmtReaisAgg(n){ return 'R$ ' + n.toLocaleString('pt-BR',{minimumFractionDigits:2, maximumFractionDigits:2}); }
+
+// Lista de meses {ano,mes,key} que EXISTEM na cobertura dada, dentro do intervalo (buracos são pulados)
+function mesesEmIntervalo(mIni, aIni, mFim, aFim, cobertura){
+  const idx = {};
+  for(const key in cobertura){ const d = parseDataISO(cobertura[key].ini); idx[d.getFullYear()+'-'+(d.getMonth()+1)] = key; }
+  const res = []; let a = aIni, m = mIni, guard = 0;
+  while((a < aFim || (a === aFim && m <= mFim)) && guard < 60){
+    const k = idx[a+'-'+m];
+    if(k) res.push({ano:a, mes:m, key:k});
+    m++; if(m > 12){ m = 1; a++; } guard++;
+  }
+  return res;
+}
+// Último mês {ano,mes,key} disponível numa cobertura
+function ultimoMesCobertura(cobertura){
+  let best = null;
+  for(const key in cobertura){
+    const d = parseDataISO(cobertura[key].ini);
+    const cur = {ano:d.getFullYear(), mes:d.getMonth()+1, key};
+    if(!best || (cur.ano*12+cur.mes) > (best.ano*12+best.mes)) best = cur;
+  }
+  return best;
 }
 
-function limparFiltroData(){
-  document.getElementById('filtroDe').value = '';
-  document.getElementById('filtroAte').value = '';
+function setSelectFiltro(mIni, aIni, mFim, aFim){
+  document.getElementById('mesIni').value = mIni; document.getElementById('anoIni').value = aIni;
+  document.getElementById('mesFim').value = mFim; document.getElementById('anoFim').value = aFim;
+}
+function filtroUltimoMes(){
+  const u = ultimoMesCobertura(COBERTURA_VENDAS) || {ano:2026, mes:7};
+  setSelectFiltro(u.mes, u.ano, u.mes, u.ano);
+  aplicarFiltroMes();
+}
+function popularFiltroMesInicial(){ filtroUltimoMes(); }
+
+function atualizarBadgeFiltro(mIni, aIni, mFim, aFim, mesesFin){
+  const b = document.getElementById('filtroBadge'); if(!b) return;
+  const nMeses = (aFim*12+mFim) - (aIni*12+mIni) + 1;
+  let txt = (nMeses === 1)
+    ? `${FMES_EXT[mIni]}/${aIni}`
+    : `${FMES_ABR[mIni]}/${String(aIni).slice(2)} → ${FMES_ABR[mFim]}/${String(aFim).slice(2)} · ${nMeses} meses`;
+  if(!mesesFin.length){
+    const u = ultimoMesCobertura(COBERTURA_VENDAS);
+    txt += u ? ` — sem dado, exibindo ${FMES_ABR[u.mes]}/${u.ano}` : ' — sem dado no período';
+  }
+  b.textContent = txt;
 }
 
-function aplicarFiltroData(){
-  const de = document.getElementById('filtroDe').value;
-  const ate = document.getElementById('filtroAte').value;
-  if(!de || !ate){
-    alert('Selecione as duas datas (De e Até) antes de aplicar o filtro.');
-    return;
+// ── Agregação de Vendas no período (soma) ──
+function agregarVendas(meses){
+  const assoc = meses.reduce((s,mk)=> s + (parseInt(getVendasMes(mk.key).associacoesNovas,10)||0), 0);
+  const valor = meses.reduce((s,mk)=> s + parseBRLnum(getVendasMes(mk.key).valorArrecadado), 0);
+  const ticket = assoc > 0 ? valor/assoc : 0;
+  const cmap = {};
+  meses.forEach(mk=>{ (getVendasMes(mk.key).campanhas||[]).forEach(c=>{
+    if(!cmap[c.nome]) cmap[c.nome] = {nome:c.nome, qtd:0, cor:c.cor};
+    cmap[c.nome].qtd += c.qtd;
+  }); });
+  const campanhas = Object.values(cmap).sort((a,b)=> b.qtd - a.qtd);
+  const alertas = meses.map(mk=> getVendasMes(mk.key).alerta).filter(Boolean);
+  const comMetas = meses.filter(mk=> getVendasMes(mk.key).metas);
+  let metas = null;
+  if(comMetas.length){
+    metas = {vendas:{orcado:0,real:0}, reingressos:{orcado:0,real:0}, totalVR:{orcado:0,real:0},
+             desafioVenda:0, desafioReingresso:0, total:{orcado:0,real:0,gap:0},
+             taxaAdesao:0, taxaReingresso:0, taxaTotal:0};
+    let reingTem = false;
+    comMetas.forEach(mk=>{ const mt = getVendasMes(mk.key).metas;
+      metas.vendas.orcado += mt.vendas.orcado||0;   metas.vendas.real += (mt.vendas.real||0);
+      metas.reingressos.orcado += mt.reingressos.orcado||0;
+      if(mt.reingressos.real != null){ metas.reingressos.real += mt.reingressos.real; reingTem = true; }
+      metas.totalVR.orcado += mt.totalVR.orcado||0;  metas.totalVR.real += (mt.totalVR.real||0);
+      metas.desafioVenda += mt.desafioVenda||0;      metas.desafioReingresso += mt.desafioReingresso||0;
+      metas.total.orcado += mt.total.orcado||0;      metas.total.real += (mt.total.real||0);
+      metas.taxaAdesao += mt.taxaAdesao||0;          metas.taxaReingresso += mt.taxaReingresso||0;
+    });
+    if(!reingTem) metas.reingressos.real = null;
+    metas.total.gap = metas.total.real - metas.total.orcado;
+    metas.taxaTotal = metas.taxaAdesao + metas.taxaReingresso;
   }
-  if(parseDataISO(de) > parseDataISO(ate)){
-    alert('A data "De" não pode ser depois da data "Até".');
-    return;
+  const m0 = meses[0], mN = meses[meses.length-1];
+  const tag = (meses.length === 1)
+    ? `${FMES_EXT[m0.mes]}/${m0.ano}`
+    : `${FMES_EXT[m0.mes]}/${m0.ano} a ${FMES_EXT[mN.mes]}/${mN.ano}`;
+  return { periodoTag:tag, associacoesNovas:String(assoc),
+           valorArrecadado:fmtReaisAgg(valor), ticketMedio:fmtReaisAgg(ticket),
+           campanhas, alerta: alertas.length ? alertas.join(' ') : null, metas };
+}
+function renderVendasMeses(meses){
+  let lista = meses, aviso = null;
+  if(!lista.length){
+    const u = ultimoMesCobertura(COBERTURA_VENDAS);
+    if(!u){
+      document.getElementById('vendasConteudo').innerHTML = `<div class="alert-box"><span>🚫</span><div><b>Sem dados de Vendas.</b></div></div>`;
+      const me = document.getElementById('vendasMetasConteudo'); if(me) me.innerHTML = '';
+      return;
+    }
+    lista = [u];
+    aviso = `Sem dados de Vendas no intervalo selecionado — exibindo o último fechamento disponível (${FMES_EXT[u.mes]}/${u.ano}).`;
   }
+  pintarVendas(agregarVendas(lista), aviso);
+}
 
-  // Pagamentos: acha a semana com maior sobreposição real
-  const semanaKey = semanaPagamentosParaIntervalo(de, ate);
-  renderPagamentosPeriodo(semanaKey, de, ate);
+// ── Agregação do movimento de associados na Visão Geral ──
+function atualizarVGMovimento(mesesFin, mesesRei){
+  const el = document.getElementById('vgAssociadosMov'); if(!el) return;
+  const sub = document.getElementById('vgAssociadosMovSub');
+  let lFin = mesesFin, lRei = mesesRei, aviso = '';
+  if(!lFin.length){ const u = ultimoMesCobertura(COBERTURA_VENDAS); if(u){ lFin = [u]; aviso = ' (último mês)'; } }
+  if(!lRei.length){ const u = ultimoMesCobertura(COBERTURA_REINGRESSO); if(u){ lRei = [u]; aviso = ' (último mês)'; } }
+  if(!lFin.length && !lRei.length){ el.textContent = '—'; if(sub) sub.textContent = 'sem dado no período'; return; }
+  let reing = 0, vend = 0, reingParcial = false;
+  lRei.forEach(mk=>{
+    const h = REINGRESSO_HISTORICO.find(x=> x.mesKey === mk.key);
+    if(h){ if(h.total == null) reingParcial = true; else reing += h.total; }
+  });
+  lFin.forEach(mk=>{
+    const vm = getVendasMes(mk.key);
+    vend += vm ? (parseInt(vm.associacoesNovas,10)||0) : 0;
+  });
+  el.textContent = (reing + vend) + (reingParcial ? '*' : '');
+  if(sub) sub.textContent = `${reing}${reingParcial?'*':''} reingr. + ${vend} vendas${aviso}`;
+}
 
-  // Fluxo de Caixa / Retenção / Vendas / Reingresso / RH / Locações: por mês de cobertura
-  const mesKey = mesKeyParaIntervalo(de, ate);
-  renderFluxoCaixaPeriodo(mesKey, de, ate);
-  renderRetencaoPeriodo(mesKey);
-  renderVendasPeriodo(mesKey);
+// ── DISPATCHER GLOBAL ──
+function aplicarFiltroMes(){
+  const mIni = +document.getElementById('mesIni').value, aIni = +document.getElementById('anoIni').value;
+  const mFim = +document.getElementById('mesFim').value, aFim = +document.getElementById('anoFim').value;
+  if(aIni*12+mIni > aFim*12+mFim){ alert('O mês/ano de início não pode ser depois do mês/ano de fim.'); return; }
+
+  const de  = ymd(aIni, mIni, 1);
+  const ate = ymd(aFim, mFim, ultimoDiaDoMes(aFim, mFim));
+
+  const mesesFin = mesesEmIntervalo(mIni, aIni, mFim, aFim, COBERTURA_MES);
+  const mesesRet = mesesEmIntervalo(mIni, aIni, mFim, aFim, COBERTURA_RETENCAO);
+  const mesesRei = mesesEmIntervalo(mIni, aIni, mFim, aFim, COBERTURA_REINGRESSO);
+  const mesesVen = mesesEmIntervalo(mIni, aIni, mFim, aFim, COBERTURA_VENDAS);
+
+  atualizarBadgeFiltro(mIni, aIni, mFim, aFim, mesesVen);
+
+  // Abas migradas (agregam o período de verdade):
+  renderVendasMeses(mesesVen);
+  renderReingressoMeses(mesesRei);
+  atualizarVGMovimento(mesesVen, mesesRei);
   renderFunilVendas(de, ate);
-  renderReingresso(mesKey);
+
+  // Demais abas: dirigidas pelo último mês do intervalo; se o intervalo não tem dado, cai pro último disponível
+  const uFin = ultimoMesCobertura(COBERTURA_MES);
+  const uRet = ultimoMesCobertura(COBERTURA_RETENCAO);
+  const mesKey    = mesesFin.length ? mesesFin[mesesFin.length-1].key : (uFin ? uFin.key : null);
+  const mesKeyRet = mesesRet.length ? mesesRet[mesesRet.length-1].key : (uRet ? uRet.key : null);
+
+  renderFluxoCaixaPeriodo(mesKey, de, ate);
+  renderRetencaoPeriodo(mesKeyRet);
   renderRH(mesKey);
   renderLocacoesPeriodo(mesKey, de, ate);
   renderDiagnostico(mesKey);
 
-  // Negociação: cobertura própria (Mar-Jun/26), independente do resto
-  renderNegociacaoResumo(faixaContidaEm(de, ate, COBERTURA_NEGOCIACAO.ini, COBERTURA_NEGOCIACAO.fim) ? mesKey : 'sem-dado', de, ate);
+  const semanaKey = semanaPagamentosParaIntervalo(de, ate);
+  renderPagamentosPeriodo(semanaKey, de, ate);
 
-  // Associados (mov.) na Visão Geral: reingressos + vendas novas do período resolvido
-  const vgAssocEl = document.getElementById('vgAssociadosMov');
-  if(vgAssocEl){
-    const reingressoDoMes = REINGRESSO_HISTORICO.filter(h=>h.mesKey===mesKey);
-    const reingressoQtd = reingressoDoMes.length ? reingressoDoMes[reingressoDoMes.length-1].total : 0;
-    const vendasQtd = mesKey && DADOS_MES[mesKey] ? parseInt(DADOS_MES[mesKey].vendas.associacoesNovas, 10) : 0;
-    if(mesKey && DADOS_MES[mesKey]){
-      vgAssocEl.textContent = reingressoQtd + vendasQtd;
-      document.getElementById('vgAssociadosMovSub').textContent = `${reingressoQtd} reingr. + ${vendasQtd} vendas`;
-    } else {
-      vgAssocEl.textContent = '—';
-      document.getElementById('vgAssociadosMovSub').textContent = 'sem dado no período';
-    }
-  }
+  // Negociação: cobertura própria (Mar-Jun/26)
+  renderNegociacaoResumo(faixaContidaEm(de, ate, COBERTURA_NEGOCIACAO.ini, COBERTURA_NEGOCIACAO.fim) ? mesKey : 'sem-dado', de, ate);
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -2346,13 +2897,12 @@ const DADOS_MES = {
   }
 };
 
-function renderRetencaoPeriodo(mesKey){
-  const m = DADOS_MES[mesKey];
-  if(!m){
-    document.getElementById('retencaoConteudo').innerHTML = `<div class="alert-box"><span>🚫</span><div><b>Não há dados de Retenção para o período selecionado.</b> Temos fechamentos completos de Junho/2026 e Julho/2026 (parcial). Selecione um intervalo dentro de um desses meses.</div></div>`;
+function renderRetencaoPeriodo(mesKeyRet){
+  const r = mesKeyRet ? (RETENCAO_EXTRA_MESES[mesKeyRet] || (DADOS_MES[mesKeyRet] && DADOS_MES[mesKeyRet].retencao)) : null;
+  if(!r){
+    document.getElementById('retencaoConteudo').innerHTML = `<div class="alert-box"><span>🚫</span><div><b>Não há dados de Retenção para o período selecionado.</b> Temos fechamentos completos de Janeiro, Fevereiro, Março, Maio, Junho e Julho/2026 (parcial) — Abril ainda não foi preenchido pela Gerência de RH. Selecione um intervalo dentro de um desses meses.</div></div>`;
     return;
   }
-  const r = m.retencao;
   document.getElementById('retencaoPeriodoTag').textContent = r.periodoTag;
   const kpisHtml = r.kpis.map(k=>`
     <div class="kpi-icon-card">
@@ -2432,10 +2982,26 @@ function fmtDataBR(iso){ const [y,m,d]=iso.split('-'); return `${d}/${m}/${y}`; 
 function renderLocacoesPeriodo(mesKey, de, ate){
   const el = document.getElementById('locacoesConteudo');
   const todos = todosContratosLocacao();
-  const contratos = (de && ate) ? todos.filter(c=>{
+  let contratos = (de && ate) ? todos.filter(c=>{
     const iso = contratoDataISO(c.dataPgto);
     return iso >= de && iso <= ate;
   }) : todos;
+
+  // Se não há contrato exatamente no recorte escolhido, mas o recorte cai dentro de um mês
+  // com contratos conhecidos, mostra o mês inteiro em vez de "sem dados" — evita telas em
+  // branco quando a semana escolhida simplesmente não teve pagamento de locação naqueles dias.
+  let avisoFallback = null;
+  if(!contratos.length && de && ate){
+    const mesResolvido = mesKeyParaIntervalo(de, ate);
+    if(mesResolvido && COBERTURA_MES[mesResolvido]){
+      const {ini, fim} = COBERTURA_MES[mesResolvido];
+      const doMes = todos.filter(c=>{ const iso = contratoDataISO(c.dataPgto); return iso >= ini && iso <= fim; });
+      if(doMes.length){
+        contratos = doMes;
+        avisoFallback = `Nenhum contrato de locação com pagamento exatamente entre ${fmtDataBR(de)} e ${fmtDataBR(ate)} — mostrando o mês inteiro (${DADOS_MES[mesResolvido].label}) abaixo.`;
+      }
+    }
+  }
 
   if(!contratos.length){
     document.getElementById('locacoesPeriodoTag').textContent = 'sem dados no período';
@@ -2452,6 +3018,7 @@ function renderLocacoesPeriodo(mesKey, de, ate){
   const pct = meta ? (realizado/meta*100) : null;
   const qtdContratos = contratos.length;
   const ticketMedio = realizado/qtdContratos;
+  const avisoFallbackHtml = avisoFallback ? `<div class="alert-box" style="margin-bottom:16px;"><span>ℹ️</span><div>${avisoFallback}</div></div>` : '';
 
   // agrupamento por semana (com base na Data de Pagamento)
   const semanasOrdem = ['S1 (01-07)','S2 (08-14)','S3 (15-21)','S4 (22-28)','S5 (29-31)'];
@@ -2485,6 +3052,7 @@ function renderLocacoesPeriodo(mesKey, de, ate){
   const categorias = Object.keys(porCategoria).map((nome,i)=>({nome, valor:porCategoria[nome].valor, qtd:porCategoria[nome].qtd, cor: nome==='Sócio' ? '#00e5a0' : '#3d7bff'}));
 
   el.innerHTML = `
+    ${avisoFallbackHtml}
     <div class="kpi-row-icons cols-4">
       <div class="kpi-icon-card">
         <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(242,183,5,.18); color:var(--gold);">🎯</div><div class="label">Meta do Mês</div></div>
@@ -2518,7 +3086,7 @@ function renderLocacoesPeriodo(mesKey, de, ate){
         <thead><tr><th>Mês</th><th class="num">Meta</th><th class="num">Realizado</th><th class="num">% Atingido</th></tr></thead>
         <tbody id="tabelaHistoricoLocacoes"></tbody>
       </table>
-      <div class="card-meta" style="margin-top:10px;">💡 Guarda o resumo de cada mês importado, sem apagar o histórico anterior. Meta só passou a ser definida a partir de Maio/2026.</div>
+      <div class="card-meta" style="margin-top:10px;">💡 Guarda o resumo de cada mês importado, sem apagar o histórico anterior. Metas orçadas disponíveis desde Janeiro/2026.</div>
     </div>
     <div class="card full">
       <div class="card-label">Acumulado no Ano (Jan → <span id="locacoesAcumuladoMesFim"></span>) — <span id="locacoesAcumuladoTotal" style="color:var(--green); font-weight:900;"></span></div>
@@ -3051,6 +3619,347 @@ function drawObrasEvolucao(elId){
   <div style="margin-top:10px; font-size:12px; color:var(--muted);">Barras roxas = saldo final acumulado do fundo em cada competência (passe o mouse para ver entradas e investimentos do mês)</div>`;
 }
 
+function mudarSubAbaRH(tab){
+  document.getElementById('rhSubRH').style.display = tab==='rh' ? 'block' : 'none';
+  document.getElementById('rhSubDP').style.display = tab==='dp' ? 'block' : 'none';
+  document.getElementById('subtabBtnRH').classList.toggle('active', tab==='rh');
+  document.getElementById('subtabBtnDP').classList.toggle('active', tab==='dp');
+}
+
+function fmtIndicador(v, formato){
+  if(v==null) return '—';
+  if(formato==='pct') return v.toFixed(2).replace('.',',')+'%';
+  if(formato==='moeda') return fmtMilReais(v);
+  if(formato==='int') return Math.round(v).toString();
+  if(formato==='saldo') return (v>0?'+':'') + Math.round(v).toString();
+  return v.toLocaleString('pt-BR', {maximumFractionDigits:1});
+}
+
+function drawSparklineSVG(valores, cor){
+  const W = 170, H = 40, pad = 4;
+  const validos = valores.map((v,i)=>({v,i})).filter(o=>o.v!=null);
+  if(validos.length < 2) return '';
+  const min = Math.min(...validos.map(o=>o.v)), max = Math.max(...validos.map(o=>o.v));
+  const range = (max-min) || 1;
+  const x = i => pad + (i/(valores.length-1))*(W-pad*2);
+  const y = v => H-pad - ((v-min)/range)*(H-pad*2);
+  let path = '';
+  validos.forEach((o,idx)=>{ path += (idx===0?'M':'L') + ` ${x(o.i).toFixed(1)} ${y(o.v).toFixed(1)}`; });
+  let dots = validos.map(o=>`<circle cx="${x(o.i).toFixed(1)}" cy="${y(o.v).toFixed(1)}" r="2.6" fill="${cor}"/>`).join('');
+  const last = validos[validos.length-1];
+  dots += `<circle cx="${x(last.i).toFixed(1)}" cy="${y(last.v).toFixed(1)}" r="3.6" fill="${cor}" stroke="#13151d" stroke-width="1.5"/>`;
+  return `<svg class="kpi-spark-svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
+    <path d="${path}" fill="none" stroke="${cor}" stroke-width="2"/>${dots}
+  </svg>`;
+}
+
+function renderIndicadoresGrid(elId, indicadores, pendentes, grupo){
+  const el = document.getElementById(elId);
+  const cards = Object.keys(indicadores).map(chave=>{
+    const ind = indicadores[chave];
+    const validos = ind.valores.filter(v=>v!=null);
+    const atual = validos[validos.length-1];
+    const anterior = validos.length>1 ? validos[validos.length-2] : null;
+    let deltaHtml = '<span class="muted">sem comparativo</span>';
+    if(anterior!=null && atual!=null){
+      const diff = atual-anterior;
+      let corDelta;
+      if(diff===0){ corDelta = 'var(--muted)'; }
+      else if(ind.formato==='moeda'){ corDelta = 'var(--gold)'; } // custo subir/cair nem sempre é bom/ruim
+      else { const melhorou = ind.invertido ? diff<0 : diff>0; corDelta = melhorou ? 'var(--green)' : 'var(--red)'; }
+      const seta = diff===0 ? '→' : (diff>0 ? '▲' : '▼');
+      const diffTxt = ind.formato==='moeda' ? fmtMilReais(Math.abs(diff)) : (ind.formato==='pct' ? Math.abs(diff).toFixed(2).replace('.',',')+'p.p.' : Math.abs(diff).toLocaleString('pt-BR',{maximumFractionDigits:1}));
+      deltaHtml = `<span style="color:${corDelta};">${seta} ${diffTxt} vs. mês anterior</span>`;
+    }
+    return `
+    <div class="kpi-spark-card" style="cursor:pointer;" onclick="abrirDetalheIndicador('${grupo}','${chave}')" id="card-${grupo}-${chave}">
+      <div class="kpi-spark-label">${ind.label} <span style="float:right; opacity:.5;">🔍</span></div>
+      <div class="kpi-spark-value" style="color:${ind.cor};">${fmtIndicador(atual, ind.formato)}</div>
+      <div class="kpi-spark-delta">${deltaHtml}</div>
+      ${drawSparklineSVG(ind.valores, ind.cor)}
+    </div>`;
+  }).join('');
+
+  const pendentesHtml = (pendentes && pendentes.length) ? `
+    <div class="alert-box" style="margin-top:4px;"><span>🕓</span><div><b>Aguardando dados da Gerência de RH:</b> ${pendentes.join(', ')}. Esses indicadores serão adicionados ao painel assim que forem enviados.</div></div>` : '';
+
+  el.innerHTML = `<div class="kpi-spark-grid">${cards}</div>${pendentesHtml}<div id="detalhe-${grupo}"></div>`;
+}
+
+function gerarLeituraExecutiva(ind){
+  const validos = ind.valores.map((v,i)=>({v,i})).filter(o=>o.v!=null);
+  const atual = validos[validos.length-1];
+  const primeiro = validos[0];
+  const variacaoTotal = atual.v - primeiro.v;
+  const mesAtual = MESES_RH[atual.i], mesPrimeiro = MESES_RH[primeiro.i];
+  const valorAtualTxt = fmtIndicador(atual.v, ind.formato);
+  const valorPrimeiroTxt = fmtIndicador(primeiro.v, ind.formato);
+  let tendenciaTxt, corTendencia;
+  if(ind.formato==='moeda'){
+    // custo subir/cair nem sempre é bom ou ruim (pode refletir crescimento de quadro) — linguagem neutra
+    tendenciaTxt = variacaoTotal===0 ? 'estável' : (variacaoTotal>0 ? 'em alta' : 'em queda');
+    corTendencia = variacaoTotal===0 ? 'var(--muted)' : 'var(--gold)';
+  } else {
+    const melhorou = ind.invertido ? variacaoTotal<0 : variacaoTotal>0;
+    tendenciaTxt = variacaoTotal===0 ? 'estável' : (melhorou ? 'melhorando' : 'piorando');
+    corTendencia = variacaoTotal===0 ? 'var(--muted)' : (melhorou ? 'var(--green)' : 'var(--red)');
+  }
+  return `<b>${ind.label}</b> está em <b>${valorAtualTxt}</b> em ${mesAtual}, com tendência <b style="color:${corTendencia};">${tendenciaTxt}</b> desde ${mesPrimeiro} (quando estava em ${valorPrimeiroTxt}). Base: ${validos.length} de ${ind.valores.length} meses com dado (${MESES_RH[0]}-${MESES_RH[MESES_RH.length-1]}).`;
+}
+
+function fmtIndicadorCurto(v, formato){
+  if(v==null) return '—';
+  if(formato==='moeda'){
+    if(Math.abs(v)>=1000000) return 'R$'+(v/1000000).toFixed(2).replace('.',',')+'M';
+    if(Math.abs(v)>=1000) return 'R$'+(v/1000).toFixed(1).replace('.',',')+'mil';
+    return fmtIndicador(v, formato);
+  }
+  return fmtIndicador(v, formato);
+}
+
+function drawIndicadorBarChart(elId, ind){
+  const el = document.getElementById(elId);
+  const dados = ind.valores.map((v,i)=>({mes:MESES_RH[i], v}));
+  const validos = dados.filter(d=>d.v!=null);
+  const W = Math.max(560, dados.length*160), H = 280, padL=70, padR=20, padT=30, padB=44;
+  const vals = validos.map(d=>d.v);
+  const minV = Math.min(0, ...vals), maxV = Math.max(...vals) * 1.25 || 1;
+  const range = maxV - minV || 1;
+  const bw = (W-padL-padR)/dados.length;
+  const y = v => padT + (1-(v-minV)/range)*(H-padT-padB);
+  const y0 = y(0);
+  let gridLine = `<line x1="${padL}" y1="${y0.toFixed(1)}" x2="${W-padR}" y2="${y0.toFixed(1)}" stroke="#40415a" stroke-width="1.2"/>`;
+  let bars = '', labels = '';
+  dados.forEach((d,i)=>{
+    const cx = padL + i*bw + bw/2;
+    labels += `<text x="${cx}" y="${H-padB+22}" text-anchor="middle" fill="#b0b0d0" font-size="12">${d.mes}</text>`;
+    if(d.v==null){
+      labels += `<text x="${cx}" y="${y0-8}" text-anchor="middle" fill="#5c6370" font-size="11">sem dado</text>`;
+      return;
+    }
+    const barW = bw*0.42;
+    const yTop = y(Math.max(d.v,0)), yBot = y(Math.min(d.v,0));
+    const barH = Math.max(yBot-yTop, 2);
+    bars += `<rect x="${(cx-barW/2).toFixed(1)}" y="${yTop.toFixed(1)}" width="${barW.toFixed(1)}" height="${barH.toFixed(1)}" fill="${ind.cor}" rx="3"><title>${MESES_RH[i]}: ${fmtIndicador(d.v, ind.formato)}</title></rect>`;
+    bars += `<text x="${cx}" y="${(d.v>=0?yTop-8:yBot+18)}" text-anchor="middle" fill="${ind.cor}" font-size="12" font-weight="800">${fmtIndicadorCurto(d.v, ind.formato)}</text>`;
+  });
+  el.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="display:block; width:${W}px; height:auto;">
+    ${gridLine}${bars}${labels}
+  </svg>`;
+}
+
+function abrirDetalheIndicador(grupo, chave){
+  const indicadores = grupo==='rh' ? RH_INDICADORES : DP_INDICADORES;
+  const ind = indicadores[chave];
+  const detalheEl = document.getElementById(`detalhe-${grupo}`);
+
+  // destaca visualmente o card selecionado
+  document.querySelectorAll(`#rhSub${grupo.toUpperCase()} .kpi-spark-card`).forEach(c=>c.style.borderColor = 'var(--border)');
+  const cardEl = document.getElementById(`card-${grupo}-${chave}`);
+  if(cardEl) cardEl.style.borderColor = ind.cor;
+
+  const ehFolha = !!ind.folha;
+  const ehJornada = !!ind.jornada;
+
+  let titulo = ind.label;
+  if(ehFolha)   titulo = 'Custo de Folha — Bruto × Líquido × Projeto Olímpico × Desencaixe';
+  if(ehJornada) titulo = 'Jornada e Ponto — Horas Trabalhadas × Horas Falta × Infrações';
+
+  const leitura = ehFolha
+    ? gerarLeituraFolha()
+    : (ehJornada ? gerarLeituraJornada() : gerarLeituraExecutiva(ind));
+
+  const notas = (ehJornada
+      ? ['infracoesPonto','horasTrabalhadas','horasFalta'].map(k=>DP_INDICADORES[k]).filter(x=>x.nota).map(x=>`<b>${x.label}:</b> ${x.nota}`)
+      : (ind.nota ? [ind.nota] : []));
+  const notasHtml = notas.length
+    ? `<div class="alert-box" style="margin-top:10px; border-color:var(--border);"><span>🗒️</span><div>${notas.join('<br>')}</div></div>` : '';
+
+  detalheEl.innerHTML = `
+    <div class="card full" style="margin-top:16px; border-left:4px solid ${ind.cor};">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px;">
+        <div class="card-label" style="font-size:15px;">${ind.icone||'📈'} ${titulo} — ${MESES_RH[0]} a ${MESES_RH[MESES_RH.length-1]}</div>
+        <button onclick="document.getElementById('detalhe-${grupo}').innerHTML=''" style="background:none; border:1px solid var(--border); color:var(--muted); border-radius:6px; padding:4px 10px; font-size:12px; cursor:pointer;">✕</button>
+      </div>
+      <div class="alert-box" style="margin-top:12px;"><span>💡</span><div>${leitura}</div></div>
+      ${notasHtml}
+      ${ehFolha ? `
+      <div style="display:flex; flex-wrap:wrap; gap:16px; margin-top:14px; font-size:12.5px; color:var(--muted);">
+        <span><span style="color:#5c6370;">■</span> <b style="color:var(--text);">Bruto</b> — custo total da folha, com encargos e provisões</span>
+        <span><span style="color:#00e5a0;">■</span> <b style="color:var(--text);">Líquido</b> — valor líquido da folha</span>
+        <span><span style="color:#a855f7;">■</span> <b style="color:var(--text);">Projeto Olímpico</b> — parte coberta por patrocínio/projeto, não sai do caixa da SOGIPA</span>
+        <span><span style="color:#f2b705;">■</span> <b style="color:var(--text);">Desencaixe SOGIPA</b> — o que o clube efetivamente paga do próprio caixa</span>
+      </div>` : ''}
+      ${ehJornada ? `
+      <div style="display:flex; flex-wrap:wrap; gap:16px; margin-top:14px; font-size:12.5px; color:var(--muted);">
+        <span><span style="color:#3d7bff;">■</span> <b style="color:var(--text);">Horas Trabalhadas</b> — escala à esquerda</span>
+        <span><span style="color:#fb923c;">■</span> <b style="color:var(--text);">Horas Falta</b> — escala à direita</span>
+        <span><span style="color:#e8192c;">▬</span> <b style="color:var(--text);">Infrações de Ponto</b> — ocorrências no mês</span>
+      </div>` : ''}
+      <div id="chartDetalhe-${grupo}-${chave}" class="scrollx" style="margin-top:16px;"></div>
+      ${ehFolha ? `<div id="tabelaComparativoFolha" style="margin-top:16px;"></div>` : ''}
+      ${ehJornada ? `<div id="tabelaJornada" style="margin-top:16px;"></div>` : ''}
+    </div>`;
+  if(ehFolha){
+    drawComparativoFolhaChart(`chartDetalhe-${grupo}-${chave}`);
+    renderTabelaComparativoFolha('tabelaComparativoFolha');
+  } else if(ehJornada){
+    drawJornadaChart(`chartDetalhe-${grupo}-${chave}`);
+    renderTabelaJornada('tabelaJornada');
+  } else {
+    drawIndicadorBarChart(`chartDetalhe-${grupo}-${chave}`, ind);
+  }
+  detalheEl.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+// Leitura executiva combinada — custo de folha
+function gerarLeituraFolha(){
+  const b = DP_INDICADORES.custoFolhaBruto.valores, l = DP_INDICADORES.custoFolhaLiq.valores;
+  const d = DP_INDICADORES.custoFolhaDesenc.valores, o = DP_INDICADORES.custoProjOlimpico.valores;
+  const n = MESES_RH.length - 1;
+  const varB = b[n] - b[0], varD = d[n] - d[0];
+  const pctIni = (o[0]/b[0]*100).toFixed(1).replace('.',','), pctFim = (o[n]/b[n]*100).toFixed(1).replace('.',',');
+  return `Em ${MESES_RH[n]}, a folha <b>bruta</b> foi de <b>${fmtIndicador(b[n],'moeda')}</b> e a <b>líquida</b> de <b>${fmtIndicador(l[n],'moeda')}</b>, com <b>desencaixe efetivo da SOGIPA</b> de <b style="color:var(--gold);">${fmtIndicador(d[n],'moeda')}</b>. Desde ${MESES_RH[0]}, o bruto está <b style="color:var(--gold);">${varB>=0?'em alta':'em queda'}</b> (${fmtIndicador(Math.abs(varB),'moeda')}) e o desencaixe <b style="color:var(--gold);">${varD>=0?'em alta':'em queda'}</b> (${fmtIndicador(Math.abs(varD),'moeda')}). A cobertura pelo Projeto Olímpico passou de ${pctIni}% para ${pctFim}% do bruto.`;
+}
+
+// Leitura executiva combinada — jornada e ponto
+function gerarLeituraJornada(){
+  const t = DP_INDICADORES.horasTrabalhadas.valores, f = DP_INDICADORES.horasFalta.valores;
+  const inf = DP_INDICADORES.infracoesPonto.valores;
+  const n = MESES_RH.length - 1;
+  const pct = i => t[i] ? (f[i]/t[i]*100) : null;
+  const pIni = pct(0), pFim = pct(n);
+  const melhor = pFim < pIni;
+  const infVal = inf.map((v,i)=>({v,i})).filter(o=>o.v!=null);
+  const ultInf = infVal[infVal.length-1];
+  return `Em ${MESES_RH[n]} foram <b>${fmtIndicador(t[n],'num')}h trabalhadas</b> contra <b>${fmtIndicador(f[n],'num')}h de falta</b> — ou seja, <b style="color:${melhor?'var(--green)':'var(--red)'};">${pFim.toFixed(2).replace('.',',')}%</b> da jornada, ante ${pIni.toFixed(2).replace('.',',')}% em ${MESES_RH[0]}. As horas trabalhadas cresceram ${fmtIndicador(t[n]-t[0],'num')}h no período, acompanhando o aumento do quadro. <b>Infrações de ponto</b> em ${MESES_RH[ultInf.i]}: ${ultInf.v} ocorrências.`;
+}
+
+// Gráfico combinado — jornada e ponto (eixo duplo)
+function drawJornadaChart(elId){
+  const el = document.getElementById(elId);
+  const t = DP_INDICADORES.horasTrabalhadas.valores, f = DP_INDICADORES.horasFalta.valores;
+  const inf = DP_INDICADORES.infracoesPonto.valores;
+  const n = MESES_RH.length;
+  const W = Math.max(700, n*150), H = 330, padL=78, padR=68, padT=30, padB=48;
+  const maxT = Math.max(...t.filter(v=>v!=null)) * 1.18;
+  const maxF = Math.max(...f.filter(v=>v!=null)) * 1.35;
+  const grupoW = (W-padL-padR)/n;
+  const yT = v => padT + (1-v/maxT)*(H-padT-padB);
+  const yF = v => padT + (1-v/maxF)*(H-padT-padB);
+  const y0 = yT(0);
+  let grid = '';
+  for(let s=0; s<=3; s++){
+    const v = maxT*s/3, yy = yT(v);
+    grid += `<line x1="${padL}" y1="${yy.toFixed(1)}" x2="${W-padR}" y2="${yy.toFixed(1)}" stroke="#40415a" stroke-width="1"/>`;
+    grid += `<text x="${padL-8}" y="${(yy+4).toFixed(1)}" text-anchor="end" fill="#3d7bff" font-size="11">${(v/1000).toFixed(0)}k h</text>`;
+    grid += `<text x="${W-padR+8}" y="${(yy+4).toFixed(1)}" text-anchor="start" fill="#fb923c" font-size="11">${(maxF*s/3).toFixed(0)}h</text>`;
+  }
+  let bars = '', labels = '', linha = '', pontos = '';
+  const barW = grupoW*0.30;
+  for(let i=0;i<n;i++){
+    const gx = padL + i*grupoW + grupoW*0.5;
+    if(t[i]!=null){
+      const yy = yT(t[i]);
+      bars += `<rect x="${(gx-barW-3).toFixed(1)}" y="${yy.toFixed(1)}" width="${barW.toFixed(1)}" height="${(y0-yy).toFixed(1)}" fill="#3d7bff" rx="3"><title>Horas Trabalhadas — ${MESES_RH[i]}: ${fmtIndicador(t[i],'num')}h</title></rect>`;
+      bars += `<text x="${(gx-barW/2-3).toFixed(1)}" y="${(yy-7).toFixed(1)}" text-anchor="middle" fill="#3d7bff" font-size="11" font-weight="800">${(t[i]/1000).toFixed(1).replace('.',',')}k</text>`;
+    }
+    if(f[i]!=null){
+      const yy = yF(f[i]);
+      bars += `<rect x="${(gx+3).toFixed(1)}" y="${yy.toFixed(1)}" width="${barW.toFixed(1)}" height="${(y0-yy).toFixed(1)}" fill="#fb923c" rx="3"><title>Horas Falta — ${MESES_RH[i]}: ${fmtIndicador(f[i],'num')}h</title></rect>`;
+      bars += `<text x="${(gx+barW/2+3).toFixed(1)}" y="${(yy-7).toFixed(1)}" text-anchor="middle" fill="#fb923c" font-size="11" font-weight="800">${Math.round(f[i])}</text>`;
+    }
+    if(inf[i]!=null){
+      const yy = yF(inf[i]/Math.max(...inf.filter(v=>v!=null))*maxF*0.62);
+      pontos += `<circle cx="${gx.toFixed(1)}" cy="${yy.toFixed(1)}" r="4.5" fill="#e8192c"><title>Infrações de Ponto — ${MESES_RH[i]}: ${inf[i]}</title></circle>`;
+      pontos += `<text x="${gx.toFixed(1)}" y="${(yy-10).toFixed(1)}" text-anchor="middle" fill="#e8192c" font-size="11" font-weight="800">${inf[i]}</text>`;
+      linha += `${gx.toFixed(1)},${yy.toFixed(1)} `;
+    }
+    labels += `<text x="${gx.toFixed(1)}" y="${H-padB+22}" text-anchor="middle" fill="#b0b0d0" font-size="12">${MESES_RH[i]}</text>`;
+  }
+  el.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="display:block; width:${W}px; height:auto;">
+    ${grid}
+    <line x1="${padL}" y1="${y0.toFixed(1)}" x2="${W-padR}" y2="${y0.toFixed(1)}" stroke="#5c6370" stroke-width="1.4"/>
+    ${bars}<polyline points="${linha.trim()}" fill="none" stroke="#e8192c" stroke-width="2" stroke-dasharray="5 3"/>${pontos}${labels}
+  </svg>`;
+}
+
+function renderTabelaJornada(elId){
+  const el = document.getElementById(elId);
+  const t = DP_INDICADORES.horasTrabalhadas.valores, f = DP_INDICADORES.horasFalta.valores;
+  const inf = DP_INDICADORES.infracoesPonto.valores;
+  el.innerHTML = `<table>
+    <thead><tr><th>Competência</th><th class="num">Horas Trabalhadas</th><th class="num">Horas Falta</th><th class="num">% Falta s/ Jornada</th><th class="num">Infrações de Ponto</th></tr></thead>
+    <tbody>
+      ${MESES_RH.map((mes,i)=>{
+        const pct = (t[i] && f[i]!=null) ? (f[i]/t[i]*100).toFixed(2).replace('.',',')+'%' : '—';
+        return `<tr><td>${mes}</td><td class="num" style="color:#3d7bff;">${fmtIndicador(t[i],'num')}</td><td class="num" style="color:#fb923c;">${fmtIndicador(f[i],'num')}</td><td class="num">${pct}</td><td class="num" style="color:${inf[i]==null?'var(--muted)':'#e8192c'};">${inf[i]==null?'—':inf[i]}</td></tr>`;
+      }).join('')}
+    </tbody>
+  </table>`;
+}
+
+function drawComparativoFolhaChart(elId){
+  const el = document.getElementById(elId);
+  const bruto = DP_INDICADORES.custoFolhaBruto.valores;
+  const liquido = DP_INDICADORES.custoFolhaLiq.valores;
+  const olimpico = DP_INDICADORES.custoProjOlimpico.valores;
+  const desencaixe = DP_INDICADORES.custoFolhaDesenc.valores;
+  const n = MESES_RH.length;
+  const W = Math.max(760, n*180), H = 340, padL=80, padR=20, padT=28, padB=44;
+  const maxV = Math.max(...bruto) * 1.15;
+  const grupoW = (W-padL-padR)/n;
+  const y = v => padT + (1-v/maxV)*(H-padT-padB);
+  const y0 = y(0);
+  let gridLines = '';
+  for(let s=0; s<=3; s++){
+    const v = maxV*s/3, yy = y(v);
+    gridLines += `<line x1="${padL}" y1="${yy.toFixed(1)}" x2="${W-padR}" y2="${yy.toFixed(1)}" stroke="#40415a" stroke-width="1"/>`;
+    gridLines += `<text x="${padL-8}" y="${(yy+4).toFixed(1)}" text-anchor="end" fill="#b0b0d0" font-size="11">${fmtIndicadorCurto(v,'moeda')}</text>`;
+  }
+  let bars = '', labels = '';
+  const series = [
+    {vals:bruto, cor:'#5c6370', nome:'Bruto'},
+    {vals:liquido, cor:'#00e5a0', nome:'Líquido'},
+    {vals:olimpico, cor:'#a855f7', nome:'Projeto Olímpico'},
+    {vals:desencaixe, cor:'#f2b705', nome:'Desencaixe SOGIPA'},
+  ];
+  const barW = (grupoW*0.84)/series.length;
+  for(let i=0;i<n;i++){
+    const gx = padL + i*grupoW + grupoW*0.08;
+    series.forEach((s,si)=>{
+      const v = s.vals[i];
+      if(v==null) return;
+      const bx = gx + si*barW;
+      const yTop = y(v);
+      const barH = y0-yTop;
+      bars += `<rect x="${bx.toFixed(1)}" y="${yTop.toFixed(1)}" width="${(barW*0.86).toFixed(1)}" height="${barH.toFixed(1)}" fill="${s.cor}" rx="2"><title>${s.nome} — ${MESES_RH[i]}: ${fmtIndicador(v,'moeda')}</title></rect>`;
+    });
+    labels += `<text x="${(gx+grupoW*0.84/2).toFixed(1)}" y="${H-padB+20}" text-anchor="middle" fill="#b0b0d0" font-size="12">${MESES_RH[i]}</text>`;
+  }
+  el.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="display:block; width:${W}px; height:auto;">
+    <line x1="${padL}" y1="${y0.toFixed(1)}" x2="${W-padR}" y2="${y0.toFixed(1)}" stroke="#5c6370" stroke-width="1.4"/>
+    ${gridLines}${bars}${labels}
+  </svg>`;
+}
+
+function renderTabelaComparativoFolha(elId){
+  const el = document.getElementById(elId);
+  const bruto = DP_INDICADORES.custoFolhaBruto.valores;
+  const liquido = DP_INDICADORES.custoFolhaLiq.valores;
+  const olimpico = DP_INDICADORES.custoProjOlimpico.valores;
+  const desencaixe = DP_INDICADORES.custoFolhaDesenc.valores;
+  el.innerHTML = `<table>
+    <thead><tr><th>Competência</th><th class="num">Bruto</th><th class="num">Líquido</th><th class="num">Projeto Olímpico</th><th class="num">Desencaixe SOGIPA</th><th class="num">% coberto por projeto</th></tr></thead>
+    <tbody>
+      ${MESES_RH.map((mes,i)=>{
+        const pct = bruto[i] ? (olimpico[i]/bruto[i]*100).toFixed(1).replace('.',',')+'%' : '—';
+        return `<tr><td>${mes}</td><td class="num">${fmtBRL(bruto[i])}</td><td class="num" style="color:var(--green);">${fmtBRL(liquido[i])}</td><td class="num" style="color:#a855f7;">${fmtBRL(olimpico[i])}</td><td class="num" style="color:var(--gold); font-weight:700;">${fmtBRL(desencaixe[i])}</td><td class="num">${pct}</td></tr>`;
+      }).join('')}
+    </tbody>
+  </table>`;
+}
+
 function renderRH(mesKey){
   setHEPeriodo(mesKey);
   renderVisaoGeralHE();
@@ -3178,17 +4087,10 @@ function renderRHRankingCC(selectedIdx){
   `;
 }
 
-function renderVendasPeriodo(mesKey){
-  const m = DADOS_MES[mesKey];
-  if(!m){
-    document.getElementById('vendasConteudo').innerHTML = `<div class="alert-box"><span>🚫</span><div><b>Não há dados de Vendas para o período selecionado.</b> Temos fechamentos completos de Junho/2026 e Julho/2026 (parcial). Selecione um intervalo dentro de um desses meses.</div></div>`;
-    const metasEl = document.getElementById('vendasMetasConteudo');
-    if(metasEl) metasEl.innerHTML = '';
-    return;
-  }
-  const v = m.vendas;
+function pintarVendas(v, aviso){
   const el = document.getElementById('vendasConteudo');
   let html = '';
+  if(aviso) html += `<div class="alert-box" style="border-color:var(--gold);"><span>ℹ️</span><div>${aviso}</div></div>`;
   if(v.alerta) html += `<div class="alert-box"><span>🆕</span><div>${v.alerta}</div></div>`;
   html += `
     <div class="grid-3">
@@ -3264,7 +4166,7 @@ function renderFunilVendas(de, ate){
     : VENDAS_FUNIL_DIARIO;
 
   if(!dias.length){
-    el.innerHTML = `<div class="alert-box"><span>🚫</span><div><b>Não há dados do funil de vendas para o período selecionado.</b> Temos registros diários de 06 a 10/07/2026.</div></div>`;
+    el.innerHTML = `<div class="alert-box"><span>🚫</span><div><b>Não há dados do funil de vendas para o período selecionado.</b> Temos registros diários de 06 a 14/07/2026.</div></div>`;
     return;
   }
 
@@ -3646,7 +4548,9 @@ function atualizarDataAtual(){
 atualizarDataAtual();
 drawPagamentosSemanal('pagChartSemanal');
 renderObras();
-popularFiltroSemanas();
+renderIndicadoresGrid('rhIndicadoresConteudo', RH_INDICADORES, RH_PENDENTES, 'rh');
+renderIndicadoresGrid('dpIndicadoresConteudo', DP_INDICADORES, DP_PENDENTES, 'dp');
+popularFiltroMesInicial();
 </script>
 </body>
 </html>
