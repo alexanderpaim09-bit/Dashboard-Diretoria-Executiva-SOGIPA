@@ -143,6 +143,7 @@
 
   .kpi-row-icons{ display:grid; grid-template-columns:repeat(5,1fr); gap:16px; margin-bottom:28px; }
   .kpi-row-icons.cols-4{ grid-template-columns:repeat(4,1fr); }
+  .kpi-row-icons.cols-3{ grid-template-columns:repeat(3,1fr); }
   .kpi-row-icons.cols-6{ grid-template-columns:repeat(6,1fr); }
   .kpi-row-icons.cols-5{ grid-template-columns:repeat(5,1fr); }
   .kpi-icon-card{ display:flex; flex-direction:column; align-items:flex-start; gap:0; padding:20px; background:var(--card); border:1px solid var(--border); border-radius:12px; min-height:160px; }
@@ -337,7 +338,7 @@
     .sidebar-logo .sub{ display:none; }
     .nav-item{ padding:13px 14px; font-size:14px; gap:10px; }
     .sidebar-foot{ display:none; }
-    .kpi-row-icons, .kpi-row-icons.cols-4, .kpi-row-icons.cols-6, .kpi-row-icons.cols-5, .kpi-grid.cols-5{ grid-template-columns:repeat(3,1fr); }
+    .kpi-row-icons, .kpi-row-icons.cols-4, .kpi-row-icons.cols-3, .kpi-row-icons.cols-6, .kpi-row-icons.cols-5, .kpi-grid.cols-5{ grid-template-columns:repeat(3,1fr); }
     .grid-3{ grid-template-columns:1fr; }
     .kpi-grid{grid-template-columns:repeat(2,1fr);}
     .grid-2, .grid-2.reverse{grid-template-columns:1fr;}
@@ -385,7 +386,7 @@
     .content{ padding:20px 16px 50px; }
     .section-title{ font-size:17px; margin:24px 0 12px; }
 
-    .kpi-row-icons, .kpi-row-icons.cols-4, .kpi-row-icons.cols-6, .kpi-row-icons.cols-5, .kpi-grid, .kpi-grid.cols-5{ grid-template-columns:repeat(2,1fr); gap:10px; }
+    .kpi-row-icons, .kpi-row-icons.cols-4, .kpi-row-icons.cols-3, .kpi-row-icons.cols-6, .kpi-row-icons.cols-5, .kpi-grid, .kpi-grid.cols-5{ grid-template-columns:repeat(2,1fr); gap:10px; }
     .kpi-icon-card{ padding:14px; min-height:auto; }
     .kpi-icon-info .value{ font-size:22px; }
     .kpi-icon-info .label{ font-size:10.5px; }
@@ -402,7 +403,7 @@
   }
 
   @media (max-width:420px){
-    .kpi-row-icons, .kpi-row-icons.cols-4, .kpi-row-icons.cols-6, .kpi-row-icons.cols-5, .kpi-grid, .kpi-grid.cols-5{ grid-template-columns:1fr; }
+    .kpi-row-icons, .kpi-row-icons.cols-4, .kpi-row-icons.cols-3, .kpi-row-icons.cols-6, .kpi-row-icons.cols-5, .kpi-grid, .kpi-grid.cols-5{ grid-template-columns:1fr; }
     .mini-stat-label{ font-size:8.7px; letter-spacing:.2px; }
     .mini-stat-value{ font-size:14px; }
   }
@@ -710,7 +711,21 @@
 
     <!-- ══════════════════ PAGAMENTOS ══════════════════ -->
     <div class="page-section" id="page-pagamentos">
-      <div class="section-title">Pagamentos <span class="tag" id="pagPeriodoTag" style="background:rgba(136,136,170,.15); color:var(--muted);">28/06 a 05/07/2026</span><div class="line"></div></div>
+      <div class="section-title">Pagamentos <span class="tag" id="pagPeriodoTag" style="background:rgba(136,136,170,.15); color:var(--muted);">—</span><div class="line"></div>
+        <span class="tag" style="background:rgba(0,229,160,.15); color:var(--green); font-weight:700; margin-left:10px;">🔒 LGPD</span>
+      </div>
+      <div class="card full" style="border-left:4px solid var(--green); margin-bottom:16px;">
+        <div style="display:flex; gap:12px; align-items:flex-start;">
+          <span style="font-size:20px; line-height:1;">🔒</span>
+          <div style="font-size:13px; line-height:1.75; color:var(--text);">
+            <b style="color:var(--green);">Adequado à LGPD (Lei nº 13.709/2018).</b>
+            Este relatório contém pagamentos a <b>pessoas físicas</b> — prestadores de serviço, atletas e colaboradores.
+            Para adequação à lei, os <b>nomes completos são ocultados</b> e exibidos apenas por iniciais, e os
+            <b>números de CPF são integralmente suprimidos</b>. Pessoas jurídicas (empresas, órgãos públicos e entidades)
+            seguem identificadas normalmente, por não configurarem dado pessoal.
+          </div>
+        </div>
+      </div>
       <div id="pagAvisoSemDados"></div>
 
       <div class="kpi-row-icons cols-4">
@@ -758,6 +773,18 @@
       <div class="card full">
         <div class="card-label">Quantidade e Valor por Banco / Conta Utilizada no Período</div>
         <div id="tabelaBancos" class="scrollx"></div>
+      </div>
+
+      <div class="section-title" style="margin-top:26px;">Histórico Mensal de Pagamentos<div class="line"></div></div>
+      <div class="card full">
+        <div class="card-label">Comparativo entre os Meses Fechados</div>
+        <div class="scrollx" style="margin-top:12px;">
+          <table>
+            <thead><tr><th>Competência</th><th class="num">Lançamentos</th><th class="num">Valor Total</th><th class="num">Ticket Médio</th><th class="num">Fornecedores</th><th class="num">Acima R$ 5 mil</th><th class="num">Até R$ 5 mil</th></tr></thead>
+            <tbody id="tabelaHistoricoPagamentos"></tbody>
+          </table>
+        </div>
+        <div class="card-meta" style="margin-top:10px;">💡 Fechamentos mensais completos da Controladoria. 🔒 Nomes de pessoa física ocultados e CPFs suprimidos para adequação à LGPD.</div>
       </div>
     </div>
 
@@ -836,8 +863,12 @@
       </div>
       <div id="rhSubDP" style="display:none;">
         <div id="dpIndicadoresConteudo"></div>
-        <div class="section-title" style="margin-top:24px;">Horas Extras <span class="tag" style="background:rgba(136,136,170,.15); color:var(--muted);">Junho/2026</span><div class="line"></div></div>
-        <div id="rhConteudo"></div>
+        <div id="heBloco" style="display:none;">
+          <div class="section-title" style="margin-top:24px;">Horas Extras <span class="tag" style="background:rgba(136,136,170,.15); color:var(--muted);">Junho/2026</span><div class="line"></div>
+            <button onclick="document.getElementById('heBloco').style.display='none'" style="background:none; border:1px solid var(--border); color:var(--muted); border-radius:6px; padding:4px 10px; font-size:12px; cursor:pointer; margin-left:10px;">✕</button>
+          </div>
+          <div id="rhConteudo"></div>
+        </div>
       </div>
     </div>
 
@@ -1086,6 +1117,25 @@ const OBRAS_FUNDO = {
   totalRecebido: 3049994.17,
   totalInvestido: 790553.80,
   saldoDisponivel: 2259440.37,
+  // ── Posição patrimonial (fonte: Dashboard Executivo Índices Construtivos, 16/07/2026) ──
+  areaTotal: 118156.09,
+  areaComissao: 5907.80,
+  areaLiquida: 112248.29,
+  areaVendida: 15432.43,
+  areaDisponivel: 96815.86,
+  potencialTotal: 96360000,
+  aReceber: 845000.00,
+  contabilizadoVendas: 13003904,
+  pctEndividamento: 76.5,
+  pctInvestimentos: 23.5,
+  pagamentoEndividamento: 9950000,
+  // Nomes de pessoa física abreviados por LGPD (MG), empresas mantidas
+  empreendimentos: [
+    {nome:'Orbis Participações',   area:4867.04, valor:4350389, cor:'#3d7bff'},
+    {nome:'Phoenix Participações', area:4867.04, valor:4350389, cor:'#00e5a0'},
+    {nome:'Fibra Participações',   area:1500.00, valor:1344294, cor:'#06b6d4'},
+    {nome:'MG',                    area:4198.35, valor:2958831, cor:'#a855f7'},
+  ],
   origens: [
     {nome:'Saldo Inicial (pós quitação de dívida)', valor:453789.70, cor:'#3d7bff'},
     {nome:'Fibra', valor:137373.72, cor:'#00e5a0'},
@@ -1336,7 +1386,8 @@ const RH_INDICADORES = {
   hht:         {label:'HHT (Horas de Treinamento)', unidade:'h', cor:'#a855f7', valores:[30,41,107,240,104,189], meta:null, formato:'int',
                 nota:'Pela base estratégica do clube, é um indicador de <b>tendência sempre a melhorar</b>. Ainda não há meta definida.'},
 };
-const RH_PENDENTES = ['Aprovação Contrato de Experiência', 'Participação em Atividades de Endomarketing'];
+// Avisos de pendências removidos a pedido da diretoria (não haverá esses dados até a apresentação)
+const RH_PENDENTES = [];
 RH_INDICADORES.saldoLiquido = {
   label:'Saldo Líquido (Contratações)', unidade:'pessoas', cor:'#00e5a0',
   valores: RH_INDICADORES.admitidos.valores.map((a,i)=>{
@@ -1346,6 +1397,14 @@ RH_INDICADORES.saldoLiquido = {
   meta:null, formato:'saldo', derivado:true,
 };
 
+// Séries do custo de folha — exibidas juntas num único card interativo
+const FOLHA_DADOS = {
+  bruto:      {nome:'Bruto',             cor:'#5c6370', vals:[1098330.57,1053585.41,1050373.01,1100209.29,1173367.33,1136222.27]},
+  liquido:    {nome:'Líquido',           cor:'#00e5a0', vals:[393679.89,422287.91,468012.16,533063.30,568958.27,534681.54]},
+  olimpico:   {nome:'Projeto Olímpico',  cor:'#a855f7', vals:[43808.77,48291.52,52841.18,60000.63,59108.83,58660.81]},
+  desencaixe: {nome:'Desencaixe SOGIPA', cor:'#f2b705', vals:[356125.74,379400.68,421914.29,473062.67,509849.44,476020.73]},
+};
+
 const DP_INDICADORES = {
   infracoesPonto:   {label:'Infrações de Ponto', unidade:'ocorr.', cor:'#e8192c', valores:[91,105,111,78,73,null], meta:null, formato:'int', invertido:true, jornada:true,
                      nota:'O indicador é impactado principalmente por <b>demandas não planejadas</b> — reuniões, serviços e atividades que surgem em cima da hora e acabam afetando a carga horária.'},
@@ -1353,13 +1412,12 @@ const DP_INDICADORES = {
   horasFalta:       {label:'Horas Falta', unidade:'h', cor:'#fb923c', valores:[391.70,337.06,141.87,359.00,572.00,396.77], meta:null, formato:'num', invertido:true, jornada:true,
                      nota:'Quanto menor, melhor.'},
   atestados:        {label:'Atestados', unidade:'h', cor:'#06b6d4', valores:[227.04,597.01,438.23,487.68,356.21,594.05], meta:null, formato:'num', invertido:true},
+  horasExtras:      {label:'Horas Extras', unidade:'R$', cor:'#e8192c', valores:[28354.98,23094.10,15546.18,40724.35,56288.44,42038.99], meta:null, formato:'moeda', invertido:true, he:true},
   custoTerceiros:   {label:'Custo Terceiros', unidade:'R$', cor:'#fb923c', valores:[191232.95,157011.13,180470.29,103701.14,98160.89,87734.63], meta:null, formato:'moeda', invertido:true},
-  custoFolhaBruto:  {label:'Custo Folha — Bruto', unidade:'R$', cor:'#3d7bff', valores:[1098330.57,1053585.41,1050373.01,1100209.29,1173367.33,1136222.27], meta:null, formato:'moeda', folha:true},
-  custoFolhaLiq:    {label:'Custo Folha — Líquido', unidade:'R$', cor:'#00e5a0', valores:[393679.89,422287.91,468012.16,533063.30,568958.27,534681.54], meta:null, formato:'moeda', folha:true},
-  custoFolhaDesenc: {label:'Custo Folha — Desencaixe (SOGIPA)', unidade:'R$', cor:'#f2b705', valores:[356125.74,379400.68,421914.29,473062.67,509849.44,476020.73], meta:null, formato:'moeda', folha:true},
-  custoProjOlimpico:{label:'Custo Projeto Olímpico', unidade:'R$', cor:'#a855f7', valores:[43808.77,48291.52,52841.18,60000.63,59108.83,58660.81], meta:null, formato:'moeda', folha:true},
+  custoFolha:       {label:'Custo de Folha', unidade:'R$', cor:'#3d7bff', valores:FOLHA_DADOS.bruto.vals, meta:null, formato:'moeda', folha:true,
+                     subvalores:['liquido','olimpico','desencaixe']},
 };
-const DP_PENDENTES = ['Reclamatórias Trabalhistas - Valor', 'Participação Plano de Saúde (custo/nº vidas)', 'Ocorrências'];
+const DP_PENDENTES = [];
 
 const HE_POR_MES = {
   jun2026: {
@@ -2191,15 +2249,15 @@ selectView('operacional');
 const PAGE_TITLES = {
   visaogeral:  {t:'Visão Geral', s:'Gestão integrada · Junho/2026'},
   diagnostico: {t:'Diagnóstico Gerencial', s:'Relatório gerencial para gestão da diretoria'},
-  fluxocaixa:  {t:'Fluxo de Caixa', s:'Operacional · Investimento · Financiamento'},
-  pagamentos:  {t:'Pagamentos', s:'Controle de pagamentos e fornecedores · Junho/2026'},
-  negociacao:  {t:'Negociação', s:'Recuperação de inadimplência · Mar-Mai/2026'},
-  reingresso:  {t:'Reingresso', s:'Associados reingressantes · 01 a 11/07/2026'},
-  vendas:      {t:'Vendas', s:'Associações novas · 01 a 26/jun/2026'},
-  retencao:    {t:'Retenção', s:'Desligamentos, retenção e permanência · Junho/2026'},
-  rh:          {t:'RH', s:'Horas Extras · Junho/2026'},
+  fluxocaixa:  {t:'Fluxo de Caixa', s:'Operacional · Investimento · Financiamento · Jan-Jul/2026'},
+  pagamentos:  {t:'Pagamentos', s:'Controle de pagamentos e fornecedores · Jan-Jun/2026'},
+  negociacao:  {t:'Negociação', s:'Recuperação de inadimplência · Mar-Jun/2026'},
+  reingresso:  {t:'Reingresso', s:'Associados reingressantes · Jan-Jul/2026'},
+  vendas:      {t:'Vendas', s:'Associações novas e metas · Jan-Jul/2026'},
+  retencao:    {t:'Retenção', s:'Desligamentos, retenção e permanência · Jan-Jul/2026'},
+  rh:          {t:'RH', s:'Indicadores de RH e DP · Jan-Jun/2026'},
   locacoes:    {t:'Locações', s:'Locação de espaços · Junho/2026'},
-  obras:       {t:'Obras', s:'Aguardando dados'},
+  obras:       {t:'Obras', s:'Fundo Índices Construtivos · Posição em 16/07/2026'},
 };
 
 const navItems = document.querySelectorAll('.nav-item');
@@ -2215,6 +2273,220 @@ for(let i=0;i<navItems.length;i++){
     document.getElementById('pageBreadcrumbSub').textContent = PAGE_TITLES[page].s;
   });
 }
+
+// ═══════════════════════════════════════════════════════════
+// DADOS — PAGAMENTOS POR MÊS (fonte: Relatório de Pagamentos Total, Controladoria)
+// Cobertura própria (COBERTURA_PAGAMENTOS): Jan a Jun/2026 — fechamentos mensais completos.
+// LGPD: CPFs removidos e nomes de pessoa física reduzidos a iniciais.
+// ═══════════════════════════════════════════════════════════
+const PAGAMENTOS_MESES = {
+  jan2026: {
+    label:'Janeiro/2026', qtd:640, total:4292651.46,
+    maiorQtd:107, maiorTotal:3614286.69, menorQtd:533, menorTotal:678364.77,
+    fornecedoresDistintos:300,
+    top:[
+      {nome:'E.F.B. (pessoa física)', qtd:1, valor:814475.50, pct:18.97},
+      {nome:'Folha Pagamento', qtd:48, valor:782784.39, pct:18.24},
+      {nome:'Secretaria da Receita Federal', qtd:4, valor:576554.94, pct:13.43},
+      {nome:'3S Solucoes em Servicos e Seguranca LTDA', qtd:6, valor:205334.99, pct:4.78},
+      {nome:'Caixa Economica Federal', qtd:4, valor:138155.60, pct:3.22},
+      {nome:'TOP Service Serviços e Sistemas LTDA', qtd:6, valor:123080.01, pct:2.87},
+      {nome:'Departamento Municipal de Agua e Esgotos', qtd:8, valor:97001.46, pct:2.26},
+      {nome:'Splenda Parus Refeições S.A', qtd:7, valor:87858.59, pct:2.05},
+      {nome:'Green Field Gramados Sinteticos', qtd:6, valor:78386.00, pct:1.83},
+      {nome:'Unimed Porto Alegre Soc. Coop. de Trabalho M', qtd:6, valor:76383.20, pct:1.78},
+      {nome:'Companhia Estadual de Distribuição de Energi', qtd:3, valor:66734.91, pct:1.55},
+      {nome:'Mercadopago.com Representacoes Ltda.', qtd:53, valor:64002.53, pct:1.49},
+      {nome:'Copel Comercializacao S.a.', qtd:1, valor:46681.12, pct:1.09},
+      {nome:'MYR Comercio de Artigos Pedagogicos LTDA', qtd:1, valor:37389.18, pct:0.87},
+      {nome:'VT Solucoes Administracao e Servicos LTDA', qtd:2, valor:34836.76, pct:0.81},
+    ],
+    bancos:[
+      {nome:'BANRISUL', qtd:567, total:3162393.11},
+      {nome:'ÍNDICES CONS', qtd:2, total:817030.00},
+      {nome:'BANCO DO BR', qtd:40, total:139699.22},
+      {nome:'PROJETO OLIM', qtd:9, total:100620.84},
+      {nome:'CBC BB EDITAL', qtd:1, total:37389.18},
+      {nome:'ALTO RENDIME', qtd:4, total:17043.20},
+      {nome:'PROJ SOGIPA', qtd:3, total:10250.00},
+      {nome:'Caixa Sogipa', qtd:14, total:8225.91},
+    ],
+  },
+  fev2026: {
+    label:'Fevereiro/2026', qtd:632, total:4068516.44,
+    maiorQtd:107, maiorTotal:3455769.76, menorQtd:525, menorTotal:612746.68,
+    fornecedoresDistintos:275,
+    top:[
+      {nome:'Folha Pagamento', qtd:58, valor:656397.31, pct:16.13},
+      {nome:'E.F.B. (pessoa física)', qtd:1, valor:504712.94, pct:12.41},
+      {nome:'Secretaria da Receita Federal', qtd:10, valor:498691.63, pct:12.26},
+      {nome:'M.R.S. (pessoa física)', qtd:3, valor:316626.79, pct:7.78},
+      {nome:'TOP Service Serviços e Sistemas LTDA', qtd:8, valor:173450.49, pct:4.26},
+      {nome:'3S Solucoes em Servicos e Seguranca LTDA', qtd:4, valor:149937.63, pct:3.69},
+      {nome:'Departamento Municipal de Agua e Esgotos', qtd:8, valor:118239.57, pct:2.91},
+      {nome:'Caixa Economica Federal', qtd:6, valor:105122.81, pct:2.58},
+      {nome:'Splenda Parus Refeições S.A', qtd:9, valor:97414.92, pct:2.39},
+      {nome:'Unimed Porto Alegre Soc. Coop. de Trabalho M', qtd:6, valor:91960.78, pct:2.26},
+      {nome:'Companhia Estadual de Distribuição de Energi', qtd:3, valor:90029.90, pct:2.21},
+      {nome:'C.V.S. (pessoa física)', qtd:1, valor:72222.00, pct:1.78},
+      {nome:'L.A.S. (pessoa física)', qtd:1, valor:72222.00, pct:1.78},
+      {nome:'Capitale Energia Comercializadora Ltda.', qtd:1, valor:39898.99, pct:0.98},
+      {nome:'VT Solucoes Administracao e Servicos LTDA', qtd:2, valor:37634.64, pct:0.93},
+    ],
+    bancos:[
+      {nome:'BANRISUL', qtd:579, total:2940090.76},
+      {nome:'ÍNDICES CONS', qtd:13, total:989090.86},
+      {nome:'PROJETO OLIM', qtd:4, total:32985.97},
+      {nome:'PATROCÍNIO A', qtd:7, total:28431.82},
+      {nome:'CBC EDIT 11 R', qtd:1, total:25563.34},
+      {nome:'ALTO RENDIME', qtd:5, total:24543.20},
+      {nome:'Caixa Sogipa', qtd:19, total:15519.98},
+      {nome:'PROJ SOGIPA', qtd:3, total:10250.00},
+      {nome:'BANCO DO BR', qtd:1, total:2040.51},
+    ],
+  },
+  mar2026: {
+    label:'Março/2026', qtd:745, total:4074229.43,
+    maiorQtd:131, maiorTotal:3240370.06, menorQtd:614, menorTotal:833859.37,
+    fornecedoresDistintos:353,
+    top:[
+      {nome:'Folha Pagamento', qtd:50, valor:698114.32, pct:17.13},
+      {nome:'Secretaria da Receita Federal', qtd:3, valor:487903.87, pct:11.98},
+      {nome:'Beckenkamp Vestuario LTDA', qtd:1, valor:168905.00, pct:4.15},
+      {nome:'3S Solucoes em Servicos e Seguranca LTDA', qtd:5, valor:163475.72, pct:4.01},
+      {nome:'TOP Service Serviços e Sistemas LTDA', qtd:8, valor:154977.77, pct:3.80},
+      {nome:'Caixa Economica Federal', qtd:7, valor:119229.76, pct:2.93},
+      {nome:'SAM Music Edicoes Musicais LTDA', qtd:1, valor:117600.00, pct:2.89},
+      {nome:'Departamento Municipal de Agua e Esgotos', qtd:8, valor:106219.83, pct:2.61},
+      {nome:'Splenda Parus Refeições S.A', qtd:8, valor:95992.47, pct:2.36},
+      {nome:'Unimed Porto Alegre Soc. Coop. de Trabalho M', qtd:6, valor:89287.61, pct:2.19},
+      {nome:'Companhia Estadual de Distribuição de Energi', qtd:3, valor:76131.40, pct:1.87},
+      {nome:'Casa de Negocios - Planejamento e Captacoes', qtd:1, valor:70086.00, pct:1.72},
+      {nome:'Agencia Valiant LTDA', qtd:2, valor:63250.00, pct:1.55},
+      {nome:'Sports Business Comercio de Materiais Esport', qtd:1, valor:61394.00, pct:1.51},
+      {nome:'Mercadopago.com Representacoes Ltda.', qtd:21, valor:54766.75, pct:1.34},
+    ],
+    bancos:[
+      {nome:'BANRISUL', qtd:597, total:3292511.42},
+      {nome:'PROJETO OLIM', qtd:110, total:502692.41},
+      {nome:'CBC BB EDITAL', qtd:1, total:168905.00},
+      {nome:'CBC EDIT 11 R', qtd:1, total:28469.99},
+      {nome:'ALTO RENDIME', qtd:5, total:24543.20},
+      {nome:'PATROCÍNIO A', qtd:4, total:24135.20},
+      {nome:'Caixa Sogipa', qtd:22, total:19199.36},
+      {nome:'PROJ SOGIPA', qtd:3, total:10250.00},
+      {nome:'BANCO DO BR', qtd:2, total:3522.85},
+    ],
+  },
+  abr2026: {
+    label:'Abril/2026', qtd:718, total:3620602.84,
+    maiorQtd:119, maiorTotal:2897791.18, menorQtd:599, menorTotal:722811.66,
+    fornecedoresDistintos:348,
+    top:[
+      {nome:'Folha Pagamento', qtd:45, valor:820422.83, pct:22.66},
+      {nome:'Secretaria da Receita Federal', qtd:4, valor:472619.18, pct:13.05},
+      {nome:'Departamento Municipal de Agua e Esgotos', qtd:11, valor:215129.02, pct:5.94},
+      {nome:'TOP Service Serviços e Sistemas LTDA', qtd:8, valor:164400.35, pct:4.54},
+      {nome:'3S Solucoes em Servicos e Seguranca LTDA', qtd:7, valor:143908.30, pct:3.97},
+      {nome:'Splenda Parus Refeições S.A', qtd:6, valor:99566.76, pct:2.75},
+      {nome:'Unimed Porto Alegre Soc. Coop. de Trabalho M', qtd:6, valor:89147.50, pct:2.46},
+      {nome:'Companhia Estadual de Distribuição de Energi', qtd:3, valor:84488.69, pct:2.33},
+      {nome:'Broilo Capital Sistemas de Aquecimento LTDA', qtd:1, valor:49000.00, pct:1.35},
+      {nome:'VT Solucoes Administracao e Servicos LTDA', qtd:2, valor:48072.99, pct:1.33},
+      {nome:'Capitale Energia Comercializadora Ltda.', qtd:1, valor:47763.23, pct:1.32},
+      {nome:'5 Continentes Viagens e Assessoria LTDA', qtd:11, valor:43384.33, pct:1.20},
+      {nome:'Trevenza Solucoes LTDA', qtd:1, valor:40734.92, pct:1.13},
+      {nome:'B&B Representacoes e Servicos LTDA', qtd:2, valor:31546.42, pct:0.87},
+      {nome:'Percorrer Atividades Fisicas Ltda-me', qtd:2, valor:30971.44, pct:0.86},
+    ],
+    bancos:[
+      {nome:'BANRISUL', qtd:602, total:3097495.33},
+      {nome:'PROJETO OLIM', qtd:58, total:248217.09},
+      {nome:'ÍNDICES CONS', qtd:5, total:96236.42},
+      {nome:'Caixa Sogipa', qtd:40, total:45705.05},
+      {nome:'CBC EDIT 11 R', qtd:1, total:41560.00},
+      {nome:'CBC BB EDITA', qtd:1, total:40734.92},
+      {nome:'ALTO RENDIM', qtd:5, total:24543.20},
+      {nome:'PATROCÍNIO A', qtd:3, total:19000.00},
+      {nome:'PROJ SOGIPA', qtd:2, total:5039.39},
+      {nome:'BANCO DO BR', qtd:1, total:2071.44},
+    ],
+  },
+  mai2026: {
+    label:'Maio/2026', qtd:690, total:3710693.59,
+    maiorQtd:120, maiorTotal:2955888.12, menorQtd:570, menorTotal:754805.47,
+    fornecedoresDistintos:332,
+    top:[
+      {nome:'Folha Pagamento', qtd:48, valor:766367.13, pct:20.65},
+      {nome:'Secretaria da Receita Federal', qtd:4, valor:481895.08, pct:12.99},
+      {nome:'TOP Service Serviços e Sistemas LTDA', qtd:19, valor:194666.01, pct:5.25},
+      {nome:'Vitale Restaurantes Empresariais LTDA', qtd:6, valor:123001.00, pct:3.31},
+      {nome:'Caixa Economica Federal', qtd:5, valor:118560.51, pct:3.20},
+      {nome:'SAM Music Edicoes Musicais LTDA', qtd:1, valor:117600.00, pct:3.17},
+      {nome:'3S Solucoes em Servicos e Seguranca LTDA', qtd:4, valor:109674.71, pct:2.96},
+      {nome:'Departamento Municipal de Agua e Esgotos', qtd:7, valor:99197.36, pct:2.67},
+      {nome:'Unimed Porto Alegre Soc. Coop. de Trabalho M', qtd:6, valor:89813.64, pct:2.42},
+      {nome:'Companhia Estadual de Distribuição de Energi', qtd:3, valor:85322.71, pct:2.30},
+      {nome:'Mercadopago.com Representacoes Ltda.', qtd:23, valor:72604.92, pct:1.96},
+      {nome:'Broilo Capital Sistemas de Aquecimento LTDA', qtd:1, valor:49000.00, pct:1.32},
+      {nome:'VT Solucoes Administracao e Servicos LTDA', qtd:2, valor:45168.80, pct:1.22},
+      {nome:'Galbo Engenharia LTDA - EPP', qtd:3, valor:39047.85, pct:1.05},
+      {nome:'Capitale Energia Comercializadora Ltda.', qtd:1, valor:37254.93, pct:1.00},
+    ],
+    bancos:[
+      {nome:'BANRISUL', qtd:575, total:3141530.51},
+      {nome:'PROJETO OLIM', qtd:58, total:264645.85},
+      {nome:'ÍNDICES CONS', qtd:13, total:133816.14},
+      {nome:'Caixa Sogipa', qtd:25, total:42084.63},
+      {nome:'CBC EDIT 11 R', qtd:1, total:41500.00},
+      {nome:'PROJ SOGIPA', qtd:6, total:32176.10},
+      {nome:'PATROCÍNIO A', qtd:6, total:28310.47},
+      {nome:'ALTO RENDIME', qtd:5, total:24543.20},
+      {nome:'BANCO DO BR', qtd:1, total:2086.69},
+    ],
+  },
+  jun2026: {
+    label:'Junho/2026', qtd:845, total:4021251.03,
+    maiorQtd:124, maiorTotal:3141288.99, menorQtd:721, menorTotal:879962.04,
+    fornecedoresDistintos:379,
+    top:[
+      {nome:'Folha Pagamento', qtd:53, valor:815625.49, pct:20.28},
+      {nome:'Secretaria da Receita Federal', qtd:3, valor:553977.55, pct:13.78},
+      {nome:'GBA Brasil Administracao de Pessoas LTDA', qtd:1, valor:165707.91, pct:4.12},
+      {nome:'Caixa Economica Federal', qtd:8, valor:130305.79, pct:3.24},
+      {nome:'TOP Service Serviços e Sistemas LTDA', qtd:6, valor:115351.27, pct:2.87},
+      {nome:'Vitale Restaurantes Empresariais LTDA', qtd:6, valor:105583.20, pct:2.63},
+      {nome:'Unimed Porto Alegre Soc. Coop. de Trabalho M', qtd:6, valor:90317.68, pct:2.25},
+      {nome:'Departamento Municipal de Agua e Esgotos', qtd:7, valor:86589.56, pct:2.15},
+      {nome:'3S Solucoes em Servicos e Seguranca LTDA', qtd:4, valor:86034.76, pct:2.14},
+      {nome:'Companhia Estadual de Distribuição de Energi', qtd:5, valor:67076.34, pct:1.67},
+      {nome:'Avates Eventos LTDA', qtd:2, valor:49450.00, pct:1.23},
+      {nome:'Earte Promocoes e Prod Artisticas Cult e Ens', qtd:3, valor:49142.99, pct:1.22},
+      {nome:'Center Broilo Com de Sistemas de Aquecim Ltd', qtd:1, valor:49000.00, pct:1.22},
+      {nome:'VT Solucoes Administracao e Servicos LTDA', qtd:2, valor:48434.02, pct:1.20},
+      {nome:'Galbo Engenharia LTDA - EPP', qtd:3, valor:43293.27, pct:1.08},
+    ],
+    bancos:[
+      {nome:'BANRISUL', qtd:681, total:3419998.76},
+      {nome:'PROJETO OLIM', qtd:57, total:256766.62},
+      {nome:'ÍNDICES CONS', qtd:7, total:111146.82},
+      {nome:'Caixa Sogipa', qtd:81, total:80390.10},
+      {nome:'PATROCÍNIO A', qtd:9, total:71113.81},
+      {nome:'CBC EDIT 11 R', qtd:1, total:43480.00},
+      {nome:'ALTO RENDIM', qtd:5, total:24543.20},
+      {nome:'PROJ SOGIPA', qtd:3, total:11710.00},
+      {nome:'BANCO DO BR', qtd:1, total:2101.72},
+    ],
+  },
+};
+const COBERTURA_PAGAMENTOS = {
+  jan2026: {ini:'2026-01-01', fim:'2026-01-31'},
+  fev2026: {ini:'2026-02-01', fim:'2026-02-28'},
+  mar2026: {ini:'2026-03-01', fim:'2026-03-31'},
+  abr2026: {ini:'2026-04-01', fim:'2026-04-30'},
+  mai2026: {ini:'2026-05-01', fim:'2026-05-31'},
+  jun2026: {ini:'2026-06-01', fim:'2026-06-30'},
+};
 
 // ── Filtro de período — baseado nos períodos REAIS enviados pela controladoria ──
 // (não são semanas de calendário limpas; variam de 2 a 12 dias, conforme o corte que eles usam)
@@ -2419,6 +2691,19 @@ const VENDAS_EXTRA_MESES = {
       taxaAdesao:11165, taxaReingresso:18973.5, taxaTotal:30138.5,
     },
   },
+};
+
+// Fluxo de Caixa tem cobertura própria (Jan a Jul/26) — os fechamentos mensais por categoria
+// chegaram para todos os meses. Não confundir com COBERTURA_MES, que segue servindo
+// Locações/Negociação/Diagnóstico (só Jun/Jul têm o conjunto completo dessas abas).
+const COBERTURA_FLUXO = {
+  jan2026: {ini:'2026-01-01', fim:'2026-01-31'},
+  fev2026: {ini:'2026-02-01', fim:'2026-02-28'},
+  mar2026: {ini:'2026-03-01', fim:'2026-03-31'},
+  abr2026: {ini:'2026-04-01', fim:'2026-04-30'},
+  mai2026: {ini:'2026-05-01', fim:'2026-05-31'},
+  jun2026: {ini:'2026-06-01', fim:'2026-06-30'},
+  jul2026: {ini:'2026-07-01', fim:'2026-07-31'},
 };
 
 // Vendas tem cobertura própria (Jan a Jul/26) — a planilha de ENTRADAS tem os 6 meses,
@@ -2632,6 +2917,7 @@ function aplicarFiltroMes(){
   const mesesRet = mesesEmIntervalo(mIni, aIni, mFim, aFim, COBERTURA_RETENCAO);
   const mesesRei = mesesEmIntervalo(mIni, aIni, mFim, aFim, COBERTURA_REINGRESSO);
   const mesesVen = mesesEmIntervalo(mIni, aIni, mFim, aFim, COBERTURA_VENDAS);
+  const mesesFlx = mesesEmIntervalo(mIni, aIni, mFim, aFim, COBERTURA_FLUXO);
 
   atualizarBadgeFiltro(mIni, aIni, mFim, aFim, mesesVen);
 
@@ -2647,14 +2933,15 @@ function aplicarFiltroMes(){
   const mesKey    = mesesFin.length ? mesesFin[mesesFin.length-1].key : (uFin ? uFin.key : null);
   const mesKeyRet = mesesRet.length ? mesesRet[mesesRet.length-1].key : (uRet ? uRet.key : null);
 
-  renderFluxoCaixaPeriodo(mesKey, de, ate);
+  const uFlx = ultimoMesCobertura(COBERTURA_FLUXO);
+  const mesKeyFlx = mesesFlx.length ? mesesFlx[mesesFlx.length-1].key : (uFlx ? uFlx.key : null);
+  renderFluxoCaixaPeriodo(mesKeyFlx, de, ate);
   renderRetencaoPeriodo(mesKeyRet);
   renderRH(mesKey);
   renderLocacoesPeriodo(mesKey, de, ate);
   renderDiagnostico(mesKey);
 
-  const semanaKey = semanaPagamentosParaIntervalo(de, ate);
-  renderPagamentosPeriodo(semanaKey, de, ate);
+  renderPagamentosMeses(mesesEmIntervalo(mIni, aIni, mFim, aFim, COBERTURA_PAGAMENTOS));
 
   // Negociação: cobertura própria (Mar-Jun/26)
   renderNegociacaoResumo(faixaContidaEm(de, ate, COBERTURA_NEGOCIACAO.ini, COBERTURA_NEGOCIACAO.fim) ? mesKey : 'sem-dado', de, ate);
@@ -2669,26 +2956,206 @@ const MES_DA_SEMANA = {
 };
 
 const DADOS_MES = {
+  jan2026: {
+    label: 'Janeiro/2026',
+    despesas: [
+      {nome:'Pessoal de Apoio', prev:1521.9, tend:1627.9, real:1627.9},
+      {nome:'Despesas de Funcionamento', prev:1101.0, tend:1014.7, real:1014.7},
+      {nome:'Despesas Fixas', prev:260.8, tend:241.8, real:241.8},
+      {nome:'Esporte', prev:112.5, tend:112.2, real:112.2},
+      {nome:'Eventos', prev:0, tend:9.5, real:9.5},
+      {nome:'Imobilizado', prev:105.0, tend:153.8, real:153.8},
+      {nome:'Contingências (Indenizações)', prev:32.9, tend:16.3, real:16.3},
+      {nome:'Tarifas e Desp. Bancárias', prev:13.0, tend:11.3, real:11.3},
+      {nome:'Taxas IPTU', prev:0, tend:0, real:0},
+    ],
+    receitas: [
+      {nome:'Boletos', prev:1436.0, tend:1206.8, real:1206.8},
+      {nome:'Débito em Conta', prev:676.0, tend:607.1, real:607.1},
+      {nome:'Receitas Diversas', prev:477.0, tend:367.0, real:367.0},
+      {nome:'Cartões Crédito', prev:652.0, tend:583.4, real:583.4},
+      {nome:'Cartões Débito', prev:166.0, tend:126.7, real:126.7},
+      {nome:'Rendimento Aplicação', prev:0, tend:0.2, real:0.2},
+      {nome:'Patrocínios', prev:90.0, tend:90.0, real:90.0},
+    ],
+    obras: [], obrasTotal: 0,
+    caixaLivre: 419.7, fundoObras: 0.0, resultadoOper: -206.2, saldoTotal: 419.7,
+    caixaLivrePct: 100.0, fundoObrasPct: 0.0, negativo: false,
+    receitaReal: 2981.2, despesaReal: 3187.4,
+    resultadoLiquido: 209.5,
+    dataReferencia: '31/01/2026',
+    fechado: true,
+    totaisReceitaDespesa: {
+      previsto:  {receita:3497.0, despesa:3147.1},
+      tendencia: {receita:2981.2, despesa:3187.4},
+      realizado: {receita:2981.2, despesa:3187.4},
+    },
+    ptoAtencao: '<b>Mês anterior à criação do fundo Índices Construtivos</b> — todo o saldo em banco de R$ 419,7 mil era caixa operacional livre.',
+  },
+  fev2026: {
+    label: 'Fevereiro/2026',
+    despesas: [
+      {nome:'Pessoal de Apoio', prev:1334.5, tend:1427.4, real:1427.4},
+      {nome:'Despesas de Funcionamento', prev:1061.0, tend:1079.0, real:1079.0},
+      {nome:'Despesas Fixas', prev:240.7, tend:272.8, real:272.8},
+      {nome:'Esporte', prev:86.0, tend:46.4, real:46.4},
+      {nome:'Eventos', prev:35.0, tend:24.1, real:24.1},
+      {nome:'Imobilizado', prev:47.0, tend:69.1, real:69.1},
+      {nome:'Contingências (Indenizações)', prev:32.2, tend:17.9, real:17.9},
+      {nome:'Tarifas e Desp. Bancárias', prev:14.3, tend:11.8, real:11.8},
+      {nome:'Taxas IPTU', prev:0, tend:14.1, real:14.1},
+    ],
+    receitas: [
+      {nome:'Boletos', prev:1415.0, tend:1405.6, real:1405.6},
+      {nome:'Débito em Conta', prev:648.6, tend:654.3, real:654.3},
+      {nome:'Receitas Diversas', prev:470.0, tend:353.9, real:353.9},
+      {nome:'Cartões Crédito', prev:389.0, tend:442.8, real:442.8},
+      {nome:'Cartões Débito', prev:195.0, tend:133.4, real:133.4},
+      {nome:'Rendimento Aplicação', prev:0, tend:0.1, real:0.1},
+      {nome:'Patrocínios', prev:90.0, tend:40.0, real:40.0},
+    ],
+    obras: [], obrasTotal: 0,
+    caixaLivre: 35.3, fundoObras: 453.8, resultadoOper: 67.6, saldoTotal: 489.1,
+    caixaLivrePct: 7.2, fundoObrasPct: 92.8, negativo: false,
+    receitaReal: 3030.1, despesaReal: 2962.5,
+    resultadoLiquido: 69.3,
+    dataReferencia: '28/02/2026',
+    fechado: true,
+    totaisReceitaDespesa: {
+      previsto:  {receita:3207.6, despesa:2850.7},
+      tendencia: {receita:3030.1, despesa:2962.5},
+      realizado: {receita:3030.1, despesa:2962.5},
+    },
+    ptoAtencao: '<b>PONTO DE ATENÇÃO:</b> do saldo em banco de R$ 489,1 mil, <b>R$ 35,3 mil (7,2%)</b> é caixa operacional livre. Os outros <b>R$ 453,8 mil (92,8%)</b> pertencem ao fundo Índices Construtivos, restrito a obras.',
+  },
+  mar2026: {
+    label: 'Março/2026',
+    despesas: [
+      {nome:'Pessoal de Apoio', prev:1361.5, tend:1452.4, real:1452.4},
+      {nome:'Despesas de Funcionamento', prev:1152.0, tend:1098.8, real:1098.8},
+      {nome:'Despesas Fixas', prev:289.8, tend:253.4, real:253.4},
+      {nome:'Esporte', prev:143.5, tend:275.1, real:275.1},
+      {nome:'Eventos', prev:208.0, tend:198.6, real:198.6},
+      {nome:'Imobilizado', prev:50.0, tend:18.7, real:18.7},
+      {nome:'Contingências (Indenizações)', prev:32.4, tend:14.3, real:14.3},
+      {nome:'Tarifas e Desp. Bancárias', prev:12.3, tend:12.5, real:12.5},
+      {nome:'Taxas IPTU', prev:0, tend:0, real:0},
+    ],
+    receitas: [
+      {nome:'Boletos', prev:1590.0, tend:1526.9, real:1526.9},
+      {nome:'Débito em Conta', prev:683.6, tend:692.2, real:692.2},
+      {nome:'Receitas Diversas', prev:472.0, tend:517.5, real:517.5},
+      {nome:'Cartões Crédito', prev:541.0, tend:541.1, real:541.1},
+      {nome:'Cartões Débito', prev:185.0, tend:164.9, real:164.9},
+      {nome:'Rendimento Aplicação', prev:0, tend:0.3, real:0.3},
+      {nome:'Patrocínios', prev:40.0, tend:40.0, real:40.0},
+    ],
+    obras: [], obrasTotal: 0,
+    caixaLivre: 368.2, fundoObras: 297.2, resultadoOper: 158.9, saldoTotal: 665.4,
+    caixaLivrePct: 55.3, fundoObrasPct: 44.7, negativo: false,
+    receitaReal: 3482.8, despesaReal: 3323.9,
+    resultadoLiquido: 176.3,
+    dataReferencia: '31/03/2026',
+    fechado: true,
+    totaisReceitaDespesa: {
+      previsto:  {receita:3511.6, despesa:3249.5},
+      tendencia: {receita:3482.8, despesa:3323.9},
+      realizado: {receita:3482.8, despesa:3323.9},
+    },
+    ptoAtencao: '<b>PONTO DE ATENÇÃO:</b> do saldo em banco de R$ 665,4 mil, <b>R$ 368,2 mil (55,3%)</b> é caixa operacional livre. Os outros <b>R$ 297,2 mil (44,7%)</b> pertencem ao fundo Índices Construtivos, restrito a obras.',
+  },
+  abr2026: {
+    label: 'Abril/2026',
+    despesas: [
+      {nome:'Pessoal de Apoio', prev:1430.4, tend:1486.7, real:1486.7},
+      {nome:'Despesas de Funcionamento', prev:1049.7, tend:993.3, real:993.3},
+      {nome:'Despesas Fixas', prev:294.4, tend:382.3, real:382.3},
+      {nome:'Esporte', prev:120.0, tend:169.1, real:169.1},
+      {nome:'Eventos', prev:71.5, tend:50.4, real:50.4},
+      {nome:'Imobilizado', prev:50.0, tend:19.1, real:19.1},
+      {nome:'Contingências (Indenizações)', prev:16.6, tend:14.3, real:14.3},
+      {nome:'Tarifas e Desp. Bancárias', prev:11.5, tend:11.3, real:11.3},
+      {nome:'Taxas IPTU', prev:0, tend:1.1, real:1.1},
+    ],
+    receitas: [
+      {nome:'Boletos', prev:1459.0, tend:1467.4, real:1467.4},
+      {nome:'Débito em Conta', prev:665.0, tend:655.5, real:655.5},
+      {nome:'Receitas Diversas', prev:405.0, tend:448.8, real:448.8},
+      {nome:'Cartões Crédito', prev:520.0, tend:564.4, real:564.4},
+      {nome:'Cartões Débito', prev:140.0, tend:129.8, real:129.8},
+      {nome:'Rendimento Aplicação', prev:0, tend:0.4, real:0.4},
+      {nome:'Patrocínios', prev:40.0, tend:40.0, real:40.0},
+    ],
+    obras: [], obrasTotal: 0,
+    caixaLivre: 449.1, fundoObras: 228.7, resultadoOper: 178.7, saldoTotal: 677.8,
+    caixaLivrePct: 66.3, fundoObrasPct: 33.7, negativo: false,
+    receitaReal: 3306.3, despesaReal: 3127.6,
+    resultadoLiquido: 12.4,
+    dataReferencia: '30/04/2026',
+    fechado: true,
+    totaisReceitaDespesa: {
+      previsto:  {receita:3229.0, despesa:3044.1},
+      tendencia: {receita:3306.3, despesa:3127.6},
+      realizado: {receita:3306.3, despesa:3127.6},
+    },
+    ptoAtencao: '<b>PONTO DE ATENÇÃO:</b> do saldo em banco de R$ 677,8 mil, <b>R$ 449,1 mil (66,3%)</b> é caixa operacional livre. Os outros <b>R$ 228,7 mil (33,7%)</b> pertencem ao fundo Índices Construtivos, restrito a obras.',
+  },
+  mai2026: {
+    label: 'Maio/2026',
+    despesas: [
+      {nome:'Pessoal de Apoio', prev:1455.0, tend:1517.5, real:1517.5},
+      {nome:'Despesas de Funcionamento', prev:1124.0, tend:985.6, real:985.6},
+      {nome:'Despesas Fixas', prev:316.8, tend:258.1, real:258.1},
+      {nome:'Esporte', prev:121.9, tend:193.2, real:193.2},
+      {nome:'Eventos', prev:191.8, tend:173.4, real:173.4},
+      {nome:'Imobilizado', prev:41.6, tend:28.3, real:28.3},
+      {nome:'Contingências (Indenizações)', prev:28.4, tend:15.7, real:15.7},
+      {nome:'Tarifas e Desp. Bancárias', prev:12.5, tend:10.6, real:10.6},
+      {nome:'Taxas IPTU', prev:0, tend:0, real:0},
+    ],
+    receitas: [
+      {nome:'Boletos', prev:1568.0, tend:1503.3, real:1503.3},
+      {nome:'Débito em Conta', prev:687.0, tend:681.1, real:681.1},
+      {nome:'Receitas Diversas', prev:477.0, tend:499.4, real:499.4},
+      {nome:'Cartões Crédito', prev:432.0, tend:435.5, real:435.5},
+      {nome:'Cartões Débito', prev:148.0, tend:131.2, real:131.2},
+      {nome:'Rendimento Aplicação', prev:0, tend:0.4, real:0.4},
+      {nome:'Patrocínios', prev:40.0, tend:40.0, real:40.0},
+    ],
+    obras: [], obrasTotal: 0,
+    caixaLivre: 512.0, fundoObras: 949.4, resultadoOper: 108.7, saldoTotal: 1461.4,
+    caixaLivrePct: 35.0, fundoObrasPct: 65.0, negativo: false,
+    receitaReal: 3290.9, despesaReal: 3182.3,
+    resultadoLiquido: 783.6,
+    dataReferencia: '31/05/2026',
+    fechado: true,
+    totaisReceitaDespesa: {
+      previsto:  {receita:3352.0, despesa:3291.9},
+      tendencia: {receita:3290.9, despesa:3182.3},
+      realizado: {receita:3290.9, despesa:3182.3},
+    },
+    ptoAtencao: '<b>PONTO DE ATENÇÃO:</b> do saldo em banco de R$ 1461,4 mil, <b>R$ 512,0 mil (35,0%)</b> é caixa operacional livre. Os outros <b>R$ 949,4 mil (65,0%)</b> pertencem ao fundo Índices Construtivos, restrito a obras.',
+  },
   jun2026: {
     label: 'Junho/2026',
     despesas: [
-      {nome:'Pessoal de Apoio', prev:1517.5, tend:1641.7, real:1641.7},
-      {nome:'Despesas de Funcionamento', prev:1186.0, tend:1151.6, real:1101.6},
+      {nome:'Pessoal de Apoio', prev:1517.5, tend:1649.9, real:1649.9},
+      {nome:'Despesas de Funcionamento', prev:1186.0, tend:1167.9, real:1167.9},
       {nome:'Despesas Fixas', prev:300.9, tend:231.0, real:231.0},
-      {nome:'Esporte', prev:151.9, tend:238.9, real:238.9},
-      {nome:'Eventos', prev:70.7, tend:95.6, real:95.6},
+      {nome:'Esporte', prev:151.9, tend:274.0, real:274.0},
+      {nome:'Eventos', prev:70.7, tend:119.4, real:119.4},
       {nome:'Imobilizado', prev:40.0, tend:5.3, real:5.3},
       {nome:'Contingências (Indenizações)', prev:32.4, tend:25.1, real:25.1},
-      {nome:'Tarifas e Desp. Bancárias', prev:9.1, tend:10.1, real:9.6},
+      {nome:'Tarifas e Desp. Bancárias', prev:9.1, tend:10.5, real:10.5},
       {nome:'Taxas IPTU', prev:1.0, tend:1.1, real:1.1},
     ],
     receitas: [
-      {nome:'Boletos', prev:1548.0, tend:1473.7, real:1428.7},
+      {nome:'Boletos', prev:1548.0, tend:1438.9, real:1438.9},
       {nome:'Débito em Conta', prev:686.0, tend:684.6, real:684.6},
-      {nome:'Receitas Diversas', prev:525.0, tend:602.6, real:592.6},
-      {nome:'Cartões Crédito', prev:395.0, tend:399.5, real:395.5},
-      {nome:'Cartões Débito', prev:154.0, tend:144.7, real:137.7},
-      {nome:'Rendimento Aplicação', prev:0, tend:0.1, real:0.1},
+      {nome:'Receitas Diversas', prev:525.0, tend:668.4, real:668.4},
+      {nome:'Cartões Crédito', prev:395.0, tend:405.6, real:405.6},
+      {nome:'Cartões Débito', prev:154.0, tend:181.7, real:181.7},
+      {nome:'Rendimento Aplicação', prev:0, tend:0.2, real:0.2},
       {nome:'Patrocínios', prev:0, tend:0, real:0},
     ],
     obras: [
@@ -2701,16 +3168,18 @@ const DADOS_MES = {
       {data:'30/09/2026', fornecedor:'—', projeto:'Telhado Dn. Leopoldina', valor:421000.00},
     ],
     obrasTotal: 630066.00,
-    caixaLivre: 195.8, fundoObras: 1845.7, resultadoOper: -110.5, saldoTotal: 2041.5,
-    caixaLivrePct: 9.6, fundoObrasPct: 90.4, negativo: false,
-    receitaReal: 3239.3, despesaReal: 3349.7,
+    caixaLivre: 400.5, fundoObras: 1666.6, resultadoOper: -104.5, saldoTotal: 2067.1,
+    caixaLivrePct: 19.4, fundoObrasPct: 80.6, negativo: false,
+    receitaReal: 3379.5, despesaReal: 3484.0,
+    resultadoLiquido: 605.7,
     dataReferencia: '30/06/2026',
+    fechado: true,
     totaisReceitaDespesa: {
       previsto:  {receita:3308.0, despesa:3309.5},
-      tendencia: {receita:3305.3, despesa:3400.2},
-      realizado: {receita:3239.3, despesa:3349.7},
+      tendencia: {receita:3379.5, despesa:3484.0},
+      realizado: {receita:3379.5, despesa:3484.0},
     },
-    ptoAtencao: '<b>PONTO DE ATENÇÃO:</b> do saldo em banco de R$ 2,04 milhões, apenas <b>R$ 195,8 mil (9,6%)</b> é caixa operacional livre. Os outros <b>R$ 1,85 milhões (90,4%)</b> pertencem ao fundo Índices Construtivos.',
+    ptoAtencao: '<b>PONTO DE ATENÇÃO:</b> do saldo em banco de R$ 2,07 milhões, apenas <b>R$ 400,5 mil (19,4%)</b> é caixa operacional livre. Os outros <b>R$ 1,67 milhões (80,6%)</b> pertencem ao fundo Índices Construtivos.',
     retencao: {
       periodoTag:'01 a 30/jun/2026',
       kpis:[
@@ -2946,7 +3415,7 @@ function renderRetencaoPeriodo(mesKeyRet){
     <tr><td><span class="dot" style="background:${mo.cor}; margin-right:6px;"></span>${mo.motivo}</td><td class="num">${mo.qtd}</td><td class="num">${mo.pct.toFixed(2).replace('.',',')}%</td></tr>`).join('');
   drawDonut('vgRetencaoDonut', r.categorias.map(c=>({nome:c.nome, valor:c.qtd, cor:c.cor})), String(somaCategorias), 'desligamentos');
 
-  const keys = Object.keys(DADOS_MES);
+  const keys = Object.keys(DADOS_MES).filter(k=>DADOS_MES[k].retencao);
   document.getElementById('tabelaHistoricoRetencao').innerHTML = keys.map(k=>{
     const rr = DADOS_MES[k].retencao;
     const retido = rr.kpis.find(x=>x.label==='Retenção' || x.label==='Retidos');
@@ -3495,25 +3964,99 @@ function renderObras(){
   });
 
   el.innerHTML = `
-    <div class="alert-box"><span>🔗</span><div>Este é o mesmo Fundo Índices Construtivos mostrado na aba <b>Fluxo de Caixa</b> (cards "② Fundo Índices Construtivos" e "Compromissos Futuros"). Aqui você vê a origem completa dos recursos, a composição por projeto e a evolução mês a mês — uma visão de apresentação, não filtrada por período, já que é um fundo acumulado desde fevereiro/2026.</div></div>
+    <div class="alert-box"><span>🏛️</span><div>Painel dos <b>Índices Construtivos</b> — mostra o <b>ativo</b> (área comercializável), o quanto já foi vendido, para onde foi o dinheiro das vendas e quanto virou obra. Posição em <b>${o.dataReferencia}</b>; é um fundo acumulado, por isso não muda com o filtro de período.</div></div>
 
-    <div class="kpi-row-icons cols-4" style="margin-top:16px;">
+    <div class="kpi-row-icons cols-3" style="margin-top:16px;">
+      <div class="kpi-icon-card" style="border-color:#06b6d4;">
+        <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(6,182,212,.15); color:#06b6d4;">📐</div><div class="label">Área Líquida</div></div>
+        <div class="kpi-icon-info"><div class="value" style="color:#06b6d4;">${o.areaLiquida.toLocaleString('pt-BR',{minimumFractionDigits:2})} m²</div><div class="delta muted">potencial de ${fmtMilReais(o.potencialTotal)}</div></div>
+      </div>
+      <div class="kpi-icon-card" style="border-color:var(--purple);">
+        <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(168,85,247,.15); color:var(--purple);">📊</div><div class="label">Índices Vendidos</div></div>
+        <div class="kpi-icon-info"><div class="value" style="color:var(--purple);">${o.areaVendida.toLocaleString('pt-BR',{minimumFractionDigits:2})} m²</div><div class="delta muted">${(o.areaVendida/o.areaLiquida*100).toFixed(2).replace('.',',')}% da área líquida</div></div>
+      </div>
       <div class="kpi-icon-card">
-        <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(61,123,255,.15); color:var(--blue);">💰</div><div class="label">Total de Recursos Recebidos</div></div>
-        <div class="kpi-icon-info"><div class="value">${fmtMilReais(o.totalRecebido)}</div><div class="delta muted">desde fev/2026</div></div>
+        <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(61,123,255,.15); color:var(--blue);">💰</div><div class="label">Recebido</div></div>
+        <div class="kpi-icon-info"><div class="value">${fmtMilReais(o.totalRecebido)}</div><div class="delta muted">comercialização realizada</div></div>
       </div>
       <div class="kpi-icon-card" style="border-color:var(--red); background:rgba(232,25,44,.06);">
-        <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(232,25,44,.15); color:var(--red);">🏗️</div><div class="label">Total Investido em Obras</div></div>
-        <div class="kpi-icon-info"><div class="value" style="color:var(--red);">-${fmtMilReais(o.totalInvestido)}</div><div class="delta" style="color:var(--red); font-weight:700;">🔴 SAÍDA DE CAIXA · ${pctInvestido.toFixed(1).replace('.',',')}% do recebido</div></div>
+        <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(232,25,44,.15); color:var(--red);">🏗️</div><div class="label">Investido em Obras</div></div>
+        <div class="kpi-icon-info"><div class="value" style="color:var(--red);">-${fmtMilReais(o.totalInvestido)}</div><div class="delta" style="color:var(--red); font-weight:700;">🔴 SAÍDA · ${pctInvestido.toFixed(1).replace('.',',')}% do recebido</div></div>
       </div>
       <div class="kpi-icon-card" style="border-color:var(--green); background:rgba(0,229,160,.06);">
-        <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(0,229,160,.15); color:var(--green);">🔒</div><div class="label">Saldo Financeiro Disponível</div></div>
-        <div class="kpi-icon-info"><div class="value" style="color:var(--green);">${fmtMilReais(o.saldoDisponivel)}</div><div class="delta muted">restrito a obras futuras</div></div>
+        <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(0,229,160,.15); color:var(--green);">🔒</div><div class="label">Saldo Disponível</div></div>
+        <div class="kpi-icon-info"><div class="value" style="color:var(--green);">${fmtMilReais(o.saldoDisponivel)}</div><div class="delta muted">para novos investimentos</div></div>
       </div>
-      <div class="kpi-icon-card">
-        <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(242,183,5,.18); color:var(--gold);">📋</div><div class="label">Compromissos já Contratados</div></div>
-        <div class="kpi-icon-info"><div class="value">${fmtBRL0(931266)}</div><div class="delta muted">ver detalhe em Fluxo de Caixa</div></div>
+      <div class="kpi-icon-card" style="border-color:var(--gold);">
+        <div class="kpi-card-top"><div class="kpi-icon-circle" style="background:rgba(242,183,5,.18); color:var(--gold);">⏳</div><div class="label">A Receber</div></div>
+        <div class="kpi-icon-info"><div class="value" style="color:var(--gold);">${fmtMilReais(o.aReceber)}</div><div class="delta muted">saldo de contratos (MG)</div></div>
       </div>
+    </div>
+
+    <div class="section-title" style="margin-top:26px;">Posição Patrimonial e Destinação dos Recursos<div class="line"></div></div>
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-label">Comercialização da Área</div>
+        <div style="font-size:40px; font-weight:800; color:var(--purple); margin-top:10px; line-height:1;">${(o.areaVendida/o.areaLiquida*100).toFixed(2).replace('.',',')}%</div>
+        <div class="card-meta" style="margin-top:4px;">da área líquida comercializável já vendida</div>
+        <div style="display:flex; height:26px; border-radius:6px; overflow:hidden; margin-top:16px; border:1px solid var(--border);">
+          <div style="width:${(o.areaVendida/o.areaLiquida*100).toFixed(2)}%; background:var(--purple);"></div>
+          <div style="flex:1; background:#2a2c3a;"></div>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-top:8px; font-size:12px;">
+          <span style="color:var(--purple);">■ Vendida ${o.areaVendida.toLocaleString('pt-BR',{minimumFractionDigits:2})} m²</span>
+          <span class="muted">■ Disponível ${o.areaDisponivel.toLocaleString('pt-BR',{minimumFractionDigits:2})} m²</span>
+        </div>
+        <div class="card-meta" style="margin-top:12px; border-top:1px solid var(--border); padding-top:10px;">Área total: ${o.areaTotal.toLocaleString('pt-BR',{minimumFractionDigits:2})} m² · Comissão: ${o.areaComissao.toLocaleString('pt-BR',{minimumFractionDigits:2})} m²</div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Posição Financeira | 2026</div>
+        <div id="obrasBarrasPosicao" style="margin-top:16px;"></div>
+        <div class="card-meta" style="margin-top:14px; border-top:1px solid var(--border); padding-top:10px;">Recursos aplicados em obras representam <b style="color:var(--red);">${pctInvestido.toFixed(1).replace('.',',')}%</b> do total recebido.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Destinação dos Recursos Vendidos 2025/2026</div>
+        <div class="card-meta" style="margin-top:8px;">Valor contabilizado em vendas: <b style="color:var(--text);">${fmtMilReais(o.contabilizadoVendas)}</b></div>
+        <div style="display:flex; height:52px; border-radius:8px; overflow:hidden; margin-top:14px; border:1px solid var(--border);">
+          <div style="width:${o.pctEndividamento}%; background:var(--red); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; color:#fff;">${o.pctEndividamento.toFixed(1).replace('.',',')}%</div>
+          <div style="width:${o.pctInvestimentos}%; background:var(--green); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; color:#0b0d12;">${o.pctInvestimentos.toFixed(1).replace('.',',')}%</div>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-top:8px; font-size:12px;">
+          <span style="color:var(--red);">■ Endividamento</span>
+          <span style="color:var(--green);">■ Investimentos</span>
+        </div>
+        <div class="card-meta" style="margin-top:12px; line-height:1.9; border-top:1px solid var(--border); padding-top:10px;">
+          Pagamento de endividamento: <b style="color:var(--red);">${fmtMilReais(o.pagamentoEndividamento)}</b><br>
+          Saldo para investimento: <b style="color:var(--green);">${fmtMilReais(o.totalRecebido)}</b>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title" style="margin-top:26px;">Empreendimentos Comercializados — 2025/2026<div class="line"></div></div>
+    <div class="card full">
+      <div class="scrollx">
+      <table>
+        <thead><tr><th>Empreendimento</th><th class="num">Área (m²)</th><th class="num">Valor</th><th class="num">% do total</th></tr></thead>
+        <tbody>
+          ${o.empreendimentos.map(e=>`
+          <tr>
+            <td><span class="dot" style="background:${e.cor}; margin-right:8px;"></span>${e.nome}</td>
+            <td class="num">${e.area.toLocaleString('pt-BR',{minimumFractionDigits:2})}</td>
+            <td class="num">${fmtBRL0(e.valor)}</td>
+            <td class="num muted">${(e.valor/o.contabilizadoVendas*100).toFixed(1).replace('.',',')}%</td>
+          </tr>`).join('')}
+          <tr class="total-highlight" style="font-weight:800;">
+            <td style="color:var(--red);">TOTAL</td>
+            <td class="num" style="color:var(--red);">${o.areaVendida.toLocaleString('pt-BR',{minimumFractionDigits:2})}</td>
+            <td class="num" style="color:var(--red);">${fmtBRL0(o.contabilizadoVendas)}</td>
+            <td class="num" style="color:var(--red);">100,0%</td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+      <div class="card-meta" style="margin-top:12px;">⏳ Saldo a receber: <b style="color:var(--gold);">${fmtBRL0(o.aReceber)}</b> · Nomes de pessoa física abreviados por proteção de dados (LGPD).</div>
     </div>
 
     <div class="card full" style="margin-top:16px; border-left:4px solid var(--gold);">
@@ -3583,12 +4126,35 @@ function renderObras(){
     </div>
   `;
 
+  drawObrasPosicao('obrasBarrasPosicao');
   drawObrasEvolucao('obrasChartEvolucao');
   const totalOrigens = o.origens.reduce((s,x)=>s+x.valor,0);
   drawDonut('obrasDonutOrigem', o.origens, fmtMilReais(totalOrigens), 'recebidos');
   const totalProjetos = o.projetos.reduce((s,x)=>s+x.valor,0);
   drawDonut('obrasDonutProjetos', o.projetos, fmtMilReais(totalProjetos), 'investidos');
   renderSimpleBars('obrasRankingProjetos', o.projetos.map(p=>({nome:p.nome, valor:p.valor, display:fmtBRL0(p.valor), cor:p.cor})));
+}
+
+function drawObrasPosicao(elId){
+  const el = document.getElementById(elId);
+  if(!el) return;
+  const o = OBRAS_FUNDO;
+  const linhas = [
+    {nome:'Recursos recebidos', valor:o.totalRecebido,   cor:'var(--blue)'},
+    {nome:'Investimentos',      valor:o.totalInvestido,  cor:'var(--red)'},
+    {nome:'Saldo disponível',   valor:o.saldoDisponivel, cor:'var(--green)'},
+  ];
+  const max = Math.max(...linhas.map(l=>l.valor));
+  el.innerHTML = linhas.map(l=>`
+    <div style="margin-bottom:14px;">
+      <div style="display:flex; justify-content:space-between; font-size:12.5px; margin-bottom:5px;">
+        <span class="muted">${l.nome}</span>
+        <b style="color:${l.cor};">${fmtMilReais(l.valor)}</b>
+      </div>
+      <div style="height:14px; background:#2a2c3a; border-radius:4px; overflow:hidden;">
+        <div style="width:${(l.valor/max*100).toFixed(1)}%; height:100%; background:${l.cor}; border-radius:4px;"></div>
+      </div>
+    </div>`).join('');
 }
 
 function drawObrasEvolucao(elId){
@@ -3671,11 +4237,15 @@ function renderIndicadoresGrid(elId, indicadores, pendentes, grupo){
       const diffTxt = ind.formato==='moeda' ? fmtMilReais(Math.abs(diff)) : (ind.formato==='pct' ? Math.abs(diff).toFixed(2).replace('.',',')+'p.p.' : Math.abs(diff).toLocaleString('pt-BR',{maximumFractionDigits:1}));
       deltaHtml = `<span style="color:${corDelta};">${seta} ${diffTxt} vs. mês anterior</span>`;
     }
+    const subHtml = ind.subvalores ? `<div style="display:flex; flex-wrap:wrap; gap:10px; margin-top:6px; font-size:11.5px;">` +
+      ind.subvalores.map(k=>`<span style="color:${FOLHA_DADOS[k].cor};">${FOLHA_DADOS[k].nome}: <b>${fmtIndicadorCurto(FOLHA_DADOS[k].vals[FOLHA_DADOS[k].vals.length-1],'moeda')}</b></span>`).join('') + `</div>` : '';
+    const dica = ind.he ? `<div style="font-size:11.5px; color:var(--muted); margin-top:6px;">clique para abrir o detalhamento de HE</div>` : '';
     return `
     <div class="kpi-spark-card" style="cursor:pointer;" onclick="abrirDetalheIndicador('${grupo}','${chave}')" id="card-${grupo}-${chave}">
       <div class="kpi-spark-label">${ind.label} <span style="float:right; opacity:.5;">🔍</span></div>
       <div class="kpi-spark-value" style="color:${ind.cor};">${fmtIndicador(atual, ind.formato)}</div>
       <div class="kpi-spark-delta">${deltaHtml}</div>
+      ${subHtml}${dica}
       ${drawSparklineSVG(ind.valores, ind.cor)}
     </div>`;
   }).join('');
@@ -3760,6 +4330,20 @@ function abrirDetalheIndicador(grupo, chave){
 
   const ehFolha = !!ind.folha;
   const ehJornada = !!ind.jornada;
+  const ehHE = !!ind.he;
+
+  // Horas Extras: abre o bloco completo de HE que já existe na aba
+  if(ehHE){
+    detalheEl.innerHTML = '';
+    const bloco = document.getElementById('heBloco');
+    if(bloco){
+      bloco.style.display = 'block';
+      bloco.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+    return;
+  }
+  const blocoHE = document.getElementById('heBloco');
+  if(blocoHE) blocoHE.style.display = 'none';
 
   let titulo = ind.label;
   if(ehFolha)   titulo = 'Custo de Folha — Bruto × Líquido × Projeto Olímpico × Desencaixe';
@@ -3789,7 +4373,9 @@ function abrirDetalheIndicador(grupo, chave){
         <span><span style="color:#00e5a0;">■</span> <b style="color:var(--text);">Líquido</b> — valor líquido da folha</span>
         <span><span style="color:#a855f7;">■</span> <b style="color:var(--text);">Projeto Olímpico</b> — parte coberta por patrocínio/projeto, não sai do caixa da SOGIPA</span>
         <span><span style="color:#f2b705;">■</span> <b style="color:var(--text);">Desencaixe SOGIPA</b> — o que o clube efetivamente paga do próprio caixa</span>
-      </div>` : ''}
+      </div>
+      <div class="card-meta" style="margin-top:12px;">👆 Clique para ver uma série isolada — ou em <b>Competência (tudo)</b> para voltar ao comparativo completo.</div>
+      ${botoesFiltroFolha(`chartDetalhe-${grupo}-${chave}`)}` : ''}
       ${ehJornada ? `
       <div style="display:flex; flex-wrap:wrap; gap:16px; margin-top:14px; font-size:12.5px; color:var(--muted);">
         <span><span style="color:#3d7bff;">■</span> <b style="color:var(--text);">Horas Trabalhadas</b> — escala à esquerda</span>
@@ -3814,8 +4400,8 @@ function abrirDetalheIndicador(grupo, chave){
 
 // Leitura executiva combinada — custo de folha
 function gerarLeituraFolha(){
-  const b = DP_INDICADORES.custoFolhaBruto.valores, l = DP_INDICADORES.custoFolhaLiq.valores;
-  const d = DP_INDICADORES.custoFolhaDesenc.valores, o = DP_INDICADORES.custoProjOlimpico.valores;
+  const b = FOLHA_DADOS.bruto.vals, l = FOLHA_DADOS.liquido.vals;
+  const d = FOLHA_DADOS.desencaixe.vals, o = FOLHA_DADOS.olimpico.vals;
   const n = MESES_RH.length - 1;
   const varB = b[n] - b[0], varD = d[n] - d[0];
   const pctIni = (o[0]/b[0]*100).toFixed(1).replace('.',','), pctFim = (o[n]/b[n]*100).toFixed(1).replace('.',',');
@@ -3899,15 +4485,40 @@ function renderTabelaJornada(elId){
   </table>`;
 }
 
+let FOLHA_FILTRO = 'todos';
+function filtrarSerieFolha(chave, elId){
+  FOLHA_FILTRO = chave;
+  document.querySelectorAll('.folha-filtro-btn').forEach(b=>{
+    const ativo = b.dataset.serie === chave;
+    b.style.background = ativo ? (b.dataset.cor + '22') : 'transparent';
+    b.style.borderColor = ativo ? b.dataset.cor : 'var(--border)';
+    b.style.color = ativo ? b.dataset.cor : 'var(--muted)';
+    b.style.fontWeight = ativo ? '800' : '600';
+  });
+  drawComparativoFolhaChart(elId);
+  renderTabelaComparativoFolha('tabelaComparativoFolha');
+}
+function botoesFiltroFolha(elId){
+  const opts = [{k:'todos', nome:'Competência (tudo)', cor:'#b0b0d0'}]
+    .concat(Object.keys(FOLHA_DADOS).map(k=>({k, nome:FOLHA_DADOS[k].nome, cor:FOLHA_DADOS[k].cor})));
+  return `<div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:14px;">` + opts.map(o=>`
+    <button class="folha-filtro-btn" data-serie="${o.k}" data-cor="${o.cor}"
+      onclick="filtrarSerieFolha('${o.k}','${elId}')"
+      style="height:32px; box-sizing:border-box; padding:0 14px; border-radius:16px; cursor:pointer; font-size:12.5px; font-family:inherit;
+             border:1px solid ${o.k===FOLHA_FILTRO?o.cor:'var(--border)'};
+             background:${o.k===FOLHA_FILTRO?o.cor+'22':'transparent'};
+             color:${o.k===FOLHA_FILTRO?o.cor:'var(--muted)'};
+             font-weight:${o.k===FOLHA_FILTRO?'800':'600'};">${o.nome}</button>`).join('') + `</div>`;
+}
+
 function drawComparativoFolhaChart(elId){
   const el = document.getElementById(elId);
-  const bruto = DP_INDICADORES.custoFolhaBruto.valores;
-  const liquido = DP_INDICADORES.custoFolhaLiq.valores;
-  const olimpico = DP_INDICADORES.custoProjOlimpico.valores;
-  const desencaixe = DP_INDICADORES.custoFolhaDesenc.valores;
+  if(!el) return;
+  const chaves = FOLHA_FILTRO === 'todos' ? Object.keys(FOLHA_DADOS) : [FOLHA_FILTRO];
+  const series = chaves.map(k=>FOLHA_DADOS[k]);
   const n = MESES_RH.length;
   const W = Math.max(760, n*180), H = 340, padL=80, padR=20, padT=28, padB=44;
-  const maxV = Math.max(...bruto) * 1.15;
+  const maxV = Math.max(...series.flatMap(s=>s.vals)) * 1.15;
   const grupoW = (W-padL-padR)/n;
   const y = v => padT + (1-v/maxV)*(H-padT-padB);
   const y0 = y(0);
@@ -3918,12 +4529,6 @@ function drawComparativoFolhaChart(elId){
     gridLines += `<text x="${padL-8}" y="${(yy+4).toFixed(1)}" text-anchor="end" fill="#b0b0d0" font-size="11">${fmtIndicadorCurto(v,'moeda')}</text>`;
   }
   let bars = '', labels = '';
-  const series = [
-    {vals:bruto, cor:'#5c6370', nome:'Bruto'},
-    {vals:liquido, cor:'#00e5a0', nome:'Líquido'},
-    {vals:olimpico, cor:'#a855f7', nome:'Projeto Olímpico'},
-    {vals:desencaixe, cor:'#f2b705', nome:'Desencaixe SOGIPA'},
-  ];
   const barW = (grupoW*0.84)/series.length;
   for(let i=0;i<n;i++){
     const gx = padL + i*grupoW + grupoW*0.08;
@@ -3932,8 +4537,10 @@ function drawComparativoFolhaChart(elId){
       if(v==null) return;
       const bx = gx + si*barW;
       const yTop = y(v);
-      const barH = y0-yTop;
-      bars += `<rect x="${bx.toFixed(1)}" y="${yTop.toFixed(1)}" width="${(barW*0.86).toFixed(1)}" height="${barH.toFixed(1)}" fill="${s.cor}" rx="2"><title>${s.nome} — ${MESES_RH[i]}: ${fmtIndicador(v,'moeda')}</title></rect>`;
+      bars += `<rect x="${bx.toFixed(1)}" y="${yTop.toFixed(1)}" width="${(barW*0.86).toFixed(1)}" height="${(y0-yTop).toFixed(1)}" fill="${s.cor}" rx="2"><title>${s.nome} — ${MESES_RH[i]}: ${fmtIndicador(v,'moeda')}</title></rect>`;
+      if(series.length === 1){
+        bars += `<text x="${(bx+barW*0.43).toFixed(1)}" y="${(yTop-8).toFixed(1)}" text-anchor="middle" fill="${s.cor}" font-size="12" font-weight="800">${fmtIndicadorCurto(v,'moeda')}</text>`;
+      }
     });
     labels += `<text x="${(gx+grupoW*0.84/2).toFixed(1)}" y="${H-padB+20}" text-anchor="middle" fill="#b0b0d0" font-size="12">${MESES_RH[i]}</text>`;
   }
@@ -3945,16 +4552,16 @@ function drawComparativoFolhaChart(elId){
 
 function renderTabelaComparativoFolha(elId){
   const el = document.getElementById(elId);
-  const bruto = DP_INDICADORES.custoFolhaBruto.valores;
-  const liquido = DP_INDICADORES.custoFolhaLiq.valores;
-  const olimpico = DP_INDICADORES.custoProjOlimpico.valores;
-  const desencaixe = DP_INDICADORES.custoFolhaDesenc.valores;
+  if(!el) return;
+  const chaves = FOLHA_FILTRO === 'todos' ? Object.keys(FOLHA_DADOS) : [FOLHA_FILTRO];
+  const mostraPct = FOLHA_FILTRO === 'todos';
   el.innerHTML = `<table>
-    <thead><tr><th>Competência</th><th class="num">Bruto</th><th class="num">Líquido</th><th class="num">Projeto Olímpico</th><th class="num">Desencaixe SOGIPA</th><th class="num">% coberto por projeto</th></tr></thead>
+    <thead><tr><th>Competência</th>${chaves.map(k=>`<th class="num" style="color:${FOLHA_DADOS[k].cor};">${FOLHA_DADOS[k].nome}</th>`).join('')}${mostraPct?'<th class="num">% coberto por projeto</th>':''}</tr></thead>
     <tbody>
       ${MESES_RH.map((mes,i)=>{
-        const pct = bruto[i] ? (olimpico[i]/bruto[i]*100).toFixed(1).replace('.',',')+'%' : '—';
-        return `<tr><td>${mes}</td><td class="num">${fmtBRL(bruto[i])}</td><td class="num" style="color:var(--green);">${fmtBRL(liquido[i])}</td><td class="num" style="color:#a855f7;">${fmtBRL(olimpico[i])}</td><td class="num" style="color:var(--gold); font-weight:700;">${fmtBRL(desencaixe[i])}</td><td class="num">${pct}</td></tr>`;
+        const b = FOLHA_DADOS.bruto.vals[i];
+        const pct = b ? (FOLHA_DADOS.olimpico.vals[i]/b*100).toFixed(1).replace('.',',')+'%' : '—';
+        return `<tr><td>${mes}</td>${chaves.map(k=>`<td class="num" style="color:${FOLHA_DADOS[k].cor};">${fmtBRL(FOLHA_DADOS[k].vals[i])}</td>`).join('')}${mostraPct?`<td class="num">${pct}</td>`:''}</tr>`;
       }).join('')}
     </tbody>
   </table>`;
@@ -4346,7 +4953,7 @@ function renderHistoricoFechamentos(){
   const keys = Object.keys(DADOS_MES);
   el.innerHTML = keys.map((k,i)=>{
     const m = DADOS_MES[k];
-    const isUltimo = i === keys.length-1;
+    const isUltimo = !m.fechado;
     const status = isUltimo
       ? `<span class="tag" style="background:#ffd32a22; color:#ffd32a;">Em andamento (até ${m.dataReferencia})</span>`
       : `<span class="tag" style="background:#00e5a022; color:#00e5a0;">Fechado</span>`;
@@ -4402,7 +5009,9 @@ function renderFluxoCaixaPeriodo(mesKey, de, ate){
   document.getElementById('vgFundoObras').textContent = fmtMil(m.fundoObras);
   document.getElementById('alertaPontoAtencaoVG').innerHTML = m.ptoAtencao + ' Detalhes na aba <b>Fluxo de Caixa</b>.';
   document.getElementById('alertaPontoAtencaoFC').innerHTML = m.ptoAtencao;
-  document.getElementById('alertaFechamentoFC').innerHTML = `<b>Fechamento em andamento:</b> dados de <b>${m.label}</b> atualizados pela Controladoria até <b>${m.dataReferencia}</b>. Os valores de "Tendência" e "Realizado" seguem sendo ajustados conforme novos lançamentos chegam.`;
+  document.getElementById('alertaFechamentoFC').innerHTML = m.fechado
+    ? `<b>Mês fechado:</b> ${m.label} encerrado em <b>${m.dataReferencia}</b>, com saldo em banco de <b>R$ ${m.saldoTotal.toFixed(1).replace('.',',')} mil</b> e resultado líquido de <b>R$ ${(m.resultadoLiquido!=null?m.resultadoLiquido:0).toFixed(1).replace('.',',')} mil</b>. Valores conforme o relatório "Fluxo Caixa SOGIPA" da Controladoria.`
+    : `<b>Fechamento em andamento:</b> dados de <b>${m.label}</b> atualizados pela Controladoria até <b>${m.dataReferencia}</b>. Os valores de "Tendência" e "Realizado" seguem sendo ajustados conforme novos lançamentos chegam.`;
 
   // KPIs (aba Fluxo de Caixa)
   document.getElementById('fcVal1').textContent = (m.caixaLivre<0?'-':'') + 'R$ ' + Math.abs(m.caixaLivre).toFixed(1).replace('.',',') + ' mil';
@@ -4446,18 +5055,49 @@ function renderVisaoGeralObrasComp(){
     <div class="card-meta" style="margin-top:8px;">Sobre o total já recebido no fundo (${fmtMilReais(o.totalRecebido)}, acumulado desde fev/2026). Ver detalhes na aba <b>Obras</b>.</div>`;
 }
 
-function renderPagamentosPeriodo(key, de, ate){
+// Agrega pagamentos de vários meses (soma valores e consolida fornecedores/bancos)
+function agregarPagamentos(meses){
+  const itens = meses.map(mk=>PAGAMENTOS_MESES[mk.key]).filter(Boolean);
+  if(itens.length === 1) return itens[0];
+  const soma = c => itens.reduce((s,d)=>s+d[c],0);
+  const fmap = {}, bmap = {};
+  itens.forEach(d=>{
+    d.top.forEach(f=>{ if(!fmap[f.nome]) fmap[f.nome]={nome:f.nome,qtd:0,valor:0}; fmap[f.nome].qtd+=f.qtd; fmap[f.nome].valor+=f.valor; });
+    d.bancos.forEach(b=>{ if(!bmap[b.nome]) bmap[b.nome]={nome:b.nome,qtd:0,total:0}; bmap[b.nome].qtd+=b.qtd; bmap[b.nome].total+=b.total; });
+  });
+  const total = soma('total');
+  const top = Object.values(fmap).sort((a,b)=>b.valor-a.valor).slice(0,15);
+  top.forEach(f=> f.pct = f.valor/total*100);
+  return {
+    label: itens[0].label.split('/')[0] + ' a ' + itens[itens.length-1].label,
+    qtd: soma('qtd'), total,
+    maiorQtd: soma('maiorQtd'), maiorTotal: soma('maiorTotal'),
+    menorQtd: soma('menorQtd'), menorTotal: soma('menorTotal'),
+    fornecedoresDistintos: null,
+    top, bancos: Object.values(bmap).sort((a,b)=>b.total-a.total),
+    agregado: itens.length,
+  };
+}
+
+function renderPagamentosMeses(meses){
   const aviso = document.getElementById('pagAvisoSemDados');
-  if(!key || !PAGAMENTOS_POR_PERIODO[key]){
-    aviso.innerHTML = `<div class="alert-box"><span>🚫</span><div><b>Não há dados de pagamentos para o período selecionado</b>${de&&ate?` (${de.split('-').reverse().join('/')} a ${ate.split('-').reverse().join('/')})`:''}. Os últimos cortes recebidos da Controladoria vão de 01/06/2026 a 10/07/2026.</div></div>`;
-    return;
+  let lista = meses, txtAviso = '';
+  if(!lista.length){
+    const u = ultimoMesCobertura(COBERTURA_PAGAMENTOS);
+    if(!u){
+      aviso.innerHTML = `<div class="alert-box"><span>🚫</span><div><b>Sem dados de pagamentos.</b></div></div>`;
+      return;
+    }
+    lista = [u];
+    txtAviso = `Sem relatório de pagamentos no intervalo selecionado — exibindo o último fechamento disponível (${PAGAMENTOS_MESES[u.key].label}).`;
   }
-  aviso.innerHTML = '';
-  const d = PAGAMENTOS_POR_PERIODO[key];
-  if(!d) return;
+  const d = agregarPagamentos(lista);
+  if(d.agregado) txtAviso = `Somando <b>${d.agregado} meses</b> de pagamentos. Os percentuais por fornecedor são calculados sobre o total do período.`;
+  aviso.innerHTML = txtAviso
+    ? `<div class="alert-box" style="border-color:var(--gold);"><span>ℹ️</span><div>${txtAviso}</div></div>` : '';
+
   const pctMaior = (d.maiorTotal/d.total*100).toFixed(1).replace('.',',');
   const pctMenor = (d.menorTotal/d.total*100).toFixed(1).replace('.',',');
-
   document.getElementById('pagPeriodoTag').textContent = d.label;
   document.getElementById('pagKpiTotalQtd').textContent = d.qtd;
   document.getElementById('pagKpiTotalValor').textContent = fmtBRL0(d.total);
@@ -4467,22 +5107,30 @@ function renderPagamentosPeriodo(key, de, ate){
   document.getElementById('pagKpiMenorQtd').textContent = d.menorQtd;
   document.getElementById('pagKpiMenorPct').textContent = pctMenor + '% do valor total';
 
-  drawDonut('pagDonutFaixa', [
+  const faixas = [
     {nome:'Acima de R$ 5 mil', valor:d.maiorTotal, cor:'#e8192c', suffix:''},
     {nome:'Até R$ 5 mil', valor:d.menorTotal, cor:'#ffd32a', suffix:''},
-  ], String(d.qtd), 'pagamentos');
-
-  const donutVG = document.getElementById('vgDonutPagamentos');
-  if(donutVG){
-    drawDonut('vgDonutPagamentos', [
-      {nome:'Acima de R$ 5 mil', valor:d.maiorTotal, cor:'#e8192c', suffix:''},
-      {nome:'Até R$ 5 mil', valor:d.menorTotal, cor:'#ffd32a', suffix:''},
-    ], String(d.qtd), 'pagamentos');
-  }
+  ];
+  drawDonut('pagDonutFaixa', faixas, String(d.qtd), 'pagamentos');
+  if(document.getElementById('vgDonutPagamentos')) drawDonut('vgDonutPagamentos', faixas, String(d.qtd), 'pagamentos');
 
   renderTabelaFornecedoresPeriodo(d.top);
   renderTabelaBancosPeriodo(d.bancos, d.total);
   renderInsightFornecedores(d.top, d.label);
+  renderHistoricoPagamentos();
+}
+
+function renderHistoricoPagamentos(){
+  const el = document.getElementById('tabelaHistoricoPagamentos');
+  if(!el) return;
+  el.innerHTML = Object.keys(PAGAMENTOS_MESES).map(k=>{
+    const d = PAGAMENTOS_MESES[k];
+    const ticket = d.total/d.qtd;
+    return `<tr><td>${d.label}</td><td class="num">${d.qtd}</td><td class="num">${fmtBRL0(d.total)}</td>
+      <td class="num">${fmtBRL(ticket)}</td><td class="num">${d.fornecedoresDistintos||'—'}</td>
+      <td class="num" style="color:var(--red);">${d.maiorQtd}</td>
+      <td class="num" style="color:var(--gold);">${d.menorQtd}</td></tr>`;
+  }).join('');
 }
 
 function renderInsightFornecedores(top, periodoLabel){
@@ -4495,6 +5143,7 @@ function renderInsightFornecedores(top, periodoLabel){
 
 function renderTabelaFornecedoresPeriodo(top){
   const el = document.getElementById('tabelaFornecedores');
+  const temPF = top.some(f=>/pessoa física/.test(f.nome));
   el.innerHTML = `<table>
     <thead><tr><th>#</th><th>Fornecedor</th><th class="num">Qtd. Pagamentos</th><th class="num">Valor Total</th><th class="num">% do Total</th><th>Recorrência</th></tr></thead>
     <tbody>
@@ -4510,7 +5159,7 @@ function renderTabelaFornecedoresPeriodo(top){
         </tr>`;
       }).join('')}
     </tbody>
-  </table>`;
+  </table>` + (temPF ? `<div class="card-meta" style="margin-top:10px;">🔒 Registros marcados como <b>(pessoa física)</b> têm o nome ocultado e o CPF suprimido, conforme a LGPD.</div>` : '');
 }
 
 function renderTabelaBancosPeriodo(bancos, totalGeral){
